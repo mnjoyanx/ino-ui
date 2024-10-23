@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import useKeydown from '../../hooks/useKeydown';
 
-interface DefaultCheckboxProps {
+export interface DefaultCheckboxProps {
   isChecked: boolean;
   isActive: boolean;
 }
@@ -33,7 +33,7 @@ const DefaultCheckbox: React.FC<DefaultCheckboxProps> = ({
   </svg>
 );
 
-interface CheckboxItemProps {
+export interface CheckboxItemProps {
   defaultChecked?: boolean;
   label: string;
   onChange: (isChecked: boolean) => void;

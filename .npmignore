@@ -1,0 +1,42 @@
+# Development files
+example/
+src/
+tsconfig.json
+webpack.config.js
+.babelrc
+.eslintrc.js
+.prettierrc
+
+# Version control
+.git
+.gitignore
+
+# Build output
+dist/
+
+# Dependency directories
+node_modules/
+
+# Logs
+*.log
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Test files
+__tests__/
+*.test.ts
+*.test.tsx
+
+# Documentation
+docs/
+README.md
+CHANGELOG.md
+LICENSE
