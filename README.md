@@ -18,6 +18,4 @@ yarn add ino-tv-ui
 
 ## Preview
 
-You can preview the library at the following link:
-
 [ino-tv-ui Preview](https://ino-tv-ui-preview.netlify.app)
