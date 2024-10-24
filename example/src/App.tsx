@@ -1,8 +1,8 @@
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import 'ino-ui-tv/dist/styles/styles.css';
 import { Modal, CheckboxItem } from 'ino-ui-tv';
 import './styles.css';
-import './globals.css';
 
 const ComponentPreview = ({ component: Component, props }) => {
   return (
@@ -75,12 +75,6 @@ const App = () => {
           </nav>
         </aside>
         <main>
-          <div className="p-4">
-            <p className="text-red-500">Hello</p>
-          </div>
-          <div className="p-4 bg-blue-500 text-white">
-            <h1 className="text-2xl font-bold">Hello, Tailwind!</h1>
-          </div>
           <Routes>
             <Route path="/modal" element={<ModalPage />} />
             <Route path="/checkbox" element={<CheckboxPage />} />
