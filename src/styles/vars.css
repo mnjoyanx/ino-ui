@@ -8,7 +8,9 @@
   --ino-muted-primary: #e0e0e0;
   --ino-dark-primary: #333;
   --ino-light-primary: #f0f0f0;
-
+  --ino-bg-active: #0f87b2;
+  --ino-bg-danger: #ff0000;
+  --ino-text-danger: #fff;
   --ino-bg-secondary: #f0f0f0;
   --ino-text-secondary: #333;
   --ino-border-secondary: #e0e0e0;

@@ -15,6 +15,11 @@ export interface InoButtonProps {
     index: number;
 
     /**
+     * The text to be displayed inside the button.
+     */
+    text?: string;
+
+    /**
      * The content to be displayed inside the button.
      */
     children: ReactNode;
@@ -40,6 +45,11 @@ export interface InoButtonProps {
      * Additional class names to be applied to the button.
      */
     classNames?: string;
+
+    /**
+     * The variant of the button.
+     */
+    variant?: 'primary' | 'secondary' | 'danger' | 'outline';
 
     /**
      * Callback function to be called when the left arrow key is pressed.

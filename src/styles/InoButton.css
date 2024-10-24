@@ -1,11 +1,29 @@
 .ino-button {
   padding: 10px 20px;
-  background-color: var(--ino-bg-primary);
-  color: var(--ino-text-primary);
   border: none;
   border-radius: var(--ino-border-radius-small);
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.ino-button--primary {
+  background-color: var(--ino-bg-primary);
+  color: var(--ino-text-primary);
+}
+
+.ino-button--secondary {
+  background-color: var(--ino-bg-secondary);
+  color: var(--ino-text-secondary);
+}
+
+.ino-button--outline {
+  border: 1px solid var(--ino-border-primary);
+  background-color: transparent;
+}
+
+.ino-button--danger {
+  background-color: var(--ino-bg-danger);
+  color: var(--ino-text-danger);
 }
 
 .ino-button:hover {
@@ -15,4 +33,21 @@
 .ino-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.ino-button--active {
+  background-color: var(--ino-bg-active);
+}
+
+.ino-button.ino-button--primary .ino-button__text {
+  color: var(--ino-text-primary);
+}
+
+.ino-button.ino-button--secondary .ino-button__text {
+  color: var(--ino-text-secondary);
+}
+
+.ino-button__text {
+  font-size: var(--ino-font-size-medium);
+  color: var(--ino-text-primary);
 }

@@ -11,6 +11,7 @@ export const InoButton: React.FC<InoButtonProps> = ({
   type = 'button',
   disabled = false,
   classNames = '',
+  variant = 'primary', // Add default variant
   onLeft,
   onRight,
   onUp,
@@ -20,7 +21,6 @@ export const InoButton: React.FC<InoButtonProps> = ({
 }) => {
   useKeydown({
     isActive,
-
     ok: e => {
       if (!disabled && onClick) {
         onClick({ e }, index);
@@ -62,10 +62,14 @@ export const InoButton: React.FC<InoButtonProps> = ({
         }
       }}
       disabled={disabled}
-      className={`ino-button ${classNames}`}
+      className={`ino-button ino-button--${variant} ${
+        isActive ? 'ino-button--active' : ''
+      } ${classNames}`}
       {...rest}
     >
-      {children}
+      <span className="ino-button__text">{children}</span>
     </button>
   );
 };
+
+export default InoButton;
