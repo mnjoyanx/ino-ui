@@ -3,7 +3,7 @@ import useKeydown from '../../hooks/useKeydown';
 import { InoButtonProps } from './InoButton.types';
 import '../../styles/InoButton.css';
 
-const InoButton: React.FC<InoButtonProps> = ({
+export const InoButton: React.FC<InoButtonProps> = ({
   isActive = true,
   index,
   children,
@@ -69,5 +69,3 @@ const InoButton: React.FC<InoButtonProps> = ({
     </button>
   );
 };
-
-export default InoButton;
