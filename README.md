@@ -20,4 +20,4 @@ yarn add ino-tv-ui
 
 You can preview the library at the following link:
 
-[ino-tv-ui Preview](https://ino-tv-ui-preview.netlify.app/gridview)
+[ino-tv-ui Preview](https://ino-tv-ui-preview.netlify.app)
