@@ -105,7 +105,6 @@ export const Modal: React.FC<ModalProps> = ({
                   if (onSecondaryMouseEnter) onSecondaryMouseEnter();
                 }}
                 onMouseLeave={() => {
-                  setActiveButtonIndex(-1);
                   if (onSecondaryMouseLeave) onSecondaryMouseLeave();
                 }}
               >
@@ -124,7 +123,6 @@ export const Modal: React.FC<ModalProps> = ({
                   if (onPrimaryMouseEnter) onPrimaryMouseEnter();
                 }}
                 onMouseLeave={() => {
-                  setActiveButtonIndex(-1);
                   if (onPrimaryMouseLeave) onPrimaryMouseLeave();
                 }}
               >
