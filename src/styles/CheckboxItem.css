@@ -6,7 +6,7 @@
   padding: 1.5rem;
   border-radius: 0.5rem;
   transition: all 0.2s ease-in-out;
-  border: 0.2rem solid #fff;
+  border: 0.2rem solid var(--ino-border-secondary);
 }
 
 .ino-checkbox-item:hover {
@@ -14,16 +14,16 @@
 }
 
 .ino-checkbox-item.active {
-  background-color: #fff;
+  background-color: var(--ino-bg-secondary);
 }
 
 .ino-checkbox-item.active .ino-checkbox-container .ino-label {
-  color: #000;
+  color: var(--ino-text-secondary);
 }
 
 .ino-checkbox-item.active .ino-checkmark svg rect,
 .ino-checkbox-item.active .ino-checkmark svg path {
-  stroke: #000;
+  stroke: var(--ino-text-secondary);
 }
 
 .ino-checkbox-item.rtl {
@@ -63,6 +63,6 @@
 
 .ino-checkbox-item .ino-checkbox-container .ino-label {
   font-size: 1.8rem;
-  color: #fff;
+  color: var(--ino-text-secondary);
   transition: all 0.2s ease-in-out;
 }

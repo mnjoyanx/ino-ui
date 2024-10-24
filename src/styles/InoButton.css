@@ -1,0 +1,18 @@
+.ino-button {
+  padding: 10px 20px;
+  background-color: var(--ino-bg-primary);
+  color: var(--ino-text-primary);
+  border: none;
+  border-radius: var(--ino-border-radius-small);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ino-button:hover {
+  background-color: var(--ino-hover-primary);
+}
+
+.ino-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

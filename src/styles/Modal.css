@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--ino-bg-muted);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,7 +12,7 @@
 }
 
 .ino-modal {
-  background-color: #fff;
+  background-color: var(--ino-bg-secondary);
   border-radius: 0.5rem;
   padding: 2rem;
   max-width: 80%;
@@ -53,12 +53,12 @@
   padding: 0.5rem 1rem;
   margin-left: 1rem;
   border: none;
-  border-radius: 0.25rem;
+  border-radius: var(--ino-border-radius-small);
   cursor: pointer;
   font-size: 1.4rem;
 }
 
 .ino-modal-button.active {
-  background-color: #007bff;
-  color: #fff;
+  background-color: var(--ino-bg-primary);
+  color: var(--ino-text-primary);
 }
