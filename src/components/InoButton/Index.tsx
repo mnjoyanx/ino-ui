@@ -1,29 +1,73 @@
 import React from 'react';
+import useKeydown from '../../hooks/useKeydown';
+import { InoButtonProps } from './InoButton.types';
 import '../../styles/InoButton.css';
 
-interface InoButtonProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  type?: 'button' | 'submit' | 'reset';
-  disabled?: boolean;
-  className?: string;
-}
-
-export const InoButton: React.FC<InoButtonProps> = ({
+const InoButton: React.FC<InoButtonProps> = ({
+  isActive = true,
+  index,
   children,
   onClick,
   type = 'button',
   disabled = false,
-  className = '',
+  classNames = '',
+  onLeft,
+  onRight,
+  onUp,
+  onDown,
+  onBack,
+  ...rest
 }) => {
+  useKeydown({
+    isActive,
+
+    ok: e => {
+      if (!disabled && onClick) {
+        onClick({ e }, index);
+      }
+    },
+    left: e => {
+      if (onLeft) {
+        onLeft({ e }, index);
+      }
+    },
+    right: e => {
+      if (onRight) {
+        onRight({ e }, index);
+      }
+    },
+    up: e => {
+      if (onUp) {
+        onUp({ e }, index);
+      }
+    },
+    down: e => {
+      if (onDown) {
+        onDown({ e }, index);
+      }
+    },
+    back: e => {
+      if (onBack) {
+        onBack({ e }, index);
+      }
+    },
+  });
+
   return (
     <button
       type={type}
-      onClick={onClick}
+      onClick={e => {
+        if (!disabled && onClick) {
+          onClick({ e }, index);
+        }
+      }}
       disabled={disabled}
-      className={`ino-button ${className}`}
+      className={`ino-button ${classNames}`}
+      {...rest}
     >
       {children}
     </button>
   );
 };
+
+export default InoButton;
