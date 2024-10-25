@@ -74,8 +74,8 @@ export const GridView: React.FC<GridViewProps> = memo(
     onChangeRow = () => {},
     onUp = () => {},
     onDown = () => {},
-    // onLeft = () => {},
-    // onRight = () => {},
+    onLeft = () => {},
+    onRight = () => {},
     onBack = () => {},
     renderItem,
     data,
@@ -103,13 +103,15 @@ export const GridView: React.FC<GridViewProps> = memo(
     const left = useCallback(() => {
       setActiveIndex(prev => {
         if (prev % rowItemsCount === 0) {
-          requestAnimationFrame(onBack);
+          if (onLeft) {
+            requestAnimationFrame(onLeft);
+          }
         } else {
           prev--;
         }
         return prev;
       });
-    }, [rowItemsCount, onBack]);
+    }, [rowItemsCount, onLeft]);
 
     const right = useCallback(() => {
       setActiveIndex(prev => {
@@ -117,13 +119,15 @@ export const GridView: React.FC<GridViewProps> = memo(
           prev % rowItemsCount === rowItemsCount - 1 ||
           prev === itemsTotal - 1
         ) {
-          // Do nothing or handle edge case
+          if (onRight) {
+            requestAnimationFrame(onRight);
+          }
         } else {
           prev++;
         }
         return prev;
       });
-    }, [rowItemsCount, itemsTotal]);
+    }, [rowItemsCount, itemsTotal, onRight]);
 
     const up = useCallback(() => {
       setActiveIndex(prev => {

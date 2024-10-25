@@ -86,7 +86,7 @@ export interface GridViewProps {
     /**
      * Callback function for when the right navigation is triggered.
      */
-    onRight: () => void;
+    onRight?: () => void;
     /**
      * Callback function for when the back navigation is triggered.
      */
