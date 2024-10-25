@@ -78,7 +78,7 @@ export interface GridViewProps {
     /**
      * Callback function for when the down navigation is triggered.
      */
-    onDown?: () => void;
+    onDown?: (activeIndex: number, prevActiveIndex: number) => void;
     /**
      * Callback function for when the left navigation is triggered.
      */
@@ -87,6 +87,10 @@ export interface GridViewProps {
      * Callback function for when the right navigation is triggered.
      */
     onRight?: () => void;
+    /**
+     * Callback function for when the ok navigation is triggered.
+     */
+    onOk?: () => void;
     /**
      * Callback function for when the back navigation is triggered.
      */

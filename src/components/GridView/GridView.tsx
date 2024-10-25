@@ -76,6 +76,7 @@ export const GridView: React.FC<GridViewProps> = memo(
     onDown = () => {},
     onLeft = () => {},
     onRight = () => {},
+    onOk = () => {},
     onBack = () => {},
     renderItem,
     data,
@@ -147,7 +148,7 @@ export const GridView: React.FC<GridViewProps> = memo(
           Math.ceil((prev + 1) / rowItemsCount) ===
           Math.ceil(itemsTotal / rowItemsCount)
         ) {
-          requestAnimationFrame(onDown);
+          requestAnimationFrame(() => onDown(activeIndex, prev));
         } else {
           prev += rowItemsCount;
           if (prev > itemsTotal - 1) prev = itemsTotal - 1;
@@ -156,6 +157,10 @@ export const GridView: React.FC<GridViewProps> = memo(
         return prev;
       });
     }, [rowItemsCount, itemsTotal, onDown, changeStartRow]);
+
+    const ok = useCallback(() => {
+      onOk();
+    }, [onOk]);
 
     const back = useCallback(() => {
       onBack();
@@ -270,8 +275,9 @@ export const GridView: React.FC<GridViewProps> = memo(
         up,
         down,
         back,
+        ok,
       }),
-      [isActive, nativeControle, left, right, up, down, back]
+      [isActive, nativeControle, left, right, up, down, back, onOk]
     );
 
     useKeydown(keyDownOptions);
