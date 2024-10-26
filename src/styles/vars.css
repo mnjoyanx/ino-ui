@@ -37,4 +37,7 @@
   --ino-border-radius-large: 1.2rem;
   --ino-border-radius-xlarge: 1.6rem;
   --ino-border-radius-xxlarge: 2rem;
+
+  /* active scale */
+  --ino-active-scale: 1.05;
 }

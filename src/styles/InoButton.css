@@ -21,28 +21,9 @@
   background-color: transparent;
 }
 
-.ino-button--outline.ino-button--active {
-  background-color: var(--ino-bg-primary);
-  border-color: var(--ino-border-secondary);
-}
-
 .ino-button--danger {
   background-color: var(--ino-bg-danger);
   color: var(--ino-text-danger);
-}
-
-.ino-button--danger.ino-button--active {
-  background-color: var(--ino-bg-danger);
-  border-color: var(--ino-border-secondary);
-}
-
-.ino-button--secondary.ino-button--active {
-  background-color: var(--ino-bg-secondary);
-  border-color: var(--ino-border-secondary);
-}
-
-.ino-button:hover {
-  background-color: var(--ino-hover-primary);
 }
 
 .ino-button:disabled {
@@ -51,7 +32,7 @@
 }
 
 .ino-button--active {
-  background-color: var(--ino-bg-active);
+  transform: scale(1.05);
 }
 
 .ino-button.ino-button--primary .ino-button__text {
