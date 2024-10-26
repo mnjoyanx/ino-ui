@@ -1,3 +1,1 @@
-export interface IMouseKeyboardEvent {
-    e: React.MouseEvent<HTMLButtonElement> | KeyboardEvent;
-}
+export type MouseKeyboardEvent = React.MouseEvent<HTMLButtonElement> | KeyboardEvent;

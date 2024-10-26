@@ -1,6 +1,8 @@
 import React from 'react';
-import useKeydown from '../../hooks/useKeydown';
 import { InoButtonProps } from './InoButton.types';
+import { MouseKeyboardEvent } from '../../types';
+import { useMappedKeydown } from '../../hooks/useMappedKeydown';
+
 import '../../styles/InoButton.css';
 
 export const InoButton: React.FC<InoButtonProps> = ({
@@ -11,46 +13,26 @@ export const InoButton: React.FC<InoButtonProps> = ({
   type = 'button',
   disabled = false,
   classNames = '',
-  variant = 'primary', // Add default variant
+  variant = 'primary',
   onLeft,
   onRight,
   onUp,
   onDown,
   onBack,
+  onFocus,
+  onMouseEnter,
   ...rest
 }) => {
-  useKeydown({
+  useMappedKeydown({
     isActive,
-    ok: e => {
-      if (!disabled && onClick) {
-        onClick({ e }, index);
-      }
-    },
-    left: e => {
-      if (onLeft) {
-        onLeft({ e }, index);
-      }
-    },
-    right: e => {
-      if (onRight) {
-        onRight({ e }, index);
-      }
-    },
-    up: e => {
-      if (onUp) {
-        onUp({ e }, index);
-      }
-    },
-    down: e => {
-      if (onDown) {
-        onDown({ e }, index);
-      }
-    },
-    back: e => {
-      if (onBack) {
-        onBack({ e }, index);
-      }
-    },
+    onOk: onClick,
+    onBack: onBack,
+    onLeft: onLeft,
+    onRight: onRight,
+    onUp: onUp,
+    onDown: onDown,
+    onMouseEnter: onMouseEnter,
+    index,
   });
 
   return (
@@ -58,8 +40,11 @@ export const InoButton: React.FC<InoButtonProps> = ({
       type={type}
       onClick={e => {
         if (!disabled && onClick) {
-          onClick({ e }, index);
+          onClick(e as MouseKeyboardEvent, index);
         }
+      }}
+      onMouseEnter={e => {
+        onMouseEnter && onMouseEnter(e as MouseKeyboardEvent, index);
       }}
       disabled={disabled}
       className={`ino-button ino-button--${variant} ${
@@ -67,7 +52,7 @@ export const InoButton: React.FC<InoButtonProps> = ({
       } ${classNames}`}
       {...rest}
     >
-      <span className="ino-button__text">{children}</span>
+      {children}
     </button>
   );
 };

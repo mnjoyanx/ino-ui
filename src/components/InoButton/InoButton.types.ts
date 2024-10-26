@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { IMouseKeyboardEvent } from "../../types";
+import { MouseKeyboardEvent } from "../../types";
 /**
  * Interface representing the properties for the InoButton component.
  */
@@ -15,11 +15,6 @@ export interface InoButtonProps {
     index: number;
 
     /**
-     * The text to be displayed inside the button.
-     */
-    text?: string;
-
-    /**
      * The content to be displayed inside the button.
      */
     children: ReactNode;
@@ -29,10 +24,11 @@ export interface InoButtonProps {
      * @param e - The mouse or keyboard event.
      * @param index - The index of the button.
      */
-    onClick?: (e: IMouseKeyboardEvent, index?: number) => void;
+    onClick?: (e: MouseKeyboardEvent, index?: number) => void;
 
     /**
      * The type of the button.
+     * @default 'button'
      */
     type?: 'button' | 'submit' | 'reset';
 
@@ -48,41 +44,54 @@ export interface InoButtonProps {
 
     /**
      * The variant of the button.
+     * @default 'primary'
      */
-    variant?: 'primary' | 'secondary' | 'danger' | 'outline';
+    variant?: 'primary' | 'secondary' | 'danger' | 'outline' | 'warning';
 
     /**
      * Callback function to be called when the left arrow key is pressed.
      * @param e - The mouse or keyboard event.
      * @param index - The index of the button.
      */
-    onLeft?: (e: IMouseKeyboardEvent, index?: number) => void;
+    onLeft?: (e: MouseKeyboardEvent, index?: number) => void;
 
     /**
      * Callback function to be called when the right arrow key is pressed.
      * @param e - The mouse or keyboard event.
      * @param index - The index of the button.
      */
-    onRight?: (e: IMouseKeyboardEvent, index?: number) => void;
+    onRight?: (e: MouseKeyboardEvent, index?: number) => void;
 
     /**
      * Callback function to be called when the up arrow key is pressed.
      * @param e - The mouse or keyboard event.
      * @param index - The index of the button.
      */
-    onUp?: (e: IMouseKeyboardEvent, index?: number) => void;
+    onUp?: (e: MouseKeyboardEvent, index?: number) => void;
 
     /**
      * Callback function to be called when the down arrow key is pressed.
      * @param e - The mouse or keyboard event.
      * @param index - The index of the button.
      */
-    onDown?: (e: IMouseKeyboardEvent, index?: number) => void;
+    onDown?: (e: MouseKeyboardEvent, index?: number) => void;
 
     /**
      * Callback function to be called when the back action is triggered.
      * @param e - The mouse or keyboard event.
      * @param index - The index of the button.
      */
-    onBack?: (e: IMouseKeyboardEvent, index?: number) => void;
+    onBack?: (e: MouseKeyboardEvent, index?: number) => void;
+
+    /**
+     * Callback function to be called when the button is hovered.
+     * @param e - The mouse or keyboard event.
+     * @param index - The index of the button.
+     */
+    onMouseEnter?: (e: MouseKeyboardEvent, index?: number) => void;
+
+    /**
+     * Additional props to be passed to the button.
+     */
+    [key: string]: any;
 }

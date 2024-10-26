@@ -4,6 +4,9 @@
   border-radius: var(--ino-border-radius-small);
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-size: var(--ino-font-size-medium);
+  color: var(--ino-text-primary);
+  white-space: nowrap;
 }
 
 .ino-button--primary {
@@ -18,7 +21,13 @@
 
 .ino-button--outline {
   border: 1px solid var(--ino-border-primary);
+  color: var(--ino-text-secondary);
   background-color: transparent;
+}
+
+.ino-button--warning {
+  background-color: var(--ino-bg-warning);
+  color: var(--ino-text-warning);
 }
 
 .ino-button--danger {
@@ -41,9 +50,4 @@
 
 .ino-button.ino-button--secondary .ino-button__text {
   color: var(--ino-text-secondary);
-}
-
-.ino-button__text {
-  font-size: var(--ino-font-size-medium);
-  color: var(--ino-text-primary);
 }
