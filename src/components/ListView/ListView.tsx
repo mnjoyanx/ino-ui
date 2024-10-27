@@ -36,6 +36,7 @@ const TRANSFORM_TIMEOUT = 500;
  *   itemsTotal={50}
  *   buffer={2}
  *   itemWidth={20}
+ *   itemWidth={20}
  *   itemHeight={20}
  *   isActive={true}
  *   initialActiveIndex={0}
@@ -70,6 +71,7 @@ export const ListView: React.FC<ListViewProps> = memo(
     onBackScrollIndex = null,
     startScrollIndex = 0,
     direction = 'ltr',
+    debounce = 0,
     onMouseEnter = () => {},
     onUp = () => {},
     onDown = () => {},
@@ -252,7 +254,7 @@ export const ListView: React.FC<ListViewProps> = memo(
     const keyDownOptions = useMemo(
       () => ({
         isActive: isActive && nativeControle,
-        //   debounce,
+        debounce,
         left: () => listType === 'horizontal' && prev(),
         right: () => listType === 'horizontal' && next(),
         up: () => listType !== 'horizontal' && prev(),
@@ -261,7 +263,16 @@ export const ListView: React.FC<ListViewProps> = memo(
         channel_down: () => next(itemsCount),
         back,
       }),
-      [isActive, nativeControle, listType, prev, next, itemsCount, back]
+      [
+        isActive,
+        nativeControle,
+        listType,
+        prev,
+        next,
+        itemsCount,
+        back,
+        debounce,
+      ]
     );
 
     useKeydown(keyDownOptions);
