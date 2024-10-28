@@ -71,7 +71,7 @@ export const ListView: React.FC<ListViewProps> = memo(
     onBackScrollIndex = null,
     startScrollIndex = 0,
     direction = 'ltr',
-    debounce = 0,
+    debounce = 200,
     onMouseEnter = () => {},
     onUp = () => {},
     onDown = () => {},
@@ -84,6 +84,8 @@ export const ListView: React.FC<ListViewProps> = memo(
     const scrollViewRef = useRef<HTMLDivElement>(null);
     const [startIndex, setStartIndex] = useState(0);
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
+
+    console.log('list view rendered');
 
     const changeStartIndex = useCallback(
       (index: number) => {
