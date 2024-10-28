@@ -30,7 +30,7 @@ function useKeydown(props: KeydownProps): void {
         if (isPressed) {
             if (timeout) return;
 
-            timeout = setTimeout(() => {
+            timeout = setInterval(() => {
                 pressedKey[key] = false;
                 timeout = undefined;
                 if (props[key] && typeof props[key] === 'function') {
@@ -51,7 +51,7 @@ function useKeydown(props: KeydownProps): void {
 
         if (key) {
             pressedKey[key] = false;
-            clearTimeout(timeout);
+            clearInterval(timeout);
             timeout = undefined;
         }
     }, [props]);
