@@ -84,16 +84,15 @@
 // }
 
 // export default useKeydown;
-
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { checkKey } from '../utils/keys';
+
 export default function useKeydown(props) {
   const rtlMode = localStorage.getItem('rtlMode') === 'false';
+  const pressed = useRef({}); // Use useRef to persist the pressed state
+  let interval = null;
 
   useEffect(() => {
-    let pressed = {};
-    let interval = null;
-
     const handleKeydown = e => {
       // e.preventDefault();
       console.log('handle key down', props.debounce);
@@ -112,8 +111,8 @@ export default function useKeydown(props) {
 
       if (!props[key]) return;
 
-      console.log('2', pressed[key]);
-      let isPressed = pressed[key];
+      console.log('2', pressed.current[key]);
+      let isPressed = pressed.current[key];
 
       if (isPressed) {
         if (interval) return;
@@ -123,7 +122,7 @@ export default function useKeydown(props) {
         }, props.debounce || 100);
       } else {
         console.log('elsee');
-        pressed[key] = true;
+        pressed.current[key] = true;
         props[key](e);
       }
 
@@ -136,7 +135,7 @@ export default function useKeydown(props) {
       console.warn('handle key up', props);
 
       let key = checkKey(e, rtlMode);
-      pressed[key] = false;
+      pressed.current[key] = false; // Update the ref's current value
       clearInterval(interval);
       interval = null;
     };
