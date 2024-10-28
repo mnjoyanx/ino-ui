@@ -85,78 +85,72 @@
 
 // export default useKeydown;
 
+import { useEffect, useCallback } from 'react';
+import { checkKey } from '../utils/keys';
+export default function useKeydown(props) {
+  const rtlMode = localStorage.getItem('rtlMode') === 'false';
 
-import { useEffect, useCallback } from "react";
-import { checkKey } from "../utils/keys";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function useKeydown(props: any) {
+  useEffect(() => {
+    let pressed = {};
+    let interval = null;
 
+    const handleKeydown = e => {
+      // e.preventDefault();
+      console.log('handle key down');
 
-    const rtlMode = localStorage.getItem('rtlMode') === 'false';
+      let key = checkKey(e, rtlMode);
 
-    useEffect(() => {
+      if (
+        props.keydown &&
+        typeof props.keydown == 'function' &&
+        props.keydown(e, key)
+      )
+        return;
 
-        let pressed = {};
-        let interval: ReturnType<typeof setTimeout> | null = null;
+      if (!props[key]) return;
 
-        const handleKeydown = (e: KeyboardEvent) => {
+      let isPressed = pressed[key];
 
-            // e.preventDefault();
+      if (isPressed) {
+        if (interval) return;
 
-            let key = checkKey(e, rtlMode);
+        interval = setInterval(() => {
+          props[key](e);
+        }, props.debounce || 100);
+      } else {
+        pressed[key] = true;
+        props[key](e);
+      }
 
-            if (props.keydown && typeof props.keydown == "function" && props.keydown(e, key)) return
+      return false;
+    };
 
-            if (!props[key]) return;
+    const handleKeyup = e => {
+      // e.preventDefault();
 
-            let isPressed = pressed[key];
+      console.log('handle key up');
 
-            if (isPressed) {
+      let key = checkKey(e, rtlMode);
+      pressed[key] = false;
+      clearInterval(interval);
+      interval = null;
+    };
 
-                if (interval) return;
+    let options = props.capture || false;
 
-                interval = setInterval(() => {
-                    props[key](e);
-                }, props.debounce || 100);
+    if (props.isActive) {
+      document.addEventListener('keydown', handleKeydown, options);
+      document.addEventListener('keyup', handleKeyup, options);
+    } else {
+      document.removeEventListener('keydown', handleKeydown, options);
+      document.removeEventListener('keyup', handleKeyup, options);
+    }
 
-            } else {
-
-                pressed[key] = true;
-                props[key](e);
-
-            }
-
-            return false;
-
-        }
-
-        const handleKeyup = (e) => {
-
-            // e.preventDefault();
-
-            let key = checkKey(e, rtlMode);
-            pressed[key] = false;
-            clearInterval(interval);
-            interval = null;
-        }
-
-        let options = props.capture || false;
-
-        if (props.isActive) {
-            document.addEventListener('keydown', handleKeydown, options);
-            document.addEventListener('keyup', handleKeyup, options);
-        } else {
-            document.removeEventListener('keydown', handleKeydown, options);
-            document.removeEventListener('keyup', handleKeyup, options);
-        }
-
-        return () => {
-            document.removeEventListener('keydown', handleKeydown, options);
-            document.removeEventListener('keyup', handleKeyup, options);
-            clearInterval(interval);
-            interval = null;
-        }
-
-    }, [props]);
-
+    return () => {
+      document.removeEventListener('keydown', handleKeydown, options);
+      document.removeEventListener('keyup', handleKeyup, options);
+      clearInterval(interval);
+      interval = null;
+    };
+  }, [props]);
 }

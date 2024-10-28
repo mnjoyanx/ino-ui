@@ -9,7 +9,7 @@ import React, {
 import useKeydown from '../../hooks/useKeydown';
 import { ListViewProps, ItemProps } from './ListView.types';
 
-const TRANSFORM_TIMEOUT = 500;
+let TRANSFORM_TIMEOUT = null;
 
 /**
  * ListView component for displaying a list of items.
@@ -233,6 +233,15 @@ export const ListView: React.FC<ListViewProps> = memo(
       const applyTransform = () => {
         if (!scrollViewRef.current) return;
 
+        (window as any).transforming = true;
+        window.dispatchEvent(new Event('transformstart'));
+        clearTimeout(TRANSFORM_TIMEOUT);
+
+        TRANSFORM_TIMEOUT = setTimeout(
+          () => window.dispatchEvent(new Event('transformend')),
+          500
+        );
+
         const transform =
           listType === 'horizontal'
             ? `translate3d(${direction === 'ltr' ? '-' : ''}${startIndex *
@@ -241,13 +250,6 @@ export const ListView: React.FC<ListViewProps> = memo(
 
         scrollViewRef.current.style.transform = transform;
         scrollViewRef.current.style.webkitTransform = transform;
-        // scrollViewRef.current.style.msTransform = transform;
-
-        window.dispatchEvent(new Event('transformstart'));
-        setTimeout(
-          () => window.dispatchEvent(new Event('transformend')),
-          TRANSFORM_TIMEOUT
-        );
       };
 
       applyTransform();
