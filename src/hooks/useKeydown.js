@@ -96,7 +96,7 @@ export default function useKeydown(props) {
 
     const handleKeydown = e => {
       // e.preventDefault();
-      console.log('handle key down');
+      console.log('handle key down', props.debounce);
 
       let key = checkKey(e, rtlMode);
 
@@ -107,17 +107,21 @@ export default function useKeydown(props) {
       )
         return;
 
+      console.log('1');
+
       if (!props[key]) return;
 
+      console.log('2');
       let isPressed = pressed[key];
 
       if (isPressed) {
         if (interval) return;
-
+        console.log('pressed');
         interval = setInterval(() => {
           props[key](e);
         }, props.debounce || 100);
       } else {
+        console.log('elsee');
         pressed[key] = true;
         props[key](e);
       }
@@ -128,7 +132,7 @@ export default function useKeydown(props) {
     const handleKeyup = e => {
       // e.preventDefault();
 
-      console.log('handle key up');
+      console.log('handle key up', props.debounce);
 
       let key = checkKey(e, rtlMode);
       pressed[key] = false;
