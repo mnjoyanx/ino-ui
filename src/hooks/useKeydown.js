@@ -100,6 +100,7 @@ export default function useKeydown(props) {
 
       let key = checkKey(e, rtlMode);
 
+      console.log(props.keydown, 'props keydown');
       if (
         props.keydown &&
         typeof props.keydown == 'function' &&
@@ -111,7 +112,7 @@ export default function useKeydown(props) {
 
       if (!props[key]) return;
 
-      console.log('2');
+      console.log('2', pressed[key]);
       let isPressed = pressed[key];
 
       if (isPressed) {
@@ -132,7 +133,7 @@ export default function useKeydown(props) {
     const handleKeyup = e => {
       // e.preventDefault();
 
-      console.log('handle key up', props.debounce);
+      console.warn('handle key up', props);
 
       let key = checkKey(e, rtlMode);
       pressed[key] = false;
