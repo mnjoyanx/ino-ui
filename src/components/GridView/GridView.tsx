@@ -168,6 +168,7 @@ export const GridView: React.FC<GridViewProps> = memo(
 
     const onMouseEnterItem = useCallback(
       (index: number) => {
+        console.log(index, 'on mouse enter');
         setActiveIndex(index);
         onMouseEnter(index);
       },
