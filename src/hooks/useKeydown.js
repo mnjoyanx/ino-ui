@@ -95,11 +95,9 @@ export default function useKeydown(props) {
   useEffect(() => {
     const handleKeydown = e => {
       // e.preventDefault();
-      console.log('handle key down', props.debounce);
 
       let key = checkKey(e, rtlMode);
 
-      console.log(props.keydown, 'props keydown');
       if (
         props.keydown &&
         typeof props.keydown == 'function' &&
@@ -107,21 +105,16 @@ export default function useKeydown(props) {
       )
         return;
 
-      console.log('1');
-
       if (!props[key]) return;
 
-      console.log('2', pressed.current[key]);
       let isPressed = pressed.current[key];
 
       if (isPressed) {
         if (interval) return;
-        console.log('pressed');
         interval = setInterval(() => {
           props[key](e);
         }, props.debounce || 100);
       } else {
-        console.log('elsee');
         pressed.current[key] = true;
         props[key](e);
       }
@@ -131,8 +124,6 @@ export default function useKeydown(props) {
 
     const handleKeyup = e => {
       // e.preventDefault();
-
-      console.warn('handle key up', props);
 
       let key = checkKey(e, rtlMode);
       pressed.current[key] = false; // Update the ref's current value
