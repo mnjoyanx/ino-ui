@@ -85,8 +85,6 @@ export const ListView: React.FC<ListViewProps> = memo(
     const [startIndex, setStartIndex] = useState(0);
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
 
-    console.log('list view rendered');
-
     const changeStartIndex = useCallback(
       (index: number) => {
         index -= startScrollIndex;

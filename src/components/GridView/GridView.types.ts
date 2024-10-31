@@ -90,7 +90,7 @@ export interface GridViewProps {
     /**
      * Callback function for when the ok navigation is triggered.
      */
-    onOk?: () => void;
+    onOk?: (index: number) => void;
     /**
      * Callback function for when the back navigation is triggered.
      */

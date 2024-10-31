@@ -159,8 +159,8 @@ export const GridView: React.FC<GridViewProps> = memo(
     }, [rowItemsCount, itemsTotal, onDown, changeStartRow]);
 
     const ok = useCallback(() => {
-      onOk();
-    }, [onOk]);
+      onOk(activeIndex);
+    }, [onOk, activeIndex]);
 
     const back = useCallback(() => {
       onBack();
