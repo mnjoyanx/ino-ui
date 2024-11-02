@@ -42,6 +42,7 @@ let TRANSFORM_TIMEOUT = null;
  *   initialActiveIndex={0}
  *   onBackScrollIndex={null}
  *   startScrollIndex={0}
+ *   gap={0}
  *   direction="ltr"
  *   onMouseEnter={() => {}}
  *   onUp={() => {}}
@@ -66,6 +67,7 @@ export const ListView: React.FC<ListViewProps> = memo(
     buffer,
     itemWidth,
     itemHeight,
+    gap,
     isActive,
     initialActiveIndex = 0,
     onBackScrollIndex = null,
@@ -179,11 +181,12 @@ export const ListView: React.FC<ListViewProps> = memo(
                 [direction === 'rtl' ? 'right' : 'left']: `${index *
                   itemWidth}rem`,
                 top: 0,
+                ...(gap && { marginLeft: `${gap}rem` }),
               }
             : { left: 0, top: `${index * itemHeight}rem` }),
         };
       },
-      [itemWidth, itemHeight, listType, direction]
+      [itemWidth, itemHeight, listType, direction, gap]
     );
 
     const renderItems = useCallback(() => {
