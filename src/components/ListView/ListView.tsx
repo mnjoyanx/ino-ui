@@ -87,7 +87,12 @@ export const ListView: React.FC<ListViewProps> = memo(
     const scrollViewRef = useRef<HTMLDivElement>(null);
     const [startIndex, setStartIndex] = useState(0);
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
-    const [virtualData, setVirtualData] = useState([...data]);
+    const [virtualData, setVirtualData] = useState(() =>
+      Array.from(
+        { length: itemsTotal },
+        (_, index) => data[index % data.length]
+      )
+    );
     const [virtualStartIndex, setVirtualStartIndex] = useState(0);
 
     const changeStartIndex = useCallback(
@@ -208,25 +213,24 @@ export const ListView: React.FC<ListViewProps> = memo(
 
     const renderItems = useCallback(() => {
       const items: React.ReactNode[] = [];
-      const start = startIndex - buffer;
-      const end = startIndex + itemsCount + buffer;
+      const start = Math.max(0, startIndex - buffer);
+      const end = Math.min(itemsTotal, startIndex + itemsCount + buffer);
 
       for (let i = start; i < end; i++) {
-        if (i >= 0 && i < itemsTotal) {
-          const itemProps: ItemProps = {
-            key: `${uniqueKey}${i}`,
-            index: i,
-            style: getItemStyle(i - virtualStartIndex),
-            isActive: i === activeIndex && isActive,
-            item: virtualData[i],
-            onUp,
-            onDown,
-            onLeft,
-            onRight,
-            onMouseEnter: () => onMouseEnterItem(i),
-          };
-          items.push(renderItem(itemProps));
-        }
+        const virtualIndex = i % virtualData.length;
+        const itemProps: ItemProps = {
+          key: `${uniqueKey}${i}`,
+          index: i,
+          style: getItemStyle(i - virtualStartIndex),
+          isActive: i === activeIndex && isActive,
+          item: virtualData[virtualIndex],
+          onUp,
+          onDown,
+          onLeft,
+          onRight,
+          onMouseEnter: () => onMouseEnterItem(i),
+        };
+        items.push(renderItem(itemProps));
       }
       return items;
     }, [
@@ -318,10 +322,14 @@ export const ListView: React.FC<ListViewProps> = memo(
           const newData = [...prevData];
           if (direction === 'next') {
             const item = newData.shift();
-            newData.push(item);
+            if (item !== undefined) {
+              newData.push(item);
+            }
           } else {
             const item = newData.pop();
-            newData.unshift(item);
+            if (item !== undefined) {
+              newData.unshift(item);
+            }
           }
           return newData;
         });
@@ -337,6 +345,15 @@ export const ListView: React.FC<ListViewProps> = memo(
       },
       [loop]
     );
+
+    useEffect(() => {
+      setVirtualData(
+        Array.from(
+          { length: itemsTotal },
+          (_, index) => data[index % data.length]
+        )
+      );
+    }, [data, itemsTotal]);
 
     return (
       <div className={`scroll-view-parent ${listType}`} style={parentStyle}>
