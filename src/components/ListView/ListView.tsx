@@ -11,6 +11,8 @@ import { ListViewProps, ItemProps } from './ListView.types';
 import { NavigationArrow } from './NavigationArrow';
 import SvgArrowLeft from '../Svgs/SvgArrowLeft';
 import SvgArrowRight from '../Svgs/SvgArrowRight';
+import SvgArrowUp from '../Svgs/SvgArrowUp';
+import SvgArrowDown from '../Svgs/SvgArrowDown';
 
 let TRANSFORM_TIMEOUT = null;
 
@@ -319,8 +321,8 @@ export const ListView: React.FC<ListViewProps> = memo(
           direction="start"
           icon={
             listType === 'horizontal'
-              ? arrows.startIcon
-              : arrows.startIcon || <SvgArrowLeft />
+              ? arrows.startIcon || <SvgArrowLeft />
+              : arrows.startIcon || <SvgArrowUp />
           }
           onClick={() => prev()}
           show={arrows.show && showStartArrow}
@@ -333,8 +335,8 @@ export const ListView: React.FC<ListViewProps> = memo(
           direction="end"
           icon={
             listType === 'horizontal'
-              ? arrows.endIcon
-              : arrows.endIcon || <SvgArrowRight />
+              ? arrows.endIcon || <SvgArrowRight />
+              : arrows.endIcon || <SvgArrowDown />
           }
           onClick={() => next()}
           show={arrows.show && showEndArrow}

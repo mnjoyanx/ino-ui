@@ -18,12 +18,16 @@
 }
 
 .ino-list-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3rem;
+  height: 5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--ino-dark-opacity);
-  width: 3rem;
-  height: 5rem;
+  cursor: pointer;
 }
 
 .ino-list-arrow-icon {
