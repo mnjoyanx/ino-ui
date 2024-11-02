@@ -9,6 +9,8 @@ import React, {
 import useKeydown from '../../hooks/useKeydown';
 import { ListViewProps, ItemProps } from './ListView.types';
 import { NavigationArrow } from './NavigationArrow';
+import SvgArrowLeft from '../Svgs/SvgArrowLeft';
+import SvgArrowRight from '../Svgs/SvgArrowRight';
 
 let TRANSFORM_TIMEOUT = null;
 
@@ -318,7 +320,7 @@ export const ListView: React.FC<ListViewProps> = memo(
           icon={
             listType === 'horizontal'
               ? arrows.startIcon
-              : arrows.startIcon || '↑'
+              : arrows.startIcon || <SvgArrowLeft />
           }
           onClick={() => prev()}
           show={arrows.show && showStartArrow}
@@ -330,7 +332,9 @@ export const ListView: React.FC<ListViewProps> = memo(
         <NavigationArrow
           direction="end"
           icon={
-            listType === 'horizontal' ? arrows.endIcon : arrows.endIcon || '↓'
+            listType === 'horizontal'
+              ? arrows.endIcon
+              : arrows.endIcon || <SvgArrowRight />
           }
           onClick={() => next()}
           show={arrows.show && showEndArrow}

@@ -16,3 +16,21 @@
 .scroll-view.grid-view {
   transition: transform 0.8s cubic-bezier(0.4, 0.8, 0.5, 1);
 }
+
+.ino-list-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ino-dark-opacity);
+  width: 3rem;
+  height: 5rem;
+}
+
+.ino-list-arrow-icon {
+  font-size: var(--ino-font-size-large);
+  color: var(--ino-text-primary);
+}
+
+.ino-list-arrow:hover .ino-list-arrow-icon svg {
+  fill: var(--ino-light-primary);
+}

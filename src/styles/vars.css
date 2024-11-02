@@ -7,6 +7,7 @@
   --ino-disabled-primary: #808080;
   --ino-muted-primary: #e0e0e0;
   --ino-dark-primary: #333;
+  --ino-dark-opacity: rgba(0, 0, 0, 0.5);
   --ino-light-primary: #f0f0f0;
   --ino-bg-active: #0f87b2;
   --ino-bg-danger: #ff0000;

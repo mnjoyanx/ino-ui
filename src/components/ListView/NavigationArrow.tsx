@@ -44,9 +44,10 @@ export const NavigationArrow: React.FC<NavigationArrowProps> = ({
         ...getPositionStyles(),
         ...customStyle,
       }}
-      className={`list-arrow list-arrow-${direction} ${className || ''}`}
+      className={`ino-list-arrow ino-list-arrow-${direction} ${className ||
+        ''}`}
     >
-      {icon}
+      <span className="ino-list-arrow-icon">{icon}</span>
     </div>
   );
 };
