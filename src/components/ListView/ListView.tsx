@@ -367,7 +367,6 @@ export const ListView: React.FC<ListViewProps> = memo(
       setIsAutoScrolling(false);
     }, []);
 
-    // Edge scroll hover zone styles
     const hoverZoneStyles: React.CSSProperties = {
       position: 'absolute',
       zIndex: 2,
@@ -384,15 +383,12 @@ export const ListView: React.FC<ListViewProps> = memo(
 
     return (
       <div className={`scroll-view-parent ${listType}`} style={parentStyle}>
-        {/* Edge Scroll Hover Zones */}
         {edgeScroll.enabled && startIndex > 0 && (
           <div
             className="edge-scroll-zone edge-scroll-zone-start"
             style={{
               ...hoverZoneStyles,
               ...(listType === 'horizontal' ? { left: 0 } : { top: 0 }),
-              background:
-                'linear-gradient(to right, rgba(0,0,0,0.1), transparent)',
             }}
             onMouseEnter={() => startAutoScroll('prev')}
             onMouseLeave={stopAutoScroll}
@@ -405,8 +401,6 @@ export const ListView: React.FC<ListViewProps> = memo(
             style={{
               ...hoverZoneStyles,
               ...(listType === 'horizontal' ? { right: 0 } : { bottom: 0 }),
-              background:
-                'linear-gradient(to left, rgba(0,0,0,0.1), transparent)',
             }}
             onMouseEnter={() => startAutoScroll('next')}
             onMouseLeave={stopAutoScroll}
