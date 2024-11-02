@@ -57,10 +57,6 @@ export interface ListViewProps {
      */
     gap?: number;
     /**
-     * Flag indicating if the ListView should loop.
-     */
-    loop?: boolean;
-    /**
      * Optional index to scroll back to when the back button is pressed.
      */
     onBackScrollIndex?: number | null;
