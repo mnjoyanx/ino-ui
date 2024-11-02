@@ -34,6 +34,7 @@ let TRANSFORM_TIMEOUT = null;
  *   nativeControle={true}
  *   itemsCount={10}
  *   itemsTotal={50}
+ *   gap={1}
  *   buffer={2}
  *   itemWidth={20}
  *   itemWidth={20}
@@ -42,7 +43,6 @@ let TRANSFORM_TIMEOUT = null;
  *   initialActiveIndex={0}
  *   onBackScrollIndex={null}
  *   startScrollIndex={0}
- *   gap={0}
  *   direction="ltr"
  *   onMouseEnter={() => {}}
  *   onUp={() => {}}
