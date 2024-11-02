@@ -103,6 +103,10 @@ export interface ListViewProps {
      * Array of data items to be rendered in the ListView.
      */
     data: any[];
+    /**
+     * Configuration for navigation arrows
+     */
+    arrows?: ArrowProps;
 }
 
 export interface ItemProps {
@@ -116,5 +120,38 @@ export interface ItemProps {
     onLeft?: () => void;
     onRight?: () => void;
     onMouseEnter: () => void;
+}
+
+export interface ArrowProps {
+    /**
+     * Whether to show the arrows
+     */
+    show?: boolean;
+    /**
+     * Icon for the start/left/up arrow
+     */
+    startIcon?: React.ReactNode;
+    /**
+     * Icon for the end/right/down arrow
+     */
+    endIcon?: React.ReactNode;
+    /**
+     * Custom styles for the arrows
+     */
+    style?: React.CSSProperties;
+    /**
+     * Additional CSS class names
+     */
+    className?: string;
+}
+
+export interface NavigationArrowProps {
+    direction: 'start' | 'end';
+    icon: React.ReactNode;
+    onClick: () => void;
+    show: boolean;
+    listType: 'horizontal' | 'vertical';
+    customStyle?: React.CSSProperties;
+    className?: string;
 }
 

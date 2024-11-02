@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import useKeydown from '../../hooks/useKeydown';
 import { ListViewProps, ItemProps } from './ListView.types';
+import { NavigationArrow } from './NavigationArrow';
 
 let TRANSFORM_TIMEOUT = null;
 
@@ -82,10 +83,19 @@ export const ListView: React.FC<ListViewProps> = memo(
     onBack = () => {},
     renderItem,
     data,
+    arrows = {
+      show: false,
+      startIcon: '←',
+      endIcon: '→',
+      style: {},
+      className: '',
+    },
   }) => {
     const scrollViewRef = useRef<HTMLDivElement>(null);
     const [startIndex, setStartIndex] = useState(0);
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
+    const [showStartArrow, setShowStartArrow] = useState(false);
+    const [showEndArrow, setShowEndArrow] = useState(false);
 
     const changeStartIndex = useCallback(
       (index: number) => {
@@ -259,6 +269,13 @@ export const ListView: React.FC<ListViewProps> = memo(
       applyTransform();
     }, [startIndex, listType, direction, itemWidth, itemHeight]);
 
+    useEffect(() => {
+      if (arrows.show) {
+        setShowStartArrow(startIndex > 0);
+        setShowEndArrow(startIndex < itemsTotal - itemsCount);
+      }
+    }, [startIndex, itemsTotal, itemsCount, arrows.show]);
+
     const keyDownOptions = useMemo(
       () => ({
         isActive: isActive && nativeControle,
@@ -296,6 +313,32 @@ export const ListView: React.FC<ListViewProps> = memo(
 
     return (
       <div className={`scroll-view-parent ${listType}`} style={parentStyle}>
+        <NavigationArrow
+          direction="start"
+          icon={
+            listType === 'horizontal'
+              ? arrows.startIcon
+              : arrows.startIcon || '↑'
+          }
+          onClick={() => prev()}
+          show={arrows.show && showStartArrow}
+          listType={listType}
+          customStyle={arrows.style}
+          className={arrows.className}
+        />
+
+        <NavigationArrow
+          direction="end"
+          icon={
+            listType === 'horizontal' ? arrows.endIcon : arrows.endIcon || '↓'
+          }
+          onClick={() => next()}
+          show={arrows.show && showEndArrow}
+          listType={listType}
+          customStyle={arrows.style}
+          className={arrows.className}
+        />
+
         <div
           className={`scroll-view list-view ${
             direction === 'rtl' ? 'rtl-list-view' : ''
