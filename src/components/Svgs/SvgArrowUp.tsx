@@ -2,7 +2,7 @@ import React from 'react';
 
 const SvgArrowUp = () => {
   return (
-    <svg viewBox="0 0 24 24" fill="none">
+    <svg viewBox="0 0 24 24" fill="none" width="2.4rem" height="2.4rem">
       <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g
         id="SVGRepo_tracerCarrier"
@@ -13,7 +13,7 @@ const SvgArrowUp = () => {
         {' '}
         <path
           d="M12 6V18M12 6L7 11M12 6L17 11"
-          stroke="#000000"
+          stroke="#fff"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

@@ -30,11 +30,15 @@
   cursor: pointer;
 }
 
+.ino-list-arrow:active {
+  transform: translateY(-50%) scale(0.9);
+}
+
 .ino-list-arrow-icon {
   font-size: var(--ino-font-size-large);
   color: var(--ino-text-primary);
 }
 
-.ino-list-arrow:hover .ino-list-arrow-icon svg {
-  fill: var(--ino-light-primary);
+.ino-list-arrow:hover {
+  background-color: var(--ino-mid-opacity);
 }
