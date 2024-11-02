@@ -68,6 +68,7 @@ export const ListView: React.FC<ListViewProps> = memo(
     itemWidth,
     itemHeight,
     gap,
+    loop = false,
     isActive,
     initialActiveIndex = 0,
     onBackScrollIndex = null,
@@ -86,6 +87,8 @@ export const ListView: React.FC<ListViewProps> = memo(
     const scrollViewRef = useRef<HTMLDivElement>(null);
     const [startIndex, setStartIndex] = useState(0);
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
+    const [virtualData, setVirtualData] = useState([...data]);
+    const [virtualStartIndex, setVirtualStartIndex] = useState(0);
 
     const changeStartIndex = useCallback(
       (index: number) => {
@@ -122,16 +125,22 @@ export const ListView: React.FC<ListViewProps> = memo(
     const next = (count = 1) => {
       setActiveIndex(index => {
         if (index === itemsTotal - 1) {
-          listType === 'horizontal'
-            ? requestAnimationFrame(onRight)
-            : requestAnimationFrame(onDown);
+          if (loop) {
+            rotateData('next');
+            return index;
+          } else {
+            listType === 'horizontal'
+              ? requestAnimationFrame(onRight)
+              : requestAnimationFrame(onDown);
+          }
         } else {
           index += count;
-          if (index > itemsTotal - 1) index = itemsTotal - 1;
+          if (index > itemsTotal - 1) {
+            index = loop ? index % itemsTotal : itemsTotal - 1;
+          }
         }
 
         changeStartIndex(index);
-
         return index;
       });
     };
@@ -139,16 +148,22 @@ export const ListView: React.FC<ListViewProps> = memo(
     const prev = (count = 1) => {
       setActiveIndex(index => {
         if (index === 0) {
-          listType === 'horizontal'
-            ? requestAnimationFrame(onLeft)
-            : requestAnimationFrame(onUp);
+          if (loop) {
+            rotateData('prev');
+            return index;
+          } else {
+            listType === 'horizontal'
+              ? requestAnimationFrame(onLeft)
+              : requestAnimationFrame(onUp);
+          }
         } else {
           index -= count;
-          if (index < 0) index = 0;
+          if (index < 0) {
+            index = loop ? 0 : 0;
+          }
         }
 
         changeStartIndex(index);
-
         return index;
       });
     };
@@ -201,9 +216,9 @@ export const ListView: React.FC<ListViewProps> = memo(
           const itemProps: ItemProps = {
             key: `${uniqueKey}${i}`,
             index: i,
-            style: getItemStyle(i),
+            style: getItemStyle(i - virtualStartIndex),
             isActive: i === activeIndex && isActive,
-            item: data[i],
+            item: virtualData[i],
             onUp,
             onDown,
             onLeft,
@@ -229,7 +244,8 @@ export const ListView: React.FC<ListViewProps> = memo(
       onRight,
       onMouseEnterItem,
       renderItem,
-      data,
+      virtualData,
+      virtualStartIndex,
     ]);
 
     useEffect(() => {
@@ -292,6 +308,34 @@ export const ListView: React.FC<ListViewProps> = memo(
         }rem`,
       }),
       [listType, itemHeight, itemWidth]
+    );
+
+    const rotateData = useCallback(
+      (direction: 'next' | 'prev') => {
+        if (!loop) return;
+
+        setVirtualData(prevData => {
+          const newData = [...prevData];
+          if (direction === 'next') {
+            const item = newData.shift();
+            newData.push(item);
+          } else {
+            const item = newData.pop();
+            newData.unshift(item);
+          }
+          return newData;
+        });
+
+        // Adjust virtual start index to maintain visual position
+        setVirtualStartIndex(prev => {
+          if (direction === 'next') {
+            return prev > 0 ? prev - 1 : 0;
+          } else {
+            return prev + 1;
+          }
+        });
+      },
+      [loop]
     );
 
     return (
