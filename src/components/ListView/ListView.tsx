@@ -179,11 +179,13 @@ export const ListView: React.FC<ListViewProps> = memo(
           ...(listType === 'horizontal'
             ? {
                 [direction === 'rtl' ? 'right' : 'left']: `${index *
-                  itemWidth}rem`,
+                  (itemWidth + (gap || 0))}rem`,
                 top: 0,
-                ...(gap && { marginLeft: `${gap}rem` }),
               }
-            : { left: 0, top: `${index * itemHeight}rem` }),
+            : {
+                left: 0,
+                top: `${index * (itemHeight + (gap || 0))}rem`,
+              }),
         };
       },
       [itemWidth, itemHeight, listType, direction, gap]
@@ -246,8 +248,9 @@ export const ListView: React.FC<ListViewProps> = memo(
         const transform =
           listType === 'horizontal'
             ? `translate3d(${direction === 'ltr' ? '-' : ''}${startIndex *
-                itemWidth}rem, 0, 0)`
-            : `translate3d(0, -${startIndex * itemHeight}rem, 0)`;
+                (itemWidth + (gap || 0))}rem, 0, 0)`
+            : `translate3d(0, -${startIndex *
+                (itemHeight + (gap || 0))}rem, 0)`;
 
         scrollViewRef.current.style.transform = transform;
         scrollViewRef.current.style.webkitTransform = transform;
