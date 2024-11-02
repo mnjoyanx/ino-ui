@@ -25,14 +25,10 @@ export const NavigationArrow: React.FC<NavigationArrowProps> = ({
     if (listType === 'horizontal') {
       return {
         [direction === 'start' ? 'left' : 'right']: 0,
-        height: '100%',
-        width: '2rem',
       };
     }
     return {
       [direction === 'start' ? 'top' : 'bottom']: 0,
-      width: '100%',
-      height: '2rem',
     };
   };
 
