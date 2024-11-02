@@ -107,6 +107,10 @@ export interface ListViewProps {
      * Configuration for navigation arrows
      */
     arrows?: ArrowProps;
+    /**
+     * Configuration for edge scroll behavior
+     */
+    edgeScroll?: EdgeScrollProps;
 }
 
 export interface ItemProps {
@@ -153,5 +157,20 @@ export interface NavigationArrowProps {
     listType: 'horizontal' | 'vertical';
     customStyle?: React.CSSProperties;
     className?: string;
+}
+
+export interface EdgeScrollProps {
+    /**
+     * Enable/disable edge scrolling on hover
+     */
+    enabled?: boolean;
+    /**
+     * Interval between scrolls in milliseconds
+     */
+    interval?: number;
+    /**
+     * Initial delay before scrolling starts (in milliseconds)
+     */
+    startDelay?: number;
 }
 

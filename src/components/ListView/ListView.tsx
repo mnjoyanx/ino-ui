@@ -94,12 +94,20 @@ export const ListView: React.FC<ListViewProps> = memo(
       style: {},
       className: '',
     },
+    edgeScroll = {
+      enabled: false,
+      interval: 700,
+      startDelay: 1000,
+    },
   }) => {
     const scrollViewRef = useRef<HTMLDivElement>(null);
     const [startIndex, setStartIndex] = useState(0);
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
     const [showStartArrow, setShowStartArrow] = useState(false);
     const [showEndArrow, setShowEndArrow] = useState(false);
+    const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+    const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const autoScrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const changeStartIndex = useCallback(
       (index: number) => {
@@ -315,8 +323,97 @@ export const ListView: React.FC<ListViewProps> = memo(
       [listType, itemHeight, itemWidth]
     );
 
+    useEffect(() => {
+      return () => {
+        if (autoScrollIntervalRef.current) {
+          clearInterval(autoScrollIntervalRef.current);
+        }
+        if (autoScrollTimeoutRef.current) {
+          clearTimeout(autoScrollTimeoutRef.current);
+        }
+      };
+    }, []);
+
+    const startAutoScroll = useCallback(
+      (direction: 'prev' | 'next') => {
+        if (isAutoScrolling) return;
+
+        setIsAutoScrolling(true);
+        const scrollFn = direction === 'prev' ? prev : next;
+
+        // Add initial delay before starting to scroll
+        autoScrollTimeoutRef.current = setTimeout(() => {
+          // Initial scroll
+          scrollFn();
+
+          // Continue scrolling while hovering
+          autoScrollIntervalRef.current = setInterval(() => {
+            scrollFn();
+          }, edgeScroll.interval);
+        }, edgeScroll.startDelay);
+      },
+      [isAutoScrolling, prev, next, edgeScroll.interval, edgeScroll.startDelay]
+    );
+
+    const stopAutoScroll = useCallback(() => {
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+        autoScrollIntervalRef.current = null;
+      }
+      if (autoScrollTimeoutRef.current) {
+        clearTimeout(autoScrollTimeoutRef.current);
+        autoScrollTimeoutRef.current = null;
+      }
+      setIsAutoScrolling(false);
+    }, []);
+
+    // Edge scroll hover zone styles
+    const hoverZoneStyles: React.CSSProperties = {
+      position: 'absolute',
+      zIndex: 2,
+      ...(listType === 'horizontal'
+        ? {
+            top: 0,
+            height: '100%',
+          }
+        : {
+            left: 0,
+            width: '100%',
+          }),
+    };
+
     return (
       <div className={`scroll-view-parent ${listType}`} style={parentStyle}>
+        {/* Edge Scroll Hover Zones */}
+        {edgeScroll.enabled && startIndex > 0 && (
+          <div
+            className="edge-scroll-zone edge-scroll-zone-start"
+            style={{
+              ...hoverZoneStyles,
+              ...(listType === 'horizontal' ? { left: 0 } : { top: 0 }),
+              background:
+                'linear-gradient(to right, rgba(0,0,0,0.1), transparent)',
+            }}
+            onMouseEnter={() => startAutoScroll('prev')}
+            onMouseLeave={stopAutoScroll}
+          />
+        )}
+
+        {edgeScroll.enabled && startIndex < itemsTotal - itemsCount && (
+          <div
+            className="edge-scroll-zone edge-scroll-zone-end"
+            style={{
+              ...hoverZoneStyles,
+              ...(listType === 'horizontal' ? { right: 0 } : { bottom: 0 }),
+              background:
+                'linear-gradient(to left, rgba(0,0,0,0.1), transparent)',
+            }}
+            onMouseEnter={() => startAutoScroll('next')}
+            onMouseLeave={stopAutoScroll}
+          />
+        )}
+
+        {/* Navigation Arrows */}
         <NavigationArrow
           direction="start"
           icon={

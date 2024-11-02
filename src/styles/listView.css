@@ -42,3 +42,15 @@
 .ino-list-arrow:hover {
   background-color: var(--ino-mid-opacity);
 }
+
+.hover-zone {
+  width: 3rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.scroll-view-parent:hover .hover-zone {
+  opacity: 1;
+  pointer-events: all;
+}
