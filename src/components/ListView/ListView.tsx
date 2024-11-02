@@ -119,7 +119,6 @@ export const ListView: React.FC<ListViewProps> = memo(
         setActiveIndex(index);
         changeStartIndex(index);
 
-        // Trigger a re-render to update the transform
         setTimeout(() => {
           setStartIndex(prevStartIndex => prevStartIndex);
         }, 0);
