@@ -262,7 +262,7 @@ export const ListView: React.FC<ListViewProps> = memo(
     const keyDownOptions = useMemo(
       () => ({
         isActive: isActive && nativeControle,
-        debounce,
+        // debounce,
         left: () => listType === 'horizontal' && prev(),
         right: () => listType === 'horizontal' && next(),
         up: () => listType !== 'horizontal' && prev(),
