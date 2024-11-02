@@ -68,7 +68,6 @@ export const ListView: React.FC<ListViewProps> = memo(
     itemWidth,
     itemHeight,
     gap,
-    loop = false,
     isActive,
     initialActiveIndex = 0,
     onBackScrollIndex = null,
@@ -83,17 +82,11 @@ export const ListView: React.FC<ListViewProps> = memo(
     onBack = () => {},
     renderItem,
     data,
+    loop = false,
   }) => {
     const scrollViewRef = useRef<HTMLDivElement>(null);
     const [startIndex, setStartIndex] = useState(0);
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
-    const [virtualData, setVirtualData] = useState(() =>
-      Array.from(
-        { length: itemsTotal },
-        (_, index) => data[index % data.length]
-      )
-    );
-    const [virtualStartIndex, setVirtualStartIndex] = useState(0);
 
     const changeStartIndex = useCallback(
       (index: number) => {
@@ -119,6 +112,7 @@ export const ListView: React.FC<ListViewProps> = memo(
         setActiveIndex(index);
         changeStartIndex(index);
 
+        // Trigger a re-render to update the transform
         setTimeout(() => {
           setStartIndex(prevStartIndex => prevStartIndex);
         }, 0);
@@ -130,8 +124,7 @@ export const ListView: React.FC<ListViewProps> = memo(
       setActiveIndex(index => {
         if (index === itemsTotal - 1) {
           if (loop) {
-            rotateData('next');
-            return index;
+            index = 0; // Wrap around to the start
           } else {
             listType === 'horizontal'
               ? requestAnimationFrame(onRight)
@@ -139,12 +132,11 @@ export const ListView: React.FC<ListViewProps> = memo(
           }
         } else {
           index += count;
-          if (index > itemsTotal - 1) {
-            index = loop ? index % itemsTotal : itemsTotal - 1;
-          }
+          if (index > itemsTotal - 1) index = itemsTotal - 1;
         }
 
         changeStartIndex(index);
+
         return index;
       });
     };
@@ -153,8 +145,7 @@ export const ListView: React.FC<ListViewProps> = memo(
       setActiveIndex(index => {
         if (index === 0) {
           if (loop) {
-            rotateData('prev');
-            return index;
+            index = itemsTotal - 1; // Wrap around to the end
           } else {
             listType === 'horizontal'
               ? requestAnimationFrame(onLeft)
@@ -162,12 +153,11 @@ export const ListView: React.FC<ListViewProps> = memo(
           }
         } else {
           index -= count;
-          if (index < 0) {
-            index = loop ? 0 : 0;
-          }
+          if (index < 0) index = 0;
         }
 
         changeStartIndex(index);
+
         return index;
       });
     };
@@ -212,24 +202,25 @@ export const ListView: React.FC<ListViewProps> = memo(
 
     const renderItems = useCallback(() => {
       const items: React.ReactNode[] = [];
-      const start = Math.max(0, startIndex - buffer);
-      const end = Math.min(itemsTotal, startIndex + itemsCount + buffer);
+      const start = startIndex - buffer;
+      const end = startIndex + itemsCount + buffer;
 
       for (let i = start; i < end; i++) {
-        const virtualIndex = i % virtualData.length;
-        const itemProps: ItemProps = {
-          key: `${uniqueKey}${i}`,
-          index: i,
-          style: getItemStyle(i - virtualStartIndex),
-          isActive: i === activeIndex && isActive,
-          item: virtualData[virtualIndex],
-          onUp,
-          onDown,
-          onLeft,
-          onRight,
-          onMouseEnter: () => onMouseEnterItem(i),
-        };
-        items.push(renderItem(itemProps));
+        if (i >= 0 && i < itemsTotal) {
+          const itemProps: ItemProps = {
+            key: `${uniqueKey}${i}`,
+            index: i,
+            style: getItemStyle(i),
+            isActive: i === activeIndex && isActive,
+            item: data[i],
+            onUp,
+            onDown,
+            onLeft,
+            onRight,
+            onMouseEnter: () => onMouseEnterItem(i),
+          };
+          items.push(renderItem(itemProps));
+        }
       }
       return items;
     }, [
@@ -247,8 +238,7 @@ export const ListView: React.FC<ListViewProps> = memo(
       onRight,
       onMouseEnterItem,
       renderItem,
-      virtualData,
-      virtualStartIndex,
+      data,
     ]);
 
     useEffect(() => {
@@ -312,47 +302,6 @@ export const ListView: React.FC<ListViewProps> = memo(
       }),
       [listType, itemHeight, itemWidth]
     );
-
-    const rotateData = useCallback(
-      (direction: 'next' | 'prev') => {
-        if (!loop) return;
-
-        setVirtualData(prevData => {
-          const newData = [...prevData];
-          if (direction === 'next') {
-            const item = newData.shift();
-            if (item !== undefined) {
-              newData.push(item);
-            }
-          } else {
-            const item = newData.pop();
-            if (item !== undefined) {
-              newData.unshift(item);
-            }
-          }
-          return newData;
-        });
-
-        // Adjust virtual start index to maintain visual position
-        setVirtualStartIndex(prev => {
-          if (direction === 'next') {
-            return prev > 0 ? prev - 1 : 0;
-          } else {
-            return prev + 1;
-          }
-        });
-      },
-      [loop]
-    );
-
-    useEffect(() => {
-      setVirtualData(
-        Array.from(
-          { length: itemsTotal },
-          (_, index) => data[index % data.length]
-        )
-      );
-    }, [data, itemsTotal]);
 
     return (
       <div className={`scroll-view-parent ${listType}`} style={parentStyle}>
