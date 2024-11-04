@@ -91,6 +91,12 @@ export interface InoButtonProps {
     onMouseEnter?: (e: MouseKeyboardEvent, index?: number) => void;
 
     /**
+     * The size of the button.
+     * @default 'medium'
+     */
+    size?: 'small' | 'medium' | 'large';
+
+    /**
      * Additional props to be passed to the button.
      */
     [key: string]: any;

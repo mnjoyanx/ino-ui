@@ -150,12 +150,33 @@ export interface ArrowProps {
 }
 
 export interface NavigationArrowProps {
+    /**
+     * Direction of the navigation arrow ('start' for left/up, 'end' for right/down)
+     */
     direction: 'start' | 'end';
+    /**
+     * Icon element to display as the arrow
+     */
     icon: React.ReactNode;
+    /**
+     * Click handler for the arrow
+     */
     onClick: () => void;
+    /**
+     * Whether to show or hide the arrow
+     */
     show: boolean;
+    /**
+     * Orientation of the list ('horizontal' or 'vertical')
+     */
     listType: 'horizontal' | 'vertical';
+    /**
+     * Custom styles to apply to the arrow
+     */
     customStyle?: React.CSSProperties;
+    /**
+     * Additional CSS class names
+     */
     className?: string;
 }
 

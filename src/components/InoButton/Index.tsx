@@ -13,6 +13,7 @@ export const InoButton: React.FC<InoButtonProps> = ({
   type = 'button',
   disabled = false,
   classNames = '',
+  size = 'medium',
   variant = 'primary',
   onLeft,
   onRight,
@@ -47,7 +48,7 @@ export const InoButton: React.FC<InoButtonProps> = ({
         onMouseEnter && onMouseEnter(e as MouseKeyboardEvent, index);
       }}
       disabled={disabled}
-      className={`ino-button ino-button--${variant} ${
+      className={`ino-button ino-button--${variant} ino-button--${size} ${
         isActive ? 'ino-button--active' : ''
       } ${classNames}`}
       {...rest}
