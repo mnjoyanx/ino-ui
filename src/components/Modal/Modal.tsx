@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ModalProps } from './Modal.types';
 import useKeydown from '../../hooks/useKeydown';
+import { InoButton } from '../InoButton/Index';
 
 /**
  * Modal component for displaying content in an overlay.
@@ -43,8 +44,6 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   const [activeButtonIndex, setActiveButtonIndex] = useState<number>(0);
 
-  if (!isOpen) return null;
-
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
@@ -57,14 +56,6 @@ export const Modal: React.FC<ModalProps> = ({
     }
   }, [onOk, handleClose]);
 
-  const handleSecondaryAction = useCallback(() => {
-    if (onCancel) {
-      onCancel();
-    } else {
-      handleClose();
-    }
-  }, [onCancel, handleClose]);
-
   const handleOverlayClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (closeOnOverlayClick && e.target === e.currentTarget) {
@@ -73,6 +64,14 @@ export const Modal: React.FC<ModalProps> = ({
     },
     [closeOnOverlayClick, handleClose]
   );
+
+  const handleSecondaryAction = useCallback(() => {
+    if (onCancel) {
+      onCancel();
+    } else {
+      handleClose();
+    }
+  }, [onCancel, handleClose]);
 
   const keyDownOptions = {
     isActive: isOpen,
@@ -99,7 +98,7 @@ export const Modal: React.FC<ModalProps> = ({
     >
       <div className="ino-modal">
         <div className="ino-modal-header">
-          <h2>{title}</h2>
+          <h2 className="ino-modal-title">{title}</h2>
           {showCloseIcon && (
             <button className="ino-modal-close" onClick={handleClose}>
               &times;
@@ -110,12 +109,11 @@ export const Modal: React.FC<ModalProps> = ({
         {(okBtnText || cancelBtnText) && (
           <div className="ino-modal-footer">
             {cancelBtnText && (
-              <button
-                className={`ino-modal-button secondary ${
-                  activeButtonIndex === 0 ? 'active' : ''
-                }`}
+              <InoButton
+                index={0}
+                isActive={activeButtonIndex === 0}
+                variant="secondary"
                 onClick={handleSecondaryAction}
-                onFocus={() => setActiveButtonIndex(0)}
                 onMouseEnter={() => {
                   setActiveButtonIndex(0);
                   if (onSecondaryMouseEnter) onSecondaryMouseEnter();
@@ -125,15 +123,14 @@ export const Modal: React.FC<ModalProps> = ({
                 }}
               >
                 {cancelBtnText}
-              </button>
+              </InoButton>
             )}
             {okBtnText && (
-              <button
-                className={`ino-modal-button primary ${
-                  activeButtonIndex === 1 ? 'active' : ''
-                }`}
+              <InoButton
+                index={1}
+                isActive={activeButtonIndex === 1}
+                variant="primary"
                 onClick={handlePrimaryAction}
-                onFocus={() => setActiveButtonIndex(1)}
                 onMouseEnter={() => {
                   setActiveButtonIndex(1);
                   if (onPrimaryMouseEnter) onPrimaryMouseEnter();
@@ -143,7 +140,7 @@ export const Modal: React.FC<ModalProps> = ({
                 }}
               >
                 {okBtnText}
-              </button>
+              </InoButton>
             )}
           </div>
         )}

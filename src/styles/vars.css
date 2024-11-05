@@ -9,6 +9,7 @@
   --ino-dark-primary: #333;
   --ino-dark-opacity: rgba(0, 0, 0, 0.5);
   --ino-mid-opacity: rgba(0, 0, 0, 0.8);
+  --ino-light-opacity: rgba(0, 0, 0, 0.2);
   --ino-light-primary: #f0f0f0;
   --ino-bg-active: #0f87b2;
   --ino-bg-danger: #ff0000;
@@ -23,8 +24,8 @@
   --ino-disabled-secondary: #808080;
 
   /* font sizes */
-  --ino-font-size-small: 1.3rem;
-  --ino-font-size-medium: 1.6rem;
+  --ino-font-size-small: 1.5rem;
+  --ino-font-size-medium: 1.8rem;
   --ino-font-size-large: 2rem;
   --ino-font-size-xlarge: 2.4rem;
   --ino-font-size-xxlarge: 3.2rem;
@@ -36,7 +37,7 @@
   --ino-font-weight-bold: 700;
 
   /* border radius */
-  --ino-border-radius-small: 0.4rem;
+  --ino-border-radius-small: 0.5rem;
   --ino-border-radius-medium: 0.8rem;
   --ino-border-radius-large: 1.2rem;
   --ino-border-radius-xlarge: 1.6rem;
