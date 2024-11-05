@@ -51,4 +51,4 @@ jobs:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           SMTP_USER: ${{ secrets.EMAIL_USER }}
           SMTP_PASSWORD: ${{ secrets.EMAIL_PASS }}
-        run: node src/scripts/send-notifications.js
+        run: node src/scripts/send-notifications.mjs

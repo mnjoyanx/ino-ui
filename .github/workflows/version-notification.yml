@@ -48,10 +48,10 @@ jobs:
             }
           }
 
-          sendNotifications();' > src/scripts/send-notifications.js
+          sendNotifications();' > src/scripts/send-notifications.mjs
 
       - name: Send notification
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-        run: node src/scripts/send-notifications.js
+        run: node src/scripts/send-notifications.mjs
