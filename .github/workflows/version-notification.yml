@@ -1,1 +1,57 @@
- 
+name: Version Update Notification
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install nodemailer
+
+      - name: Create notification script
+        run: |
+          mkdir -p scripts
+          echo 'const nodemailer = require("nodemailer");
+
+          async function sendNotifications() {
+            const transporter = nodemailer.createTransport({
+              service: "gmail",
+              auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+              }
+            });
+            
+            try {
+              await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: process.env.EMAIL_USER,
+                subject: `New Version Released: ${process.env.GITHUB_REF_NAME}`,
+                html: `<h1>New Version ${process.env.GITHUB_REF_NAME} Released!</h1>`
+              });
+              
+              console.log("Notification sent successfully");
+            } catch (error) {
+              console.error("Error:", error);
+              process.exit(1);
+            }
+          }
+
+          sendNotifications();' > src/scripts/send-notifications.js
+
+      - name: Send notification
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        run: node src/scripts/send-notifications.js
