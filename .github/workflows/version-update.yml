@@ -57,3 +57,6 @@ jobs:
 
       - name: Generate Prisma Client
         run: npx prisma generate
+
+      - name: Send notifications
+        run: node src/scripts/send-update-notifications.ts
