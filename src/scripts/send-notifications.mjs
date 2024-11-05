@@ -1,5 +1,5 @@
-const { MongoClient } = require('mongodb');
-const nodemailer = require('nodemailer');
+import { MongoClient } from 'mongodb';
+import nodemailer from 'nodemailer';
 
 async function sendNotifications() {
   const client = new MongoClient(process.env.MONGODB_URI);
@@ -13,10 +13,12 @@ async function sendNotifications() {
       .toArray();
 
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT),
+      secure: true,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
       },
     });
 
@@ -24,7 +26,7 @@ async function sendNotifications() {
 
     const emailPromises = subscribers.map(subscriber =>
       transporter.sendMail({
-        from: process.env.EMAIL_USER,
+        from: process.env.SMTP_USER,
         to: subscriber.email,
         subject: `Framework Update: Version ${version}`,
         html: `
