@@ -10,6 +10,9 @@ const releaseNotes = {
   improvements: ['Reduced bundle size'],
 };
 
+// const changelogUrl = 'https://github.com/Ino-UI/ino-ui-tv/releases';
+const changelogUrl = 'https://ino-tv-ui-preview.netlify.app/';
+
 const generateListItems = items => {
   return items
     .map(item => `<li style="margin-bottom: 8px;">${item}</li>`)
@@ -76,7 +79,7 @@ async function sendNotifications() {
                   </div>
 
                   <div style="text-align: center; margin-top: 30px;">
-                    <a href="${changelogUrl}" style="background: #4A90E2; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">View Changelog</a>
+                    <a href="${changelogUrl}" style="background: #4A90E2; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">See New Changes</a>
                   </div>
 
                   <p style="margin-top: 30px; color: #666; font-size: 14px;">Thank you for being part of our community!</p>
