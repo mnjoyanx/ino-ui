@@ -4,6 +4,7 @@ import { InoKeyboardProps } from './InoKeyboard.types';
 import { InoButton } from '../InoButton/Index';
 import useKeydown from '../../hooks/useKeydown';
 import { standardLayout, netflixLayout } from './layouts';
+import '../../styles/InoKeyboard.css';
 
 export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   isOpen,
