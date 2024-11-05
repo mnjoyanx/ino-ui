@@ -1068,138 +1068,6 @@ var ListView = /*#__PURE__*/React.memo(function (_ref) {
   }, renderItems()));
 });
 
-/**
- * Modal component for displaying content in an overlay.
- *
- * This component provides a customizable modal dialog with optional primary and secondary action buttons.
- * It supports keyboard navigation and can be controlled via props.
- *
- * @component
- * @example
- * ```jsx
- * <Modal
- *   isOpen={isModalOpen}
- *   onClose={() => setIsModalOpen(false)}
- *   title="Example Modal"
- *   okBtnText="Save"
- *   onOk={() => handleSave()}
- *   cancelBtnText="Cancel"
- * >
- *   <p>This is the modal content.</p>
- * </Modal>
- * ```
- */
-var Modal = function Modal(_ref) {
-  var isOpen = _ref.isOpen,
-    onClose = _ref.onClose,
-    title = _ref.title,
-    children = _ref.children,
-    _ref$classNames = _ref.classNames,
-    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
-    okBtnText = _ref.okBtnText,
-    onOk = _ref.onOk,
-    cancelBtnText = _ref.cancelBtnText,
-    onCancel = _ref.onCancel,
-    _ref$showCloseIcon = _ref.showCloseIcon,
-    showCloseIcon = _ref$showCloseIcon === void 0 ? true : _ref$showCloseIcon,
-    _ref$closeOnOverlayCl = _ref.closeOnOverlayClick,
-    closeOnOverlayClick = _ref$closeOnOverlayCl === void 0 ? true : _ref$closeOnOverlayCl,
-    onPrimaryMouseEnter = _ref.onPrimaryMouseEnter,
-    onPrimaryMouseLeave = _ref.onPrimaryMouseLeave,
-    onSecondaryMouseEnter = _ref.onSecondaryMouseEnter,
-    onSecondaryMouseLeave = _ref.onSecondaryMouseLeave;
-  var _useState = React.useState(0),
-    activeButtonIndex = _useState[0],
-    setActiveButtonIndex = _useState[1];
-  var handleClose = React.useCallback(function () {
-    onClose();
-  }, [onClose]);
-  var handlePrimaryAction = React.useCallback(function () {
-    if (onOk) {
-      onOk();
-    } else {
-      handleClose();
-    }
-  }, [onOk, handleClose]);
-  var handleOverlayClick = React.useCallback(function (e) {
-    if (closeOnOverlayClick && e.target === e.currentTarget) {
-      handleClose();
-    }
-  }, [closeOnOverlayClick, handleClose]);
-  var handleSecondaryAction = React.useCallback(function () {
-    if (onCancel) {
-      onCancel();
-    } else {
-      handleClose();
-    }
-  }, [onCancel, handleClose]);
-  var keyDownOptions = {
-    isActive: isOpen,
-    back: handleClose,
-    ok: function ok() {
-      if (activeButtonIndex === 0) {
-        handleSecondaryAction();
-      } else if (activeButtonIndex === 1) {
-        handlePrimaryAction();
-      }
-    },
-    left: function left() {
-      return setActiveButtonIndex(function (prev) {
-        return Math.max(prev - 1, 0);
-      });
-    },
-    right: function right() {
-      return setActiveButtonIndex(function (prev) {
-        return Math.min(prev + 1, 1);
-      });
-    }
-  };
-  useKeydown(keyDownOptions);
-  if (!isOpen) return null;
-  var modalContent = React__default.createElement("div", {
-    className: "ino-modal-overlay " + classNames,
-    onClick: handleOverlayClick
-  }, React__default.createElement("div", {
-    className: "ino-modal"
-  }, React__default.createElement("div", {
-    className: "ino-modal-header"
-  }, React__default.createElement("h2", null, title), showCloseIcon && React__default.createElement("button", {
-    className: "ino-modal-close",
-    onClick: handleClose
-  }, "\xD7")), React__default.createElement("div", {
-    className: "ino-modal-content"
-  }, children), (okBtnText || cancelBtnText) && React__default.createElement("div", {
-    className: "ino-modal-footer"
-  }, cancelBtnText && React__default.createElement("button", {
-    className: "ino-modal-button secondary " + (activeButtonIndex === 0 ? 'active' : ''),
-    onClick: handleSecondaryAction,
-    onFocus: function onFocus() {
-      return setActiveButtonIndex(0);
-    },
-    onMouseEnter: function onMouseEnter() {
-      setActiveButtonIndex(0);
-      if (onSecondaryMouseEnter) onSecondaryMouseEnter();
-    },
-    onMouseLeave: function onMouseLeave() {
-      if (onSecondaryMouseLeave) onSecondaryMouseLeave();
-    }
-  }, cancelBtnText), okBtnText && React__default.createElement("button", {
-    className: "ino-modal-button primary " + (activeButtonIndex === 1 ? 'active' : ''),
-    onClick: handlePrimaryAction,
-    onFocus: function onFocus() {
-      return setActiveButtonIndex(1);
-    },
-    onMouseEnter: function onMouseEnter() {
-      setActiveButtonIndex(1);
-      if (onPrimaryMouseEnter) onPrimaryMouseEnter();
-    },
-    onMouseLeave: function onMouseLeave() {
-      if (onPrimaryMouseLeave) onPrimaryMouseLeave();
-    }
-  }, okBtnText))));
-  return reactDom.createPortal(modalContent, document.body);
-};
-
 function useMappedKeydown(props) {
   var isActive = props.isActive,
     onOk = props.onOk,
@@ -1299,6 +1167,138 @@ var InoButton = function InoButton(_ref) {
     disabled: disabled,
     className: "ino-button ino-button--" + variant + " ino-button--" + size + " " + (isActive ? 'ino-button--active' : '') + " " + classNames
   }, rest), children);
+};
+
+/**
+ * Modal component for displaying content in an overlay.
+ *
+ * This component provides a customizable modal dialog with optional primary and secondary action buttons.
+ * It supports keyboard navigation and can be controlled via props.
+ *
+ * @component
+ * @example
+ * ```jsx
+ * <Modal
+ *   isOpen={isModalOpen}
+ *   onClose={() => setIsModalOpen(false)}
+ *   title="Example Modal"
+ *   okBtnText="Save"
+ *   onOk={() => handleSave()}
+ *   cancelBtnText="Cancel"
+ * >
+ *   <p>This is the modal content.</p>
+ * </Modal>
+ * ```
+ */
+var Modal = function Modal(_ref) {
+  var isOpen = _ref.isOpen,
+    onClose = _ref.onClose,
+    title = _ref.title,
+    children = _ref.children,
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
+    okBtnText = _ref.okBtnText,
+    onOk = _ref.onOk,
+    cancelBtnText = _ref.cancelBtnText,
+    onCancel = _ref.onCancel,
+    _ref$showCloseIcon = _ref.showCloseIcon,
+    showCloseIcon = _ref$showCloseIcon === void 0 ? true : _ref$showCloseIcon,
+    _ref$closeOnOverlayCl = _ref.closeOnOverlayClick,
+    closeOnOverlayClick = _ref$closeOnOverlayCl === void 0 ? true : _ref$closeOnOverlayCl,
+    onPrimaryMouseEnter = _ref.onPrimaryMouseEnter,
+    onPrimaryMouseLeave = _ref.onPrimaryMouseLeave,
+    onSecondaryMouseEnter = _ref.onSecondaryMouseEnter,
+    onSecondaryMouseLeave = _ref.onSecondaryMouseLeave;
+  var _useState = React.useState(0),
+    activeButtonIndex = _useState[0],
+    setActiveButtonIndex = _useState[1];
+  var handleClose = React.useCallback(function () {
+    onClose();
+  }, [onClose]);
+  var handlePrimaryAction = React.useCallback(function () {
+    if (onOk) {
+      onOk();
+    } else {
+      handleClose();
+    }
+  }, [onOk, handleClose]);
+  var handleOverlayClick = React.useCallback(function (e) {
+    if (closeOnOverlayClick && e.target === e.currentTarget) {
+      handleClose();
+    }
+  }, [closeOnOverlayClick, handleClose]);
+  var handleSecondaryAction = React.useCallback(function () {
+    if (onCancel) {
+      onCancel();
+    } else {
+      handleClose();
+    }
+  }, [onCancel, handleClose]);
+  var keyDownOptions = {
+    isActive: isOpen,
+    back: handleClose,
+    ok: function ok() {
+      if (activeButtonIndex === 0) {
+        handleSecondaryAction();
+      } else if (activeButtonIndex === 1) {
+        handlePrimaryAction();
+      }
+    },
+    left: function left() {
+      return setActiveButtonIndex(function (prev) {
+        return Math.max(prev - 1, 0);
+      });
+    },
+    right: function right() {
+      return setActiveButtonIndex(function (prev) {
+        return Math.min(prev + 1, 1);
+      });
+    }
+  };
+  useKeydown(keyDownOptions);
+  if (!isOpen) return null;
+  var modalContent = React__default.createElement("div", {
+    className: "ino-modal-overlay " + classNames,
+    onClick: handleOverlayClick
+  }, React__default.createElement("div", {
+    className: "ino-modal"
+  }, React__default.createElement("div", {
+    className: "ino-modal-header"
+  }, React__default.createElement("h2", {
+    className: "ino-modal-title"
+  }, title), showCloseIcon && React__default.createElement("button", {
+    className: "ino-modal-close",
+    onClick: handleClose
+  }, "\xD7")), React__default.createElement("div", {
+    className: "ino-modal-content"
+  }, children), (okBtnText || cancelBtnText) && React__default.createElement("div", {
+    className: "ino-modal-footer"
+  }, cancelBtnText && React__default.createElement(InoButton, {
+    index: 0,
+    isActive: activeButtonIndex === 0,
+    variant: "secondary",
+    onClick: handleSecondaryAction,
+    onMouseEnter: function onMouseEnter() {
+      setActiveButtonIndex(0);
+      if (onSecondaryMouseEnter) onSecondaryMouseEnter();
+    },
+    onMouseLeave: function onMouseLeave() {
+      if (onSecondaryMouseLeave) onSecondaryMouseLeave();
+    }
+  }, cancelBtnText), okBtnText && React__default.createElement(InoButton, {
+    index: 1,
+    isActive: activeButtonIndex === 1,
+    variant: "primary",
+    onClick: handlePrimaryAction,
+    onMouseEnter: function onMouseEnter() {
+      setActiveButtonIndex(1);
+      if (onPrimaryMouseEnter) onPrimaryMouseEnter();
+    },
+    onMouseLeave: function onMouseLeave() {
+      if (onPrimaryMouseLeave) onPrimaryMouseLeave();
+    }
+  }, okBtnText))));
+  return reactDom.createPortal(modalContent, document.body);
 };
 
 var ThemeProvider = function ThemeProvider(_ref) {
