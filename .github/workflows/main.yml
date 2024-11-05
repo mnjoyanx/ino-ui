@@ -49,8 +49,6 @@ jobs:
       - name: Send notifications
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           SMTP_USER: ${{ secrets.EMAIL_USER }}
           SMTP_PASSWORD: ${{ secrets.EMAIL_PASS }}
         run: node src/scripts/send-notifications.js

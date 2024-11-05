@@ -3,22 +3,19 @@ const nodemailer = require('nodemailer');
 
 async function sendNotifications() {
   const client = new MongoClient(
-    'mongodb+srv://tigranmnjoyan:K2Yff0XGCkqQshzT@cluster0.v1ddu.mongodb.net/test'
+    'mongodb+srv://tigranmnjoyan:K2Yff0XGCkqQshzT@cluster0.v1ddu.mongodb.net'
   );
 
   try {
     await client.connect();
     const db = client.db('test');
-    const subscribers = await db
-      .collection('subscribers')
-      .find({ isActive: true })
-      .toArray();
+    const subscribers = await db.collection('subscribers').toArray();
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: 'tigranmnjoyan@gmail.com',
+        pass: 'clfc osla rrch nlfj',
       },
     });
 
@@ -26,7 +23,7 @@ async function sendNotifications() {
 
     const emailPromises = subscribers.map(subscriber =>
       transporter.sendMail({
-        from: process.env.EMAIL_USER,
+        from: 'tigranmnjoyan@gmail.com',
         to: subscriber.email,
         subject: `Framework Update: Version ${version}`,
         html: `
@@ -38,7 +35,7 @@ async function sendNotifications() {
 
     await Promise.all(emailPromises);
     console.log(
-      `Successfully sent notifications to ${subscribers.length} subscribers`
+      `Successfully sent notifications to ${subscribers.length} subscribers ${db}`
     );
   } catch (error) {
     console.error('Error sending notifications:', error);
