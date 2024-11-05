@@ -1094,6 +1094,8 @@ var Modal = function Modal(_ref) {
     onCancel = _ref.onCancel,
     _ref$showCloseIcon = _ref.showCloseIcon,
     showCloseIcon = _ref$showCloseIcon === void 0 ? true : _ref$showCloseIcon,
+    _ref$closeOnOverlayCl = _ref.closeOnOverlayClick,
+    closeOnOverlayClick = _ref$closeOnOverlayCl === void 0 ? true : _ref$closeOnOverlayCl,
     onPrimaryMouseEnter = _ref.onPrimaryMouseEnter,
     onPrimaryMouseLeave = _ref.onPrimaryMouseLeave,
     onSecondaryMouseEnter = _ref.onSecondaryMouseEnter,
@@ -1101,6 +1103,7 @@ var Modal = function Modal(_ref) {
   var _useState = useState(0),
     activeButtonIndex = _useState[0],
     setActiveButtonIndex = _useState[1];
+  if (!isOpen) return null;
   var handleClose = useCallback(function () {
     onClose();
   }, [onClose]);
@@ -1141,8 +1144,14 @@ var Modal = function Modal(_ref) {
   };
   useKeydown(keyDownOptions);
   if (!isOpen) return null;
+  var handleOverlayClick = useCallback(function (e) {
+    if (closeOnOverlayClick && e.target === e.currentTarget) {
+      handleClose();
+    }
+  }, [closeOnOverlayClick, handleClose]);
   return React.createElement("div", {
-    className: "ino-modal-overlay " + classNames
+    className: "ino-modal-overlay " + classNames,
+    onClick: handleOverlayClick
   }, React.createElement("div", {
     className: "ino-modal"
   }, React.createElement("div", {
