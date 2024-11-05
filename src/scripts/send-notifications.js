@@ -2,9 +2,9 @@ const { MongoClient } = require('mongodb');
 const nodemailer = require('nodemailer');
 
 async function sendNotifications() {
-  const client = new MongoClient(process.env.MONGODB_URI);
-
-  console.log(client, 'clieeent');
+  const client = new MongoClient(
+    'mongodb+srv://tigranmnjoyan:K2Yff0XGCkqQshzT@cluster0.v1ddu.mongodb.net/test'
+  );
 
   try {
     await client.connect();
