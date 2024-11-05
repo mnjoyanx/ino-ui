@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState, memo, useRef, startTransition, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 
 var KeyCode = {
   N0: 48,
@@ -1149,7 +1150,7 @@ var Modal = function Modal(_ref) {
       handleClose();
     }
   }, [closeOnOverlayClick, handleClose]);
-  return React.createElement("div", {
+  var modalContent = React.createElement("div", {
     className: "ino-modal-overlay " + classNames,
     onClick: handleOverlayClick
   }, React.createElement("div", {
@@ -1190,6 +1191,7 @@ var Modal = function Modal(_ref) {
       if (onPrimaryMouseLeave) onPrimaryMouseLeave();
     }
   }, okBtnText))));
+  return createPortal(modalContent, document.body);
 };
 
 function useMappedKeydown(props) {
@@ -1293,5 +1295,70 @@ var InoButton = function InoButton(_ref) {
   }, rest), children);
 };
 
-export { CheckboxItem, GridView, InoButton, ListView, Modal };
+var ThemeProvider = function ThemeProvider(_ref) {
+  var theme = _ref.theme,
+    children = _ref.children;
+  useEffect(function () {
+    var _theme$fonts, _theme$fonts2;
+    var root = document.documentElement;
+    // Colors
+    if (theme.colors) {
+      var _theme$colors$text, _theme$colors$text2;
+      if (theme.colors.primary) {
+        root.style.setProperty('--ino-bg-primary', theme.colors.primary);
+        root.style.setProperty('--ino-border-primary', theme.colors.primary);
+        root.style.setProperty('--ino-shadow-primary', theme.colors.primary);
+      }
+      if (theme.colors.secondary) {
+        root.style.setProperty('--ino-bg-secondary', theme.colors.secondary);
+      }
+      if (theme.colors.danger) {
+        root.style.setProperty('--ino-bg-danger', theme.colors.danger);
+      }
+      if (theme.colors.warning) {
+        root.style.setProperty('--ino-bg-warning', theme.colors.warning);
+      }
+      // Text colors
+      if ((_theme$colors$text = theme.colors.text) != null && _theme$colors$text.primary) {
+        root.style.setProperty('--ino-text-primary', theme.colors.text.primary);
+      }
+      if ((_theme$colors$text2 = theme.colors.text) != null && _theme$colors$text2.secondary) {
+        root.style.setProperty('--ino-text-secondary', theme.colors.text.secondary);
+      }
+    }
+    // Font sizes
+    if ((_theme$fonts = theme.fonts) != null && _theme$fonts.sizes) {
+      if (theme.fonts.sizes.small) {
+        root.style.setProperty('--ino-font-size-small', theme.fonts.sizes.small);
+      }
+      if (theme.fonts.sizes.medium) {
+        root.style.setProperty('--ino-font-size-medium', theme.fonts.sizes.medium);
+      }
+      if (theme.fonts.sizes.large) {
+        root.style.setProperty('--ino-font-size-large', theme.fonts.sizes.large);
+      }
+    }
+    // Font weights
+    if ((_theme$fonts2 = theme.fonts) != null && _theme$fonts2.weights) {
+      if (theme.fonts.weights.light) {
+        root.style.setProperty('--ino-font-weight-light', theme.fonts.weights.light.toString());
+      }
+      if (theme.fonts.weights.regular) {
+        root.style.setProperty('--ino-font-weight-regular', theme.fonts.weights.regular.toString());
+      }
+    }
+    // Border radius
+    if (theme.borderRadius) {
+      if (theme.borderRadius.small) {
+        root.style.setProperty('--ino-border-radius-small', theme.borderRadius.small);
+      }
+      if (theme.borderRadius.medium) {
+        root.style.setProperty('--ino-border-radius-medium', theme.borderRadius.medium);
+      }
+    }
+  }, [theme]);
+  return React.createElement(React.Fragment, null, children);
+};
+
+export { CheckboxItem, GridView, InoButton, ListView, Modal, ThemeProvider };
 //# sourceMappingURL=ino-ui-tv.esm.js.map

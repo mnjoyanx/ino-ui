@@ -65,6 +65,15 @@ export const Modal: React.FC<ModalProps> = ({
     }
   }, [onCancel, handleClose]);
 
+  const handleOverlayClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (closeOnOverlayClick && e.target === e.currentTarget) {
+        handleClose();
+      }
+    },
+    [closeOnOverlayClick, handleClose]
+  );
+
   const keyDownOptions = {
     isActive: isOpen,
     back: handleClose,
@@ -82,15 +91,6 @@ export const Modal: React.FC<ModalProps> = ({
   useKeydown(keyDownOptions);
 
   if (!isOpen) return null;
-
-  const handleOverlayClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (closeOnOverlayClick && e.target === e.currentTarget) {
-        handleClose();
-      }
-    },
-    [closeOnOverlayClick, handleClose]
-  );
 
   const modalContent = (
     <div
