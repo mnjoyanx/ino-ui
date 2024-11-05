@@ -1,0 +1,68 @@
+.ino-checkbox-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  border: 0.2rem solid var(--ino-border-secondary);
+}
+
+.ino-checkbox-item:hover {
+  opacity: 0.8;
+}
+
+.ino-checkbox-item.active {
+  background-color: var(--ino-bg-secondary);
+}
+
+.ino-checkbox-item.active .ino-checkbox-container .ino-label {
+  color: var(--ino-text-secondary);
+}
+
+.ino-checkbox-item.active .ino-checkmark svg rect,
+.ino-checkbox-item.active .ino-checkmark svg path {
+  stroke: var(--ino-text-secondary);
+}
+
+.ino-checkbox-item.rtl {
+  direction: rtl;
+}
+
+.ino-checkbox-item.rtl .ino-checkbox-container {
+  flex-direction: row-reverse;
+}
+
+.ino-checkbox-item.rtl .ino-checkbox-container .ino-checkmark {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+.ino-checkbox-item .ino-checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.ino-checkbox-item .ino-checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.ino-checkbox-item .ino-checkbox-container .ino-checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+.ino-checkbox-item .ino-checkbox-container .ino-label {
+  font-size: 1.8rem;
+  color: var(--ino-text-secondary);
+  transition: all 0.2s ease-in-out;
+}

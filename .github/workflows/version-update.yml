@@ -1,40 +1,9 @@
-# name: Version Update Notification
+name: Version Update Notification
 
-# on:
-#   push:
-#     tags:
-#       - 'v*.*.*'
-
-# jobs:
-#   notify-subscribers:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v3
-
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: '18'
-
-#       - name: Install dependencies
-#         run: |
-#           npm install
-#           npm install @prisma/client nodemailer
-
-#       - name: Generate Prisma Client
-#         run: |
-#           npx prisma generate
-
-#       - name: Send notifications
-#         env:
-#           SMTP_HOST: ${{ secrets.SMTP_HOST }}
-#           SMTP_PORT: ${{ secrets.SMTP_PORT }}
-#           SMTP_USER: ${{ secrets.SMTP_USER }}
-#           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-#           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-#         run: node scripts/send-notifications.js
+on:
+  push:
+    tags:
+      - 'v*.*.*'
 
 jobs:
   notify-subscribers:
@@ -49,14 +18,12 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Check Node.js version
-        run: node -v # Verify Node.js 18.x is being used
-
       - name: Install dependencies
-        run: npm install
-
-      - name: Generate Prisma Client
-        run: npx prisma generate
+        run: npm install nodemailer
 
       - name: Send notifications
-        run: node src/scripts/send-update-notifications.ts
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+        run: node scripts/send-notifications.js

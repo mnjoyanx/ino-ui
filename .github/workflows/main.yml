@@ -24,3 +24,100 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  notify:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install mongodb nodemailer
+
+      - name: Create notification script
+        run: |
+          cat > scripts/send-notifications.js << 'EOF'
+          const nodemailer = require('nodemailer');
+          const { MongoClient } = require('mongodb');
+
+          async function sendNotifications() {
+            const client = new MongoClient(process.env.MONGO_URI);
+            
+            try {
+              await client.connect();
+              const db = client.db('your_database_name');
+              const subscribers = await db.collection('subscribers')
+                .find({ isActive: true })
+                .toArray();
+
+              const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: process.env.EMAIL_USER,
+                  pass: process.env.EMAIL_PASS
+                }
+              });
+
+              const version = process.env.GITHUB_REF_NAME;
+              const emailPromises = subscribers.map(subscriber =>
+                transporter.sendMail({
+                  from: process.env.EMAIL_USER,
+                  to: subscriber.email,
+                  subject: `Framework Update: Version ${version}`,
+                  html: `
+                    <!DOCTYPE html>
+                    <html>
+                      <head>
+                        <style>
+                          body { font-family: Arial, sans-serif; line-height: 1.6; }
+                          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                          .header { background-color: #f8f9fa; padding: 20px; text-align: center; }
+                          .content { padding: 20px; }
+                          .footer { text-align: center; padding: 20px; color: #666; }
+                        </style>
+                      </head>
+                      <body>
+                        <div class="container">
+                          <div class="header">
+                            <h1>Ino UI Update</h1>
+                            <h2>Version ${version}</h2>
+                          </div>
+                          <div class="content">
+                            <h3>What's New</h3>
+                            <p>A new version has been released!</p>
+                          </div>
+                          <div class="footer">
+                            <p>You received this email because you subscribed to Ino UI updates.</p>
+                          </div>
+                        </div>
+                      </body>
+                    </html>
+                  `
+                })
+              );
+
+              await Promise.all(emailPromises);
+              console.log(`Sent notifications to ${subscribers.length} subscribers`);
+            } catch (error) {
+              console.error('Error:', error);
+              process.exit(1);
+            } finally {
+              await client.close();
+            }
+          }
+
+          sendNotifications();
+          EOF
+
+      - name: Send notifications
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        run: node scripts/send-notifications.js
