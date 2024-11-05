@@ -16,6 +16,8 @@ export interface ModalProps {
     classNames?: string;
     /** Text for the primary action button (e.g., "OK" or "Submit") */
     okBtnText?: string;
+    /** Determines if the modal should close when the overlay is clicked */
+    closeOnOverlayClick?: boolean;
     /** Function to call when the primary button is clicked */
     onOk?: () => void;
     /** Text for the secondary action button (e.g., "Cancel" or "Close") */

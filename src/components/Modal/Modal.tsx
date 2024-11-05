@@ -34,12 +34,15 @@ export const Modal: React.FC<ModalProps> = ({
   cancelBtnText,
   onCancel,
   showCloseIcon = true,
+  closeOnOverlayClick = true,
   onPrimaryMouseEnter,
   onPrimaryMouseLeave,
   onSecondaryMouseEnter,
   onSecondaryMouseLeave,
 }) => {
   const [activeButtonIndex, setActiveButtonIndex] = useState<number>(0);
+
+  if (!isOpen) return null;
 
   const handleClose = useCallback(() => {
     onClose();
@@ -79,8 +82,20 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (!isOpen) return null;
 
+  const handleOverlayClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (closeOnOverlayClick && e.target === e.currentTarget) {
+        handleClose();
+      }
+    },
+    [closeOnOverlayClick, handleClose]
+  );
+
   return (
-    <div className={`ino-modal-overlay ${classNames}`}>
+    <div
+      className={`ino-modal-overlay ${classNames}`}
+      onClick={handleOverlayClick}
+    >
       <div className="ino-modal">
         <div className="ino-modal-header">
           <h2>{title}</h2>
