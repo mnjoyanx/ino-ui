@@ -55,11 +55,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: npm cache clean
-        run: npm cache clean --force
-
-      - name: Build
-        run: npm run build
-
       - name: Generate Prisma Client
         run: npx prisma generate
