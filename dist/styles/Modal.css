@@ -30,6 +30,7 @@
 .ino-modal-title {
   margin: 0;
   font-size: var(--ino-font-size-large);
+  color: var(--ino-text-primary);
 }
 
 .ino-modal-close {
@@ -41,6 +42,7 @@
 
 .ino-modal-content {
   font-size: var(--ino-font-size-medium);
+  color: var(--ino-text-secondary);
 }
 
 .ino-modal-footer {

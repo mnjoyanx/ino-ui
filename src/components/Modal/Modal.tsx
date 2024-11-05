@@ -112,7 +112,7 @@ export const Modal: React.FC<ModalProps> = ({
               <InoButton
                 index={0}
                 isActive={activeButtonIndex === 0}
-                variant="secondary"
+                variant="outline"
                 onClick={handleSecondaryAction}
                 onMouseEnter={() => {
                   setActiveButtonIndex(0);

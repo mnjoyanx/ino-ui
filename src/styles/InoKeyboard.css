@@ -1,0 +1,63 @@
+.ino-keyboard-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--ino-dark-opacity);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1000;
+  padding: 2rem;
+}
+
+.ino-keyboard {
+  background-color: var(--ino-bg-secondary);
+  border-radius: var(--ino-border-radius-medium);
+  padding: 2rem;
+  width: 100%;
+  max-width: 80rem;
+}
+
+.ino-keyboard-input {
+  margin-bottom: 2rem;
+}
+
+.ino-keyboard-input input {
+  width: 100%;
+  padding: 1rem;
+  font-size: var(--ino-font-size-large);
+  background-color: var(--ino-bg-primary);
+  border: none;
+  border-radius: var(--ino-border-radius-small);
+  color: var(--ino-text-primary);
+}
+
+.ino-keyboard-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.ino-keyboard-key {
+  min-width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ino-keyboard--netflix .ino-keyboard-key {
+  border-radius: 0;
+  background-color: transparent;
+}
+
+.ino-keyboard-key--action {
+  background-color: var(--ino-bg-secondary);
+}
+
+.ino-keyboard-key.active {
+  transform: scale(1.1);
+  background-color: var(--ino-bg-primary);
+}
