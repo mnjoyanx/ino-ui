@@ -9,7 +9,10 @@ async function sendNotifications() {
   try {
     await client.connect();
     const db = client.db('test');
-    const subscribers = await db.collection('subscribers').toArray();
+    const subscribers = await db
+      .collection('subscribers')
+      .find({})
+      .toArray();
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
