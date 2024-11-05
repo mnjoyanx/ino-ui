@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ModalProps } from './Modal.types';
 import useKeydown from '../../hooks/useKeydown';
 
@@ -91,7 +92,7 @@ export const Modal: React.FC<ModalProps> = ({
     [closeOnOverlayClick, handleClose]
   );
 
-  return (
+  const modalContent = (
     <div
       className={`ino-modal-overlay ${classNames}`}
       onClick={handleOverlayClick}
@@ -149,4 +150,6 @@ export const Modal: React.FC<ModalProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };
