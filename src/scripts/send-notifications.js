@@ -4,9 +4,11 @@ const nodemailer = require('nodemailer');
 async function sendNotifications() {
   const client = new MongoClient(process.env.MONGODB_URI);
 
+  console.log(client, 'clieeent');
+
   try {
     await client.connect();
-    const db = client.db('your_database_name');
+    const db = client.db('test');
     const subscribers = await db
       .collection('subscribers')
       .find({ isActive: true })
