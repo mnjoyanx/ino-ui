@@ -159,8 +159,8 @@ export const GridView: React.FC<GridViewProps> = memo(
     }, [rowItemsCount, itemsTotal, onDown, changeStartRow]);
 
     const ok = useCallback(() => {
-      onOk(activeIndex);
-    }, [onOk, activeIndex]);
+      onOk(data[activeIndex], activeIndex);
+    }, [onOk, data, activeIndex]);
 
     const back = useCallback(() => {
       onBack();
@@ -168,7 +168,6 @@ export const GridView: React.FC<GridViewProps> = memo(
 
     const onMouseEnterItem = useCallback(
       (index: number) => {
-        console.log(index, 'on mouse enter');
         setActiveIndex(index);
         onMouseEnter(index);
       },

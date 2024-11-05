@@ -3,7 +3,7 @@ import useKeydown from './useKeydown';
 
 export interface MappedKeydownProps {
     isActive: boolean;
-    onOk?: (e: MouseKeyboardEvent, index?: number) => void;
+    onOk?: (e: MouseKeyboardEvent, item?: any, index?: number) => void;
     onBack?: (e: MouseKeyboardEvent, index?: number) => void;
     onLeft?: (e: MouseKeyboardEvent, index?: number) => void;
     onRight?: (e: MouseKeyboardEvent, index?: number) => void;
@@ -11,16 +11,17 @@ export interface MappedKeydownProps {
     onDown?: (e: MouseKeyboardEvent, index?: number) => void;
     onMouseEnter?: (e: MouseKeyboardEvent, index?: number) => void;
     index?: number;
+    item?: any;
 }
 
 export function useMappedKeydown(props: MappedKeydownProps) {
-    const { isActive, onOk, onBack, onLeft, onRight, onUp, onDown, onMouseEnter, index } = props;
+    const { isActive, onOk, onBack, onLeft, onRight, onUp, onDown, onMouseEnter, index, item } = props;
 
     useKeydown({
         isActive,
         ok: (e) => {
             if (onOk) {
-                onOk(e, index);
+                onOk(e, item, index);
             }
         },
         back: (e) => {
