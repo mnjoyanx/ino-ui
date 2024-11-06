@@ -103,7 +103,7 @@ export const netflixLayout: KeyboardLayouts = {
     qwerty: [
         // Header row
         [
-            { label: 'Back to Browse', value: 'back', action: 'back', width: 12 }
+            { label: 'Back to Browse', value: 'back', action: 'input', width: 12 }
         ],
         // Action row
         [

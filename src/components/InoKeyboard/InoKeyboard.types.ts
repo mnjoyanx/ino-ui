@@ -5,7 +5,7 @@ export interface KeyboardKey {
     label: string;
     value: string;
     width?: number;
-    action?: 'input' | 'delete' | 'space' | 'clear' | 'submit';
+    action?: 'input' | 'delete' | 'space' | 'clear' | 'submit' | 'shift';
 }
 
 export interface InoKeyboardProps {

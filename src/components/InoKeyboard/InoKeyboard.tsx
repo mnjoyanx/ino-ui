@@ -17,7 +17,7 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   classNames = '',
   onSubmit,
 }) => {
-  const [text, setText] = useState(initialValue);
+  const [, setText] = useState(initialValue);
   const [activeRow, setActiveRow] = useState(0);
   const [activeCol, setActiveCol] = useState(0);
 
