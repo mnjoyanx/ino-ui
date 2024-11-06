@@ -101,16 +101,12 @@ export const standardLayout: KeyboardLayouts = {
 
 export const netflixLayout: KeyboardLayouts = {
     qwerty: [
-        // Header row
-        [
-            { label: 'Back to Browse', value: 'back', action: 'input', width: 12 }
-        ],
         // Action row
         [
-            { label: '⎵', value: 'space', action: 'space', width: 6 },
-            { label: '⌫', value: 'delete', action: 'delete', width: 6 }
+            { label: '⎵', value: 'space', action: 'space' },
+            { label: '⌫', value: 'delete', action: 'delete' }
         ],
-        // First letter row (6 columns)
+        // Letter rows (a-z) and number rows (0-9)
         [
             { label: 'a', value: 'a' },
             { label: 'b', value: 'b' },
@@ -165,7 +161,7 @@ export const netflixLayout: KeyboardLayouts = {
             { label: '0', value: '0' }
         ]
     ],
-    numeric: [] // Keep the numeric layout as is
+    numeric: []
 };
 
 export const layouts: Layouts = {
