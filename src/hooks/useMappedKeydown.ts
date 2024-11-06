@@ -1,4 +1,4 @@
-import { MouseKeyboardEvent } from '../types';
+import { MouseKeyboardEvent } from "../types";
 import useKeydown from './useKeydown';
 
 export interface MappedKeydownProps {

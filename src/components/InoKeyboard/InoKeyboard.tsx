@@ -17,6 +17,7 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   classNames = '',
   onSubmit,
   onActiveKeyChange,
+  infinite = false,
 }) => {
   const [, setText] = useState(initialValue);
   const [activeRow, setActiveRow] = useState(0);
@@ -87,20 +88,40 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
 
       switch (direction) {
         case 'up':
-          setActiveRow(prev => Math.max(0, prev - 1));
+          setActiveRow(prev => {
+            if (prev === 0 && infinite) {
+              return keys.length - 1;
+            }
+            return Math.max(0, prev - 1);
+          });
           break;
         case 'down':
-          setActiveRow(prev => Math.min(keys.length - 1, prev + 1));
+          setActiveRow(prev => {
+            if (prev === keys.length - 1 && infinite) {
+              return 0;
+            }
+            return Math.min(keys.length - 1, prev + 1);
+          });
           break;
         case 'left':
-          setActiveCol(prev => Math.max(0, prev - 1));
+          setActiveCol(prev => {
+            if (prev === 0 && infinite) {
+              return currentRow.length - 1;
+            }
+            return Math.max(0, prev - 1);
+          });
           break;
         case 'right':
-          setActiveCol(prev => Math.min(currentRow.length - 1, prev + 1));
+          setActiveCol(prev => {
+            if (prev === currentRow.length - 1 && infinite) {
+              return 0;
+            }
+            return Math.min(currentRow.length - 1, prev + 1);
+          });
           break;
       }
     },
-    [activeRow, keys]
+    [activeRow, keys, infinite]
   );
 
   useKeydown({
@@ -129,13 +150,17 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
                   index={colIndex}
                   key={`${rowIndex}-${colIndex}`}
                   isActive={activeRow === rowIndex && activeCol === colIndex}
+                  onMouseEnter={(_, index) => {
+                    setActiveRow(rowIndex);
+                    setActiveCol(index);
+                  }}
                   onClick={() => handleKeyPress(key.value)}
                   classNames={`ino-keyboard-key ${
                     key.action ? `ino-keyboard-key--${key.action}` : ''
                   } ${key.action === 'shift' && isShifted ? 'active' : ''}`}
                   style={{ width: key.width ? `${key.width}rem` : undefined }}
                 >
-                  {key.action === 'shift'
+                  {key.action === 'shift' && typeof key.label === 'string'
                     ? key.label
                     : isShifted && !key.action
                     ? key.label.toUpperCase()

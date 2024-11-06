@@ -1,1 +1,0 @@
-export type MouseKeyboardEvent = React.MouseEvent<HTMLButtonElement> | KeyboardEvent;

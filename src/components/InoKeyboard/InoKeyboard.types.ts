@@ -39,4 +39,6 @@ export interface InoKeyboardProps {
     direction?: 'ltr' | 'rtl';
     /** Callback when active key changes */
     onActiveKeyChange?: (key: KeyboardKey) => void;
+    /** Enable infinite scrolling */
+    infinite?: boolean;
 } 

@@ -3,10 +3,8 @@ const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const copy = require('rollup-plugin-copy');
 
-console.log('tsdx.config.js');
-
 module.exports = {
-  rollup(config, options) {
+  rollup(config) {
     config.plugins.push(
       postcss({
         plugins: [
