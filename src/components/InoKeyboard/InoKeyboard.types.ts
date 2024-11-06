@@ -37,4 +37,6 @@ export interface InoKeyboardProps {
     onSubmit?: (text: string) => void;
     /** Direction of the keyboard */
     direction?: 'ltr' | 'rtl';
+    /** Callback when active key changes */
+    onActiveKeyChange?: (key: KeyboardKey) => void;
 } 

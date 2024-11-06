@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { InoKeyboardProps } from './InoKeyboard.types';
 import { InoButton } from '../InoButton/Index';
 import useKeydown from '../../hooks/useKeydown';
@@ -16,6 +16,7 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   customLayout,
   classNames = '',
   onSubmit,
+  onActiveKeyChange,
 }) => {
   const [, setText] = useState(initialValue);
   const [activeRow, setActiveRow] = useState(0);
@@ -38,6 +39,12 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   };
 
   const keys = getKeyboardLayout();
+
+  useEffect(() => {
+    if (onActiveKeyChange && keys[activeRow]?.[activeCol]) {
+      onActiveKeyChange(keys[activeRow][activeCol]);
+    }
+  }, [activeRow, activeCol, keys, onActiveKeyChange]);
 
   const handleKeyPress = useCallback(
     (key: string) => {
