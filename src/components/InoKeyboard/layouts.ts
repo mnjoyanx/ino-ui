@@ -96,7 +96,7 @@ export const standardLayout: KeyboardLayouts = {
             { label: '⌫', value: 'delete', action: 'delete' }
         ]
     ]
-} as const;
+};
 
 export const netflixLayout: KeyboardLayouts = {
     qwerty: [
@@ -183,7 +183,7 @@ export const netflixLayout: KeyboardLayouts = {
             { label: '⌫', value: 'delete', action: 'delete' }
         ]
     ]
-} as const;
+};
 
 export const layouts: Layouts = {
     standard: standardLayout,
