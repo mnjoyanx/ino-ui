@@ -84,3 +84,8 @@
 .ino-keyboard--netflix .ino-keyboard-key--action {
   background-color: #2f2f2f;
 }
+
+.ino-keyboard-key--shift.active {
+  background-color: var(--ino-primary-color, #4a4455);
+  color: var(--ino-text-primary, #ffffff);
+}
