@@ -85,6 +85,12 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   const handleNavigation = useCallback(
     (direction: 'up' | 'down' | 'left' | 'right') => {
       const currentRow = keys[activeRow];
+      const nextRow =
+        direction === 'up'
+          ? keys[activeRow - 1]
+          : direction === 'down'
+          ? keys[activeRow + 1]
+          : null;
 
       switch (direction) {
         case 'up':
@@ -94,6 +100,10 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
             }
             return Math.max(0, prev - 1);
           });
+          // Adjust column if moving to a shorter row
+          if (nextRow && activeCol >= nextRow.length) {
+            setActiveCol(nextRow.length - 1);
+          }
           break;
         case 'down':
           setActiveRow(prev => {
@@ -102,6 +112,10 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
             }
             return Math.min(keys.length - 1, prev + 1);
           });
+          // Adjust column if moving to a shorter row
+          if (nextRow && activeCol >= nextRow.length) {
+            setActiveCol(nextRow.length - 1);
+          }
           break;
         case 'left':
           setActiveCol(prev => {
@@ -121,7 +135,7 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
           break;
       }
     },
-    [activeRow, keys, infinite]
+    [activeRow, activeCol, keys, infinite]
   );
 
   useKeydown({

@@ -1566,26 +1566,17 @@ var standardLayout = {
 };
 var netflixLayout = {
   qwerty: [
-  // Header row
-  [{
-    label: 'Back to Browse',
-    value: 'back',
-    action: 'input',
-    width: 12
-  }],
   // Action row
   [{
     label: '⎵',
     value: 'space',
-    action: 'space',
-    width: 6
+    action: 'space'
   }, {
     label: '⌫',
     value: 'delete',
-    action: 'delete',
-    width: 6
+    action: 'delete'
   }],
-  // First letter row (6 columns)
+  // Letter rows (a-z) and number rows (0-9)
   [{
     label: 'a',
     value: 'a'
@@ -1705,7 +1696,7 @@ var netflixLayout = {
     label: '0',
     value: '0'
   }]],
-  numeric: [] // Keep the numeric layout as is
+  numeric: []
 };
 
 var InoKeyboard = function InoKeyboard(_ref) {
