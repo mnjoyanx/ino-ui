@@ -14,30 +14,31 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   maxLength = 50,
   variant = 'standard',
   layout = 'qwerty',
-  customLayouts = {},
+  customLayout,
   classNames = '',
   onSubmit,
 }) => {
   const [, setText] = useState(initialValue);
   const [activeRow, setActiveRow] = useState(0);
   const [activeCol, setActiveCol] = useState(0);
+  const [isShifted, setIsShifted] = useState(false);
 
   const getKeyboardLayout = () => {
-    if (customLayouts[variant]) {
-      return customLayouts[variant];
+    if (customLayout) {
+      return customLayout;
     }
 
-    switch (variant) {
-      case 'netflix':
-        return netflixLayout;
-      case 'standard':
-      default:
-        return standardLayout;
-    }
+    const layoutMap = {
+      netflix: netflixLayout,
+      standard: standardLayout,
+    };
+
+    return (
+      (layoutMap[variant] || standardLayout)[layout] || standardLayout.qwerty
+    );
   };
 
-  const currentLayout = getKeyboardLayout();
-  const keys = currentLayout[layout] || currentLayout['qwerty'];
+  const keys = getKeyboardLayout();
 
   const handleKeyPress = useCallback(
     (key: string) => {
@@ -54,9 +55,16 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
           case 'submit':
             onSubmit?.(prev);
             break;
+          case 'shift':
+            setIsShifted(prevShift => !prevShift);
+            return prev;
           default:
             if (prev.length < maxLength) {
-              newText = prev + key;
+              const charToAdd = isShifted ? key.toUpperCase() : key;
+              newText = prev + charToAdd;
+              if (isShifted) {
+                setIsShifted(false); // Reset shift after one character
+              }
             }
         }
 
@@ -64,7 +72,7 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
         return newText;
       });
     },
-    [maxLength, onChange, onSubmit]
+    [maxLength, onChange, onSubmit, isShifted]
   );
 
   const handleNavigation = useCallback(
@@ -118,10 +126,14 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
                   onClick={() => handleKeyPress(key.value)}
                   classNames={`ino-keyboard-key ${
                     key.action ? `ino-keyboard-key--${key.action}` : ''
-                  }`}
+                  } ${key.action === 'shift' && isShifted ? 'active' : ''}`}
                   style={{ width: key.width ? `${key.width}rem` : undefined }}
                 >
-                  {key.label}
+                  {key.action === 'shift'
+                    ? key.label
+                    : isShifted && !key.action
+                    ? key.label.toUpperCase()
+                    : key.label}
                 </InoButton>
               ))}
             </div>

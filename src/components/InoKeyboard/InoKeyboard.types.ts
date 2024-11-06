@@ -27,10 +27,8 @@ export interface InoKeyboardProps {
     variant?: KeyboardVariant;
     /** Keyboard layout type */
     layout?: KeyboardLayout;
-    /** Custom keyboard layouts */
-    customLayouts?: {
-        [variant: string]: KeyboardLayouts;
-    };
+    /** Custom keyboard layout */
+    customLayout?: KeyboardKey[][];
     /** Custom class names */
     classNames?: string;
     /** Submit button text */

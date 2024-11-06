@@ -1713,6 +1713,8 @@ var InoKeyboard = function InoKeyboard(_ref) {
     variant = _ref$variant === void 0 ? 'standard' : _ref$variant,
     _ref$layout = _ref.layout,
     layout = _ref$layout === void 0 ? 'qwerty' : _ref$layout,
+    _ref$customLayouts = _ref.customLayouts,
+    customLayouts = _ref$customLayouts === void 0 ? {} : _ref$customLayouts,
     _ref$classNames = _ref.classNames,
     classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
     onSubmit = _ref.onSubmit;
@@ -1724,8 +1726,20 @@ var InoKeyboard = function InoKeyboard(_ref) {
   var _useState3 = useState(0),
     activeCol = _useState3[0],
     setActiveCol = _useState3[1];
-  var currentLayout = variant === 'netflix' ? netflixLayout : standardLayout;
-  var keys = currentLayout[layout];
+  var getKeyboardLayout = function getKeyboardLayout() {
+    if (customLayouts[variant]) {
+      return customLayouts[variant];
+    }
+    switch (variant) {
+      case 'netflix':
+        return netflixLayout;
+      case 'standard':
+      default:
+        return standardLayout;
+    }
+  };
+  var currentLayout = getKeyboardLayout();
+  var keys = currentLayout[layout] || currentLayout['qwerty'];
   var handleKeyPress = useCallback(function (key) {
     setText(function (prev) {
       var newText = prev;
