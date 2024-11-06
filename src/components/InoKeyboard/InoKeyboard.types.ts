@@ -16,7 +16,7 @@ export interface InoKeyboardProps {
     /** Callback function when text changes */
     onChange: (text: string) => void;
     /** Initial text value */
-    value?: string;
+    initialValue?: string;
     /** Maximum length of input */
     maxLength?: number;
     /** Keyboard visual variant */
@@ -25,8 +25,6 @@ export interface InoKeyboardProps {
     layout?: KeyboardLayout;
     /** Custom class names */
     classNames?: string;
-    /** Placeholder text */
-    placeholder?: string;
     /** Submit button text */
     submitText?: string;
     /** Function called on submit */

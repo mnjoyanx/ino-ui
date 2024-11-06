@@ -10,15 +10,14 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   isOpen,
   onClose,
   onChange,
-  value = '',
+  initialValue = '',
   maxLength = 50,
   variant = 'standard',
   layout = 'qwerty',
   classNames = '',
-  placeholder = 'Enter text...',
   onSubmit,
 }) => {
-  const [text, setText] = useState(value);
+  const [text, setText] = useState(initialValue);
   const [activeRow, setActiveRow] = useState(0);
   const [activeCol, setActiveCol] = useState(0);
 
@@ -36,9 +35,6 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
             break;
           case 'space':
             newText = prev + ' ';
-            break;
-          case 'clear':
-            newText = '';
             break;
           case 'submit':
             onSubmit?.(prev);
@@ -96,9 +92,6 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   return createPortal(
     <div className={`ino-keyboard-overlay ${classNames}`}>
       <div className={`ino-keyboard ino-keyboard--${variant}`}>
-        <div className="ino-keyboard-input">
-          <input type="text" value={text} placeholder={placeholder} readOnly />
-        </div>
         <div className="ino-keyboard-keys">
           {keys.map((row, rowIndex: number) => (
             <div key={rowIndex} className="ino-keyboard-row">
