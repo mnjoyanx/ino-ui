@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import { createPortal } from 'react-dom';
 import { InoKeyboardProps } from './InoKeyboard.types';
 import { InoButton } from '../InoButton/Index';
 import useKeydown from '../../hooks/useKeydown';
@@ -112,7 +111,7 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
 
   if (!isOpen) return null;
 
-  return createPortal(
+  return (
     <div className={`ino-keyboard-overlay ${classNames}`}>
       <div className={`ino-keyboard ino-keyboard--${variant}`}>
         <div className="ino-keyboard-keys">
@@ -140,7 +139,6 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
           ))}
         </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 };
