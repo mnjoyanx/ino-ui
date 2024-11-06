@@ -14,6 +14,7 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   maxLength = 50,
   variant = 'standard',
   layout = 'qwerty',
+  customLayouts = {},
   classNames = '',
   onSubmit,
 }) => {
@@ -21,8 +22,22 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   const [activeRow, setActiveRow] = useState(0);
   const [activeCol, setActiveCol] = useState(0);
 
-  const currentLayout = variant === 'netflix' ? netflixLayout : standardLayout;
-  const keys = currentLayout[layout];
+  const getKeyboardLayout = () => {
+    if (customLayouts[variant]) {
+      return customLayouts[variant];
+    }
+
+    switch (variant) {
+      case 'netflix':
+        return netflixLayout;
+      case 'standard':
+      default:
+        return standardLayout;
+    }
+  };
+
+  const currentLayout = getKeyboardLayout();
+  const keys = currentLayout[layout] || currentLayout['qwerty'];
 
   const handleKeyPress = useCallback(
     (key: string) => {
