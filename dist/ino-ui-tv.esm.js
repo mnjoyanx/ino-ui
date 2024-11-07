@@ -1109,6 +1109,63 @@ var ListView = /*#__PURE__*/memo(function (_ref) {
   }, renderItems()));
 });
 
+var _excluded = ["rowsCount", "rowGap", "itemsCount", "itemsTotal", "onRowChange", "onUp", "onDown"];
+var ListGridView = function ListGridView(_ref) {
+  var rowsCount = _ref.rowsCount,
+    _ref$rowGap = _ref.rowGap,
+    rowGap = _ref$rowGap === void 0 ? 1 : _ref$rowGap,
+    itemsTotal = _ref.itemsTotal,
+    _ref$onRowChange = _ref.onRowChange,
+    onRowChange = _ref$onRowChange === void 0 ? function () {} : _ref$onRowChange,
+    _ref$onUp = _ref.onUp,
+    onUp = _ref$onUp === void 0 ? function () {} : _ref$onUp,
+    _ref$onDown = _ref.onDown,
+    onDown = _ref$onDown === void 0 ? function () {} : _ref$onDown,
+    listViewProps = _objectWithoutPropertiesLoose(_ref, _excluded);
+  var itemsPerRow = useMemo(function () {
+    return Math.ceil(itemsTotal / rowsCount);
+  }, [itemsTotal, rowsCount]);
+  var handleUp = useCallback(function () {
+    var currentRow = Math.floor(listViewProps.initialActiveIndex / itemsPerRow);
+    if (currentRow === 0) {
+      onUp();
+    }
+  }, [itemsPerRow, listViewProps.initialActiveIndex, onUp]);
+  var handleDown = useCallback(function () {
+    var currentRow = Math.floor(listViewProps.initialActiveIndex / itemsPerRow);
+    if (currentRow === rowsCount - 1) {
+      onDown();
+    }
+  }, [itemsPerRow, listViewProps.initialActiveIndex, rowsCount, onDown]);
+  var getItemStyle = useCallback(function (index) {
+    var _ref2;
+    var row = Math.floor(index / itemsPerRow);
+    var col = index % itemsPerRow;
+    return _ref2 = {
+      position: 'absolute',
+      width: listViewProps.itemWidth + "rem",
+      height: listViewProps.itemHeight + "rem",
+      top: row * (listViewProps.itemHeight + rowGap) + "rem"
+    }, _ref2[listViewProps.direction === 'rtl' ? 'right' : 'left'] = col * (listViewProps.itemWidth + (listViewProps.gap || 0)) + "rem", _ref2;
+  }, [itemsPerRow, listViewProps.itemWidth, listViewProps.itemHeight, listViewProps.direction, listViewProps.gap, rowGap]);
+  return React.createElement(ListView, Object.assign({}, listViewProps, {
+    listType: "vertical",
+    itemsCount: itemsPerRow,
+    itemsTotal: itemsTotal,
+    onUp: handleUp,
+    onDown: handleDown,
+    renderItem: function renderItem(props) {
+      var row = Math.floor(props.index / itemsPerRow);
+      if (row !== Math.floor(listViewProps.initialActiveIndex / itemsPerRow)) {
+        onRowChange(row);
+      }
+      return listViewProps.renderItem(_extends({}, props, {
+        style: getItemStyle(props.index)
+      }));
+    }
+  }));
+};
+
 function useMappedKeydown(props) {
   var isActive = props.isActive,
     onOk = props.onOk,
@@ -1160,7 +1217,7 @@ function useMappedKeydown(props) {
   });
 }
 
-var _excluded = ["isActive", "index", "children", "onClick", "type", "disabled", "classNames", "size", "variant", "onLeft", "onRight", "onUp", "onDown", "onBack", "onFocus", "onMouseEnter"];
+var _excluded$1 = ["isActive", "index", "children", "onClick", "type", "disabled", "classNames", "size", "variant", "onLeft", "onRight", "onUp", "onDown", "onBack", "onFocus", "onMouseEnter"];
 var InoButton = function InoButton(_ref) {
   var _ref$isActive = _ref.isActive,
     isActive = _ref$isActive === void 0 ? true : _ref$isActive,
@@ -1183,7 +1240,7 @@ var InoButton = function InoButton(_ref) {
     onDown = _ref.onDown,
     onBack = _ref.onBack,
     _onMouseEnter = _ref.onMouseEnter,
-    rest = _objectWithoutPropertiesLoose(_ref, _excluded);
+    rest = _objectWithoutPropertiesLoose(_ref, _excluded$1);
   useMappedKeydown({
     isActive: isActive,
     onOk: _onClick,
@@ -1916,5 +1973,5 @@ var InoKeyboard = function InoKeyboard(_ref) {
   }))));
 };
 
-export { CheckboxItem, GridView, InoButton, InoKeyboard, ListView, Modal, ThemeProvider };
+export { CheckboxItem, GridView, InoButton, InoKeyboard, ListGridView, ListView, Modal, ThemeProvider };
 //# sourceMappingURL=ino-ui-tv.esm.js.map

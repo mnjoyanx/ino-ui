@@ -5,13 +5,19 @@ import { ListGridViewProps } from './ListGridView.types';
 export const ListGridView: React.FC<ListGridViewProps> = ({
   rowsCount,
   rowGap = 1,
-  itemsCount,
-  itemsTotal,
+  data,
+  selectedCategoryId,
   onRowChange = () => {},
   onUp = () => {},
   onDown = () => {},
   ...listViewProps
 }) => {
+  const currentList = useMemo(() => {
+    const category = data.find(cat => cat.id === selectedCategoryId);
+    return category?.list || [];
+  }, [data, selectedCategoryId]);
+
+  const itemsTotal = currentList.length;
   const itemsPerRow = useMemo(() => Math.ceil(itemsTotal / rowsCount), [
     itemsTotal,
     rowsCount,
@@ -62,6 +68,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
   return (
     <ListView
       {...listViewProps}
+      data={currentList}
       listType="vertical"
       itemsCount={itemsPerRow}
       itemsTotal={itemsTotal}
