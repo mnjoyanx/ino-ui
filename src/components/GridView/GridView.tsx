@@ -181,26 +181,23 @@ export const GridView: React.FC<GridViewProps> = memo(
     // Calculate dimensions based on container and data
     useEffect(() => {
       const calculateDimensions = () => {
-        // Use provided dimensions if available
-        if (itemWidth && itemHeight && rowItemsCount && rowCount) {
-          setDimensions({
-            itemWidth,
-            itemHeight,
-            rowItems: rowItemsCount,
-            rows: rowCount,
-          });
-          return;
-        }
+        const DEFAULT_ROW_ITEMS = 5;
+        const DEFAULT_ITEM_WIDTH = 15;
+        const DEFAULT_ITEM_HEIGHT = 15;
 
-        // Calculate based on container and data
-        const totalItems = itemsTotal || data.length;
-        const calculatedRowItems =
-          rowItemsCount || Math.floor(Math.sqrt(totalItems));
+        // Calculate dimensions based on data length
+        const totalItems = data.length;
+
+        // Use provided rowItemsCount or default
+        const calculatedRowItems = rowItemsCount || DEFAULT_ROW_ITEMS;
+
+        // Calculate rows based on total items and items per row
         const calculatedRows =
           rowCount || Math.ceil(totalItems / calculatedRowItems);
 
-        const calculatedItemWidth = itemWidth || 15;
-        const calculatedItemHeight = itemHeight || 15;
+        // Use provided dimensions or defaults
+        const calculatedItemWidth = itemWidth || DEFAULT_ITEM_WIDTH;
+        const calculatedItemHeight = itemHeight || DEFAULT_ITEM_HEIGHT;
 
         setDimensions({
           itemWidth: calculatedItemWidth,

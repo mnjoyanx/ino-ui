@@ -6,6 +6,14 @@ export interface GridViewProps {
      */
     id: string;
     /**
+     * Flag indicating if the GridView is currently active.
+     */
+    isActive: boolean;
+    /**
+     * Array of data items to be rendered in the GridView.
+     */
+    data: any[];
+    /**
      * Optional unique key prefix for each item in the GridView.
      */
     uniqueKey?: string;
@@ -15,10 +23,6 @@ export interface GridViewProps {
     nativeControle?: boolean;
     /**
      * Optional debounce time in milliseconds for scroll events.
-     */
-    debounce?: number;
-    /**
-     * Optional scroll offset in pixels.
      */
     scrollOffset?: number;
     /**
@@ -38,10 +42,6 @@ export interface GridViewProps {
      */
     bufferEnd?: number;
     /**
-     * Total number of items in the GridView.
-     */
-    itemsTotal: number;
-    /**
      * Width of each item in the GridView.
      */
     itemWidth?: number;
@@ -50,10 +50,6 @@ export interface GridViewProps {
      */
     itemHeight?: number;
     /**
-     * Flag indicating if the GridView is currently active.
-     */
-    isActive: boolean;
-    /**
      * Optional initial active index for the GridView.
      */
     initialActiveIndex?: number;
@@ -61,6 +57,10 @@ export interface GridViewProps {
      * Direction of the GridView, either 'ltr' (left to right) or 'rtl' (right to left).
      */
     direction?: "ltr" | "rtl";
+    /**
+     * Gap between items in pixels.
+     */
+    gap?: number;
     /**
      * Callback function for when an item is hovered.
      * @param index - The index of the hovered item.
@@ -112,26 +112,6 @@ export interface GridViewProps {
      * @returns The rendered item.
      */
     renderItem: (props: ItemProps) => React.ReactNode;
-    /**
-     * Array of data items to be rendered in the GridView.
-     */
-    data: any[];
-    /**
-     * Width of the container in pixels.
-     */
-    containerWidth?: number;
-    /**
-     * Height of the container in pixels.
-     */
-    containerHeight?: number;
-    /**
-     * Gap between items in pixels.
-     */
-    gap?: number;
-    /**
-     * Aspect ratio of the items.
-     */
-    aspectRatio?: number;
 }
 
 export interface ItemProps {
