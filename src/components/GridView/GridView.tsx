@@ -230,14 +230,6 @@ export const GridView: React.FC<GridViewProps> = memo(
       };
 
       calculateDimensions();
-
-      // Add resize observer
-      const resizeObserver = new ResizeObserver(calculateDimensions);
-      if (containerRef.current) {
-        resizeObserver.observe(containerRef.current);
-      }
-
-      return () => resizeObserver.disconnect();
     }, [
       containerWidth,
       containerHeight,
