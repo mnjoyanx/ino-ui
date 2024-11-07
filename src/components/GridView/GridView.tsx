@@ -80,10 +80,7 @@ export const GridView: React.FC<GridViewProps> = memo(
     onBack = () => {},
     renderItem,
     data,
-    containerWidth,
-    containerHeight,
     gap = 1,
-    aspectRatio = 16 / 9,
   }) => {
     const scrollViewRef = useRef<HTMLDivElement>(null);
     const [startRow, setStartRow] = useState(0);
