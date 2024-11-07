@@ -556,7 +556,7 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
   React.useEffect(function () {
     var applyTransform = function applyTransform() {
       if (!scrollViewRef.current) return;
-      var offset = startRow * dimensions.itemHeight;
+      var offset = startRow * (dimensions.itemHeight + rowGap);
       var currentRow = Math.ceil((activeIndex + 1) / dimensions.rowItems);
       if (currentRow > 1) {
         offset += scrollOffset;
@@ -564,7 +564,6 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
       var transform = "translate3d(0, -" + offset + "rem, 0)";
       scrollViewRef.current.style.transform = transform;
       scrollViewRef.current.style.webkitTransform = transform;
-      //   scrollViewRef.current.style.msTransform = transform;
       window.dispatchEvent(new Event('transformstart'));
       setTimeout(function () {
         return window.dispatchEvent(new Event('transformend'));
@@ -574,7 +573,7 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
     React.startTransition(function () {
       applyTransform();
     });
-  }, [activeIndex, startRow, dimensions.itemHeight, dimensions.rowItems, scrollOffset, onChangeRow]);
+  }, [activeIndex, startRow, dimensions.itemHeight, dimensions.rowItems, scrollOffset, onChangeRow, rowGap]);
   var keyDownOptions = React.useMemo(function () {
     return {
       isActive: isActive && nativeControle,
