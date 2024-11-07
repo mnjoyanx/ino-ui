@@ -58,7 +58,7 @@ export const GridView: React.FC<GridViewProps> = memo(
     uniqueKey = 'list-',
     nativeControle = false,
     scrollOffset = 0,
-    rowItemsCount,
+    rowItemsCount = 5,
     rowCount,
     bufferStart = 0,
     bufferEnd = 0,
@@ -83,11 +83,19 @@ export const GridView: React.FC<GridViewProps> = memo(
     const [startRow, setStartRow] = useState(0);
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
     const containerRef = useRef<HTMLDivElement>(null);
-    const [dimensions, setDimensions] = useState({
-      itemWidth: itemWidth || 15,
-      itemHeight: itemHeight || 15,
-      rowItems: rowItemsCount || 5,
-      rows: rowCount || Math.ceil(data.length / (rowItemsCount || 5)),
+    const [dimensions, setDimensions] = useState(() => {
+      const DEFAULT_ROW_ITEMS = 5;
+      const DEFAULT_ITEM_WIDTH = 15;
+      const DEFAULT_ITEM_HEIGHT = 15;
+
+      return {
+        itemWidth: itemWidth || DEFAULT_ITEM_WIDTH,
+        itemHeight: itemHeight || DEFAULT_ITEM_HEIGHT,
+        rowItems: rowItemsCount || DEFAULT_ROW_ITEMS,
+        rows:
+          rowCount ||
+          Math.ceil(data.length / (rowItemsCount || DEFAULT_ROW_ITEMS)),
+      };
     });
 
     const changeStartRow = useCallback(

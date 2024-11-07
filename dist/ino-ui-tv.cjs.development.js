@@ -403,10 +403,10 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
     setActiveIndex = _useState2[1];
   var containerRef = React.useRef(null);
   var _useState3 = React.useState({
-      itemWidth: 0,
-      itemHeight: 0,
-      rowItems: 0,
-      rows: 0
+      itemWidth: itemWidth || 15,
+      itemHeight: itemHeight || 15,
+      rowItems: rowItemsCount || 5,
+      rows: rowCount || Math.ceil(data.length / (rowItemsCount || 5))
     }),
     dimensions = _useState3[0],
     setDimensions = _useState3[1];
@@ -520,10 +520,14 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
   }, [dimensions, gap, direction]);
   var renderItems = React.useCallback(function () {
     var items = [];
+    // Guard against invalid dimensions
+    if (!dimensions.rowItems) {
+      console.warn('Invalid rowItems in dimensions:', dimensions);
+      return items;
+    }
     // Calculate visible range
     var visibleStart = Math.max(0, startRow * dimensions.rowItems - dimensions.rowItems * bufferStart);
     var visibleEnd = Math.min(data.length, startRow * dimensions.rowItems + dimensions.rowItems * dimensions.rows + dimensions.rowItems * bufferEnd);
-    console.log(data, '--', visibleStart, visibleEnd, '---', dimensions);
     var _loop = function _loop(i) {
       var itemProps = {
         key: "" + uniqueKey + i,
