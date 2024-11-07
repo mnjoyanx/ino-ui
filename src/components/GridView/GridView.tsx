@@ -227,6 +227,7 @@ export const GridView: React.FC<GridViewProps> = memo(
 
     const renderItems = useCallback(() => {
       const items: React.ReactNode[] = [];
+      console.log(dimensions, '----dimensions');
       const start =
         startRow * dimensions.rowItems - dimensions.rowItems * bufferStart;
       const end =

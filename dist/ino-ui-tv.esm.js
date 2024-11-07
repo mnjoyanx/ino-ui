@@ -515,6 +515,7 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
     var items = [];
     var start = startRow * dimensions.rowItems - dimensions.rowItems * bufferStart;
     var end = startRow * dimensions.rowItems + dimensions.rowItems * dimensions.rows + dimensions.rowItems * bufferEnd;
+    console.log(data, '----data');
     var _loop = function _loop(i) {
       if (i >= 0 && i < data.length) {
         var itemProps = {
