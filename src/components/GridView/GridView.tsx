@@ -184,42 +184,26 @@ export const GridView: React.FC<GridViewProps> = memo(
     // Calculate dimensions based on container and data
     useEffect(() => {
       const calculateDimensions = () => {
-        const container = containerRef.current;
-        if (!container) return;
-
-        const containerRect = container.getBoundingClientRect();
-        const availableWidth = containerWidth || containerRect.width;
-        const availableHeight = containerHeight || containerRect.height;
-
-        let calculatedRowItems = rowItemsCount;
-        let calculatedRows = rowCount;
-        let calculatedItemWidth = itemWidth;
-        let calculatedItemHeight = itemHeight;
-
-        // If dimensions are not provided, calculate them
-        if (!itemWidth || !itemHeight) {
-          if (rowItemsCount && rowCount) {
-            // Calculate based on provided row counts
-            calculatedItemWidth =
-              (availableWidth - gap * (rowItemsCount - 1)) / rowItemsCount;
-            calculatedItemHeight =
-              (availableHeight - gap * (rowCount - 1)) / rowCount;
-          } else {
-            // Calculate based on container size and aspect ratio
-            const totalItems = data.length;
-            const containerAspect = availableWidth / availableHeight;
-
-            calculatedRowItems = Math.ceil(
-              Math.sqrt((totalItems * containerAspect) / aspectRatio)
-            );
-            calculatedRows = Math.ceil(totalItems / calculatedRowItems);
-
-            calculatedItemWidth =
-              (availableWidth - gap * (calculatedRowItems - 1)) /
-              calculatedRowItems;
-            calculatedItemHeight = calculatedItemWidth / aspectRatio;
-          }
+        // Use provided dimensions if available
+        if (itemWidth && itemHeight && rowItemsCount && rowCount) {
+          setDimensions({
+            itemWidth,
+            itemHeight,
+            rowItems: rowItemsCount,
+            rows: rowCount,
+          });
+          return;
         }
+
+        // Calculate based on container and data
+        const totalItems = itemsTotal || data.length;
+        const calculatedRowItems =
+          rowItemsCount || Math.floor(Math.sqrt(totalItems));
+        const calculatedRows =
+          rowCount || Math.ceil(totalItems / calculatedRowItems);
+
+        const calculatedItemWidth = itemWidth || 15;
+        const calculatedItemHeight = itemHeight || 15;
 
         setDimensions({
           itemWidth: calculatedItemWidth,
@@ -231,14 +215,11 @@ export const GridView: React.FC<GridViewProps> = memo(
 
       calculateDimensions();
     }, [
-      containerWidth,
-      containerHeight,
-      rowItemsCount,
-      rowCount,
       itemWidth,
       itemHeight,
-      gap,
-      aspectRatio,
+      rowItemsCount,
+      rowCount,
+      itemsTotal,
       data.length,
     ]);
 
@@ -250,11 +231,11 @@ export const GridView: React.FC<GridViewProps> = memo(
 
         return {
           position: 'absolute',
-          width: `${dimensions.itemWidth}px`,
-          height: `${dimensions.itemHeight}px`,
-          top: `${vIndex * (dimensions.itemHeight + gap)}px`,
+          width: `${dimensions.itemWidth}rem`,
+          height: `${dimensions.itemHeight}rem`,
+          top: `${vIndex * (dimensions.itemHeight + gap)}rem`,
           [direction === 'rtl' ? 'right' : 'left']: `${hIndex *
-            (dimensions.itemWidth + gap)}px`,
+            (dimensions.itemWidth + gap)}rem`,
         };
       },
       [dimensions, gap, direction]
