@@ -513,6 +513,7 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
   }, [dimensions, gap, direction]);
   var renderItems = useCallback(function () {
     var items = [];
+    console.log(dimensions, '----dimensions');
     var start = startRow * dimensions.rowItems - dimensions.rowItems * bufferStart;
     var end = startRow * dimensions.rowItems + dimensions.rowItems * dimensions.rows + dimensions.rowItems * bufferEnd;
     console.log(data, '----data');

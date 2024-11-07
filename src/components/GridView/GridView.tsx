@@ -227,28 +227,32 @@ export const GridView: React.FC<GridViewProps> = memo(
 
     const renderItems = useCallback(() => {
       const items: React.ReactNode[] = [];
-      console.log(dimensions, '----dimensions');
-      const start =
-        startRow * dimensions.rowItems - dimensions.rowItems * bufferStart;
-      const end =
+
+      // Calculate visible range
+      const visibleStart = Math.max(
+        0,
+        startRow * dimensions.rowItems - dimensions.rowItems * bufferStart
+      );
+
+      const visibleEnd = Math.min(
+        data.length,
         startRow * dimensions.rowItems +
-        dimensions.rowItems * dimensions.rows +
-        dimensions.rowItems * bufferEnd;
+          dimensions.rowItems * dimensions.rows +
+          dimensions.rowItems * bufferEnd
+      );
 
-      console.log(data, '----data');
+      console.log(data, '--', visibleStart, visibleEnd, '---', dimensions);
 
-      for (let i = start; i < end; i++) {
-        if (i >= 0 && i < data.length) {
-          const itemProps: ItemProps = {
-            key: `${uniqueKey}${i}`,
-            index: i,
-            style: getItemStyle(i),
-            isActive: i === activeIndex && isActive,
-            item: data[i],
-            onMouseEnter: () => onMouseEnterItem(i),
-          };
-          items.push(renderItem(itemProps));
-        }
+      for (let i = visibleStart; i < visibleEnd; i++) {
+        const itemProps: ItemProps = {
+          key: `${uniqueKey}${i}`,
+          index: i,
+          style: getItemStyle(i),
+          isActive: i === activeIndex && isActive,
+          item: data[i],
+          onMouseEnter: () => onMouseEnterItem(i),
+        };
+        items.push(renderItem(itemProps));
       }
       return items;
     }, [
