@@ -80,10 +80,21 @@ export const GridView: React.FC<GridViewProps> = memo(
     onBack = () => {},
     renderItem,
     data,
+    containerWidth,
+    containerHeight,
+    gap = 1,
+    aspectRatio = 16 / 9,
   }) => {
     const scrollViewRef = useRef<HTMLDivElement>(null);
     const [startRow, setStartRow] = useState(0);
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [dimensions, setDimensions] = useState({
+      itemWidth: 0,
+      itemHeight: 0,
+      rowItems: 0,
+      rows: 0,
+    });
 
     const changeStartRow = useCallback(
       (index: number) => {
@@ -104,9 +115,7 @@ export const GridView: React.FC<GridViewProps> = memo(
     const left = useCallback(() => {
       setActiveIndex(prev => {
         if (prev % rowItemsCount === 0) {
-          if (onLeft) {
-            requestAnimationFrame(onLeft);
-          }
+          requestAnimationFrame(() => onLeft?.(prev));
         } else {
           prev--;
         }
@@ -120,9 +129,7 @@ export const GridView: React.FC<GridViewProps> = memo(
           prev % rowItemsCount === rowItemsCount - 1 ||
           prev === itemsTotal - 1
         ) {
-          if (onRight) {
-            requestAnimationFrame(onRight);
-          }
+          requestAnimationFrame(() => onRight?.(prev));
         } else {
           prev++;
         }
@@ -133,7 +140,7 @@ export const GridView: React.FC<GridViewProps> = memo(
     const up = useCallback(() => {
       setActiveIndex(prev => {
         if (prev < rowItemsCount) {
-          requestAnimationFrame(onUp);
+          requestAnimationFrame(() => onUp?.(prev));
         } else {
           prev -= rowItemsCount;
         }
@@ -148,7 +155,7 @@ export const GridView: React.FC<GridViewProps> = memo(
           Math.ceil((prev + 1) / rowItemsCount) ===
           Math.ceil(itemsTotal / rowItemsCount)
         ) {
-          requestAnimationFrame(() => onDown(activeIndex, prev));
+          requestAnimationFrame(() => onDown?.(prev));
         } else {
           prev += rowItemsCount;
           if (prev > itemsTotal - 1) prev = itemsTotal - 1;
@@ -159,12 +166,12 @@ export const GridView: React.FC<GridViewProps> = memo(
     }, [rowItemsCount, itemsTotal, onDown, changeStartRow]);
 
     const ok = useCallback(() => {
-      onOk(data[activeIndex], activeIndex);
+      onOk?.(data[activeIndex], activeIndex);
     }, [onOk, data, activeIndex]);
 
     const back = useCallback(() => {
-      onBack();
-    }, [onBack]);
+      onBack?.(activeIndex);
+    }, [onBack, activeIndex]);
 
     const onMouseEnterItem = useCallback(
       (index: number) => {
@@ -174,29 +181,101 @@ export const GridView: React.FC<GridViewProps> = memo(
       [onMouseEnter]
     );
 
+    // Calculate dimensions based on container and data
+    useEffect(() => {
+      const calculateDimensions = () => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const containerRect = container.getBoundingClientRect();
+        const availableWidth = containerWidth || containerRect.width;
+        const availableHeight = containerHeight || containerRect.height;
+
+        let calculatedRowItems = rowItemsCount;
+        let calculatedRows = rowCount;
+        let calculatedItemWidth = itemWidth;
+        let calculatedItemHeight = itemHeight;
+
+        // If dimensions are not provided, calculate them
+        if (!itemWidth || !itemHeight) {
+          if (rowItemsCount && rowCount) {
+            // Calculate based on provided row counts
+            calculatedItemWidth =
+              (availableWidth - gap * (rowItemsCount - 1)) / rowItemsCount;
+            calculatedItemHeight =
+              (availableHeight - gap * (rowCount - 1)) / rowCount;
+          } else {
+            // Calculate based on container size and aspect ratio
+            const totalItems = data.length;
+            const containerAspect = availableWidth / availableHeight;
+
+            calculatedRowItems = Math.ceil(
+              Math.sqrt((totalItems * containerAspect) / aspectRatio)
+            );
+            calculatedRows = Math.ceil(totalItems / calculatedRowItems);
+
+            calculatedItemWidth =
+              (availableWidth - gap * (calculatedRowItems - 1)) /
+              calculatedRowItems;
+            calculatedItemHeight = calculatedItemWidth / aspectRatio;
+          }
+        }
+
+        setDimensions({
+          itemWidth: calculatedItemWidth,
+          itemHeight: calculatedItemHeight,
+          rowItems: calculatedRowItems,
+          rows: calculatedRows,
+        });
+      };
+
+      calculateDimensions();
+
+      // Add resize observer
+      const resizeObserver = new ResizeObserver(calculateDimensions);
+      if (containerRef.current) {
+        resizeObserver.observe(containerRef.current);
+      }
+
+      return () => resizeObserver.disconnect();
+    }, [
+      containerWidth,
+      containerHeight,
+      rowItemsCount,
+      rowCount,
+      itemWidth,
+      itemHeight,
+      gap,
+      aspectRatio,
+      data.length,
+    ]);
+
+    // Use calculated dimensions in render logic
     const getItemStyle = useCallback(
       (index: number): React.CSSProperties => {
-        const vIndex = Math.floor(index / rowItemsCount);
-        const hIndex = index % rowItemsCount;
+        const vIndex = Math.floor(index / dimensions.rowItems);
+        const hIndex = index % dimensions.rowItems;
 
         return {
           position: 'absolute',
-          width: `${itemWidth}rem`,
-          height: `${itemHeight}rem`,
-          top: `${vIndex * itemHeight}rem`,
-          [direction === 'rtl' ? 'right' : 'left']: `${hIndex * itemWidth}rem`,
+          width: `${dimensions.itemWidth}px`,
+          height: `${dimensions.itemHeight}px`,
+          top: `${vIndex * (dimensions.itemHeight + gap)}px`,
+          [direction === 'rtl' ? 'right' : 'left']: `${hIndex *
+            (dimensions.itemWidth + gap)}px`,
         };
       },
-      [rowItemsCount, itemWidth, itemHeight, direction]
+      [dimensions, gap, direction]
     );
 
     const renderItems = useCallback(() => {
       const items: React.ReactNode[] = [];
-      const start = startRow * rowItemsCount - rowItemsCount * bufferStart;
+      const start =
+        startRow * dimensions.rowItems - dimensions.rowItems * bufferStart;
       const end =
-        startRow * rowItemsCount +
-        rowItemsCount * rowCount +
-        rowItemsCount * bufferEnd;
+        startRow * dimensions.rowItems +
+        dimensions.rowItems * dimensions.rows +
+        dimensions.rowItems * bufferEnd;
 
       for (let i = start; i < end; i++) {
         if (i >= 0 && i < itemsTotal) {
@@ -216,8 +295,8 @@ export const GridView: React.FC<GridViewProps> = memo(
       startRow,
       bufferStart,
       bufferEnd,
-      rowItemsCount,
-      rowCount,
+      dimensions.rowItems,
+      dimensions.rows,
       itemsTotal,
       uniqueKey,
       getItemStyle,
@@ -232,8 +311,8 @@ export const GridView: React.FC<GridViewProps> = memo(
       const applyTransform = () => {
         if (!scrollViewRef.current) return;
 
-        let offset = startRow * itemHeight;
-        let currentRow = Math.ceil((activeIndex + 1) / rowItemsCount);
+        let offset = startRow * dimensions.itemHeight;
+        let currentRow = Math.ceil((activeIndex + 1) / dimensions.rowItems);
 
         if (currentRow > 1) {
           offset += scrollOffset;
@@ -260,8 +339,8 @@ export const GridView: React.FC<GridViewProps> = memo(
     }, [
       activeIndex,
       startRow,
-      itemHeight,
-      rowItemsCount,
+      dimensions.itemHeight,
+      dimensions.rowItems,
       scrollOffset,
       onChangeRow,
     ]);
@@ -284,8 +363,9 @@ export const GridView: React.FC<GridViewProps> = memo(
 
     return (
       <div
+        ref={containerRef}
         className="scroll-view-parent"
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', position: 'relative' }}
       >
         <div className="scroll-view grid-view" ref={scrollViewRef}>
           {renderItems()}

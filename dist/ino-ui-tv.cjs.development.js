@@ -1779,6 +1779,7 @@ var InoKeyboard = function InoKeyboard(_ref) {
   }, [maxLength, onChange, onSubmit, isShifted]);
   var handleNavigation = React.useCallback(function (direction) {
     var currentRow = keys[activeRow];
+    var nextRow = direction === 'up' ? keys[activeRow - 1] : direction === 'down' ? keys[activeRow + 1] : null;
     switch (direction) {
       case 'up':
         setActiveRow(function (prev) {
@@ -1787,6 +1788,10 @@ var InoKeyboard = function InoKeyboard(_ref) {
           }
           return Math.max(0, prev - 1);
         });
+        // Adjust column if moving to a shorter row
+        if (nextRow && activeCol >= nextRow.length) {
+          setActiveCol(nextRow.length - 1);
+        }
         break;
       case 'down':
         setActiveRow(function (prev) {
@@ -1795,6 +1800,10 @@ var InoKeyboard = function InoKeyboard(_ref) {
           }
           return Math.min(keys.length - 1, prev + 1);
         });
+        // Adjust column if moving to a shorter row
+        if (nextRow && activeCol >= nextRow.length) {
+          setActiveCol(nextRow.length - 1);
+        }
         break;
       case 'left':
         setActiveCol(function (prev) {
@@ -1813,7 +1822,7 @@ var InoKeyboard = function InoKeyboard(_ref) {
         });
         break;
     }
-  }, [activeRow, keys, infinite]);
+  }, [activeRow, activeCol, keys, infinite]);
   useKeydown({
     isActive: isOpen,
     up: function up() {

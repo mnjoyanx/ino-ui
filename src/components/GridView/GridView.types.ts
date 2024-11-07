@@ -24,11 +24,11 @@ export interface GridViewProps {
     /**
      * Number of items per row in the GridView.
      */
-    rowItemsCount: number;
+    rowItemsCount?: number;
     /**
      * Total number of rows in the GridView.
      */
-    rowCount: number;
+    rowCount?: number;
     /**
      * Optional starting buffer index for the GridView.
      */
@@ -44,11 +44,11 @@ export interface GridViewProps {
     /**
      * Width of each item in the GridView.
      */
-    itemWidth: number;
+    itemWidth?: number;
     /**
      * Height of each item in the GridView.
      */
-    itemHeight: number;
+    itemHeight?: number;
     /**
      * Flag indicating if the GridView is currently active.
      */
@@ -73,28 +73,39 @@ export interface GridViewProps {
     onChangeRow?: (row: number) => void;
     /**
      * Callback function for when the up navigation is triggered.
+     * @param activeIndex - Current active index (optional)
+     * @param prevIndex - Previous index (optional)
      */
-    onUp?: () => void;
+    onUp?: (activeIndex?: number, prevIndex?: number) => void;
     /**
      * Callback function for when the down navigation is triggered.
+     * @param activeIndex?: Current active index (optional)
+     * @param prevIndex?: Previous index (optional)
      */
-    onDown?: (activeIndex: number, prevActiveIndex: number) => void;
+    onDown?: (activeIndex?: number, prevIndex?: number) => void;
     /**
      * Callback function for when the left navigation is triggered.
+     * @param activeIndex?: Current active index (optional)
+     * @param prevIndex?: Previous index (optional)
      */
-    onLeft?: () => void;
+    onLeft?: (activeIndex?: number, prevIndex?: number) => void;
     /**
      * Callback function for when the right navigation is triggered.
+     * @param activeIndex?: Current active index (optional)
+     * @param prevIndex?: Previous index (optional)
      */
-    onRight?: () => void;
+    onRight?: (activeIndex?: number, prevIndex?: number) => void;
     /**
      * Callback function for when the ok navigation is triggered.
+     * @param item?: The current item (optional)
+     * @param index?: The current index (optional)
      */
-    onOk?: (item: any, index: number) => void;
+    onOk?: (item?: any, index?: number) => void;
     /**
      * Callback function for when the back navigation is triggered.
+     * @param activeIndex?: Current active index (optional)
      */
-    onBack?: () => void;
+    onBack?: (activeIndex?: number) => void;
     /**
      * Function to render each item in the GridView.
      * @param props - The props for the item.
@@ -105,6 +116,22 @@ export interface GridViewProps {
      * Array of data items to be rendered in the GridView.
      */
     data: any[];
+    /**
+     * Width of the container in pixels.
+     */
+    containerWidth?: number;
+    /**
+     * Height of the container in pixels.
+     */
+    containerHeight?: number;
+    /**
+     * Gap between items in pixels.
+     */
+    gap?: number;
+    /**
+     * Aspect ratio of the items.
+     */
+    aspectRatio?: number;
 }
 
 export interface ItemProps {
