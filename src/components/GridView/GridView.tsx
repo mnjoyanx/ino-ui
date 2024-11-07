@@ -36,7 +36,6 @@ const TRANSFORM_TIMEOUT = 800;
  *   rowCount={10}
  *   bufferStart={0}
  *   bufferEnd={0}
- *   itemsTotal={40}
  *   itemWidth={20}
  *   itemHeight={20}
  *   isActive={true}
@@ -58,13 +57,11 @@ export const GridView: React.FC<GridViewProps> = memo(
     id,
     uniqueKey = 'list-',
     nativeControle = false,
-    // debounce = 300,
     scrollOffset = 0,
     rowItemsCount,
     rowCount,
     bufferStart = 0,
     bufferEnd = 0,
-    itemsTotal,
     itemWidth,
     itemHeight,
     isActive,
@@ -124,7 +121,7 @@ export const GridView: React.FC<GridViewProps> = memo(
       setActiveIndex(prev => {
         if (
           prev % rowItemsCount === rowItemsCount - 1 ||
-          prev === itemsTotal - 1
+          prev === data.length - 1
         ) {
           requestAnimationFrame(() => onRight?.(prev));
         } else {
@@ -132,7 +129,7 @@ export const GridView: React.FC<GridViewProps> = memo(
         }
         return prev;
       });
-    }, [rowItemsCount, itemsTotal, onRight]);
+    }, [rowItemsCount, data.length, onRight]);
 
     const up = useCallback(() => {
       setActiveIndex(prev => {
@@ -150,17 +147,17 @@ export const GridView: React.FC<GridViewProps> = memo(
       setActiveIndex(prev => {
         if (
           Math.ceil((prev + 1) / rowItemsCount) ===
-          Math.ceil(itemsTotal / rowItemsCount)
+          Math.ceil(data.length / rowItemsCount)
         ) {
           requestAnimationFrame(() => onDown?.(prev));
         } else {
           prev += rowItemsCount;
-          if (prev > itemsTotal - 1) prev = itemsTotal - 1;
+          if (prev > data.length - 1) prev = data.length - 1;
         }
         changeStartRow(prev);
         return prev;
       });
-    }, [rowItemsCount, itemsTotal, onDown, changeStartRow]);
+    }, [rowItemsCount, data.length, onDown, changeStartRow]);
 
     const ok = useCallback(() => {
       onOk?.(data[activeIndex], activeIndex);
@@ -208,14 +205,7 @@ export const GridView: React.FC<GridViewProps> = memo(
       };
 
       calculateDimensions();
-    }, [
-      itemWidth,
-      itemHeight,
-      rowItemsCount,
-      rowCount,
-      itemsTotal,
-      data.length,
-    ]);
+    }, [itemWidth, itemHeight, rowItemsCount, rowCount, data.length]);
 
     // Use calculated dimensions in render logic
     const getItemStyle = useCallback(
@@ -245,7 +235,7 @@ export const GridView: React.FC<GridViewProps> = memo(
         dimensions.rowItems * bufferEnd;
 
       for (let i = start; i < end; i++) {
-        if (i >= 0 && i < itemsTotal) {
+        if (i >= 0 && i < data.length) {
           const itemProps: ItemProps = {
             key: `${uniqueKey}${i}`,
             index: i,
@@ -264,7 +254,7 @@ export const GridView: React.FC<GridViewProps> = memo(
       bufferEnd,
       dimensions.rowItems,
       dimensions.rows,
-      itemsTotal,
+      data.length,
       uniqueKey,
       getItemStyle,
       activeIndex,
