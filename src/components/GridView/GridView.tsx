@@ -84,10 +84,10 @@ export const GridView: React.FC<GridViewProps> = memo(
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
     const containerRef = useRef<HTMLDivElement>(null);
     const [dimensions, setDimensions] = useState({
-      itemWidth: 0,
-      itemHeight: 0,
-      rowItems: 0,
-      rows: 0,
+      itemWidth: itemWidth || 15,
+      itemHeight: itemHeight || 15,
+      rowItems: rowItemsCount || 5,
+      rows: rowCount || Math.ceil(data.length / (rowItemsCount || 5)),
     });
 
     const changeStartRow = useCallback(
@@ -228,6 +228,12 @@ export const GridView: React.FC<GridViewProps> = memo(
     const renderItems = useCallback(() => {
       const items: React.ReactNode[] = [];
 
+      // Guard against invalid dimensions
+      if (!dimensions.rowItems) {
+        console.warn('Invalid rowItems in dimensions:', dimensions);
+        return items;
+      }
+
       // Calculate visible range
       const visibleStart = Math.max(
         0,
@@ -240,8 +246,6 @@ export const GridView: React.FC<GridViewProps> = memo(
           dimensions.rowItems * dimensions.rows +
           dimensions.rowItems * bufferEnd
       );
-
-      console.log(data, '--', visibleStart, visibleEnd, '---', dimensions);
 
       for (let i = visibleStart; i < visibleEnd; i++) {
         const itemProps: ItemProps = {

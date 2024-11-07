@@ -520,26 +520,24 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
   }, [dimensions, gap, direction]);
   var renderItems = React.useCallback(function () {
     var items = [];
-    console.log(dimensions, '----dimensions');
-    var start = startRow * dimensions.rowItems - dimensions.rowItems * bufferStart;
-    var end = startRow * dimensions.rowItems + dimensions.rowItems * dimensions.rows + dimensions.rowItems * bufferEnd;
-    console.log(data, '----data');
+    // Calculate visible range
+    var visibleStart = Math.max(0, startRow * dimensions.rowItems - dimensions.rowItems * bufferStart);
+    var visibleEnd = Math.min(data.length, startRow * dimensions.rowItems + dimensions.rowItems * dimensions.rows + dimensions.rowItems * bufferEnd);
+    console.log(data, '--', visibleStart, visibleEnd, '---', dimensions);
     var _loop = function _loop(i) {
-      if (i >= 0 && i < data.length) {
-        var itemProps = {
-          key: "" + uniqueKey + i,
-          index: i,
-          style: getItemStyle(i),
-          isActive: i === activeIndex && isActive,
-          item: data[i],
-          onMouseEnter: function onMouseEnter() {
-            return onMouseEnterItem(i);
-          }
-        };
-        items.push(renderItem(itemProps));
-      }
+      var itemProps = {
+        key: "" + uniqueKey + i,
+        index: i,
+        style: getItemStyle(i),
+        isActive: i === activeIndex && isActive,
+        item: data[i],
+        onMouseEnter: function onMouseEnter() {
+          return onMouseEnterItem(i);
+        }
+      };
+      items.push(renderItem(itemProps));
     };
-    for (var i = start; i < end; i++) {
+    for (var i = visibleStart; i < visibleEnd; i++) {
       _loop(i);
     }
     return items;
