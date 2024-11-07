@@ -58,9 +58,13 @@ export interface GridViewProps {
      */
     direction?: "ltr" | "rtl";
     /**
-     * Gap between items in pixels.
+     * Gap between items horizontally in rem.
      */
     gap?: number;
+    /**
+     * Gap between rows vertically in rem.
+     */
+    rowGap?: number;
     /**
      * Callback function for when an item is hovered.
      * @param index - The index of the hovered item.

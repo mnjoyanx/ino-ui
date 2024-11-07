@@ -361,7 +361,8 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
     nativeControle = _ref$nativeControle === void 0 ? false : _ref$nativeControle,
     _ref$scrollOffset = _ref.scrollOffset,
     scrollOffset = _ref$scrollOffset === void 0 ? 0 : _ref$scrollOffset,
-    rowItemsCount = _ref.rowItemsCount,
+    _ref$rowItemsCount = _ref.rowItemsCount,
+    rowItemsCount = _ref$rowItemsCount === void 0 ? 5 : _ref$rowItemsCount,
     rowCount = _ref.rowCount,
     _ref$bufferStart = _ref.bufferStart,
     bufferStart = _ref$bufferStart === void 0 ? 0 : _ref$bufferStart,
@@ -402,11 +403,16 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
     activeIndex = _useState2[0],
     setActiveIndex = _useState2[1];
   var containerRef = React.useRef(null);
-  var _useState3 = React.useState({
-      itemWidth: itemWidth || 15,
-      itemHeight: itemHeight || 15,
-      rowItems: rowItemsCount || 5,
-      rows: rowCount || Math.ceil(data.length / (rowItemsCount || 5))
+  var _useState3 = React.useState(function () {
+      var DEFAULT_ROW_ITEMS = 5;
+      var DEFAULT_ITEM_WIDTH = 15;
+      var DEFAULT_ITEM_HEIGHT = 15;
+      return {
+        itemWidth: itemWidth || DEFAULT_ITEM_WIDTH,
+        itemHeight: itemHeight || DEFAULT_ITEM_HEIGHT,
+        rowItems: rowItemsCount || DEFAULT_ROW_ITEMS,
+        rows: rowCount || Math.ceil(data.length / (rowItemsCount || DEFAULT_ROW_ITEMS))
+      };
     }),
     dimensions = _useState3[0],
     setDimensions = _useState3[1];

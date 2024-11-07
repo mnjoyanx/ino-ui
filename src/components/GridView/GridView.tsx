@@ -78,6 +78,7 @@ export const GridView: React.FC<GridViewProps> = memo(
     renderItem,
     data,
     gap = 1,
+    rowGap = gap,
   }) => {
     const scrollViewRef = useRef<HTMLDivElement>(null);
     const [startRow, setStartRow] = useState(0);
@@ -85,8 +86,8 @@ export const GridView: React.FC<GridViewProps> = memo(
     const containerRef = useRef<HTMLDivElement>(null);
     const [dimensions, setDimensions] = useState(() => {
       const DEFAULT_ROW_ITEMS = 5;
-      const DEFAULT_ITEM_WIDTH = 15;
-      const DEFAULT_ITEM_HEIGHT = 15;
+      const DEFAULT_ITEM_WIDTH = 25;
+      const DEFAULT_ITEM_HEIGHT = 25;
 
       return {
         itemWidth: itemWidth || DEFAULT_ITEM_WIDTH,
@@ -225,12 +226,12 @@ export const GridView: React.FC<GridViewProps> = memo(
           position: 'absolute',
           width: `${dimensions.itemWidth}rem`,
           height: `${dimensions.itemHeight}rem`,
-          top: `${vIndex * (dimensions.itemHeight + gap)}rem`,
+          top: `${vIndex * (dimensions.itemHeight + rowGap)}rem`,
           [direction === 'rtl' ? 'right' : 'left']: `${hIndex *
             (dimensions.itemWidth + gap)}rem`,
         };
       },
-      [dimensions, gap, direction]
+      [dimensions, gap, rowGap, direction]
     );
 
     const renderItems = useCallback(() => {
@@ -242,7 +243,6 @@ export const GridView: React.FC<GridViewProps> = memo(
         return items;
       }
 
-      // Calculate visible range
       const visibleStart = Math.max(
         0,
         startRow * dimensions.rowItems - dimensions.rowItems * bufferStart
