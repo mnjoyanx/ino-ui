@@ -234,6 +234,8 @@ export const GridView: React.FC<GridViewProps> = memo(
         dimensions.rowItems * dimensions.rows +
         dimensions.rowItems * bufferEnd;
 
+      console.log(data, '----data');
+
       for (let i = start; i < end; i++) {
         if (i >= 0 && i < data.length) {
           const itemProps: ItemProps = {
