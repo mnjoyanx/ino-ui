@@ -287,7 +287,7 @@ export const GridView: React.FC<GridViewProps> = memo(
       const applyTransform = () => {
         if (!scrollViewRef.current) return;
 
-        let offset = startRow * dimensions.itemHeight;
+        let offset = startRow * (dimensions.itemHeight + rowGap);
         let currentRow = Math.ceil((activeIndex + 1) / dimensions.rowItems);
 
         if (currentRow > 1) {
@@ -298,7 +298,6 @@ export const GridView: React.FC<GridViewProps> = memo(
 
         scrollViewRef.current.style.transform = transform;
         scrollViewRef.current.style.webkitTransform = transform;
-        //   scrollViewRef.current.style.msTransform = transform;
 
         window.dispatchEvent(new Event('transformstart'));
         setTimeout(
@@ -319,6 +318,7 @@ export const GridView: React.FC<GridViewProps> = memo(
       dimensions.rowItems,
       scrollOffset,
       onChangeRow,
+      rowGap,
     ]);
 
     const keyDownOptions = useMemo(

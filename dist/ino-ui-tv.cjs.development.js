@@ -394,7 +394,9 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
     renderItem = _ref.renderItem,
     data = _ref.data,
     _ref$gap = _ref.gap,
-    gap = _ref$gap === void 0 ? 1 : _ref$gap;
+    gap = _ref$gap === void 0 ? 1 : _ref$gap,
+    _ref$rowGap = _ref.rowGap,
+    rowGap = _ref$rowGap === void 0 ? gap : _ref$rowGap;
   var scrollViewRef = React.useRef(null);
   var _useState = React.useState(0),
     startRow = _useState[0],
@@ -405,8 +407,8 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
   var containerRef = React.useRef(null);
   var _useState3 = React.useState(function () {
       var DEFAULT_ROW_ITEMS = 5;
-      var DEFAULT_ITEM_WIDTH = 15;
-      var DEFAULT_ITEM_HEIGHT = 15;
+      var DEFAULT_ITEM_WIDTH = 25;
+      var DEFAULT_ITEM_HEIGHT = 25;
       return {
         itemWidth: itemWidth || DEFAULT_ITEM_WIDTH,
         itemHeight: itemHeight || DEFAULT_ITEM_HEIGHT,
@@ -521,9 +523,9 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
       position: 'absolute',
       width: dimensions.itemWidth + "rem",
       height: dimensions.itemHeight + "rem",
-      top: vIndex * (dimensions.itemHeight + gap) + "rem"
+      top: vIndex * (dimensions.itemHeight + rowGap) + "rem"
     }, _ref2[direction === 'rtl' ? 'right' : 'left'] = hIndex * (dimensions.itemWidth + gap) + "rem", _ref2;
-  }, [dimensions, gap, direction]);
+  }, [dimensions, gap, rowGap, direction]);
   var renderItems = React.useCallback(function () {
     var items = [];
     // Guard against invalid dimensions
@@ -531,7 +533,6 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
       console.warn('Invalid rowItems in dimensions:', dimensions);
       return items;
     }
-    // Calculate visible range
     var visibleStart = Math.max(0, startRow * dimensions.rowItems - dimensions.rowItems * bufferStart);
     var visibleEnd = Math.min(data.length, startRow * dimensions.rowItems + dimensions.rowItems * dimensions.rows + dimensions.rowItems * bufferEnd);
     var _loop = function _loop(i) {
