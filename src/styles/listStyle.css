@@ -52,3 +52,14 @@
 .edge-scroll-zone {
   width: 3rem;
 }
+
+.ino-list-title {
+  font-size: var(--ino-font-size-xxlarge);
+  color: var(--ino-text-primary);
+  font-weight: var(--ino-font-weight-medium);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -59,6 +59,10 @@ export interface ListViewProps {
     /**
      * Optional index to scroll back to when the back button is pressed.
      */
+    /**
+     * Gap between rows in the ListView.
+     */
+    rowGap?: number;
     onBackScrollIndex?: number | null;
     /**
      * Starting index for scrolling.

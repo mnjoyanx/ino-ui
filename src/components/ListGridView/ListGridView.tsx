@@ -1,9 +1,8 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { ListView } from '../ListView/ListView';
 import { CategoryData, ListGridViewProps } from './ListGridView.types';
 import { ItemProps } from '../ListView/ListView.types';
-// import useKeydown from '../../hooks/useKeydown';
-// import useKeydown from '../../hooks/useKeydown';
+import useKeydown from '../../hooks/useKeydown';
 
 export const ListGridView: React.FC<ListGridViewProps> = ({
   rowsCount,
@@ -12,73 +11,29 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
   withTitle = false,
   isActive,
   onRowChange = () => {},
+  onUp = () => {},
+  onDown = () => {},
   ...listViewProps
 }) => {
-  //   const [activeIndex, setActiveIndex] = useState(
-  //     listViewProps.initialActiveIndex || 0
-  //   );
-
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex] = useState(0);
   const currentList = useMemo(() => (Array.isArray(data) ? data : []), [data]);
   const itemsTotal = currentList.length;
   const itemsPerRow = useMemo(() => Math.ceil(itemsTotal / rowsCount), [
     itemsTotal,
     rowsCount,
   ]);
-
-  useEffect(() => {
-    console.log('active index', activeIndex, itemsPerRow);
-  }, [activeIndex, itemsPerRow]);
-
-  //   useEffect(() => {
-  //     setActiveIndex(listViewProps.initialActiveIndex || 0);
-  //   }, [listViewProps.initialActiveIndex]);
-
-  //   useKeydown({
-  //     isActive: true,
-  //     onUp: () => {
-  //       console.log('up');
-  //       setActiveIndex(prev => Math.max(0, prev - itemsPerRow));
-  //     },
-  //     onDown: () => {
-  //       alert('dodododoo');
-  //       setActiveIndex(prev => Math.min(itemsTotal - 1, prev + itemsPerRow));
-  //     },
-  //   });
-
-  const handleUp = useCallback(() => {
-    console.log('up');
-    setActiveIndex(prev => {
-      const currentRow = Math.floor(prev / itemsPerRow);
-      if (currentRow === 0) {
-        // onUp();
-        return prev;
-      }
-      return Math.max(0, prev - itemsPerRow);
-    });
-  }, [itemsPerRow]);
-
-  const handleDown = useCallback(() => {
-    console.log('down');
-    setActiveIndex(prev => {
-      const currentRow = Math.floor(prev / itemsPerRow);
-      if (currentRow === rowsCount - 1) {
-        // onDown();
-        return prev;
-      }
-      return Math.min(itemsTotal - 1, prev + itemsPerRow);
-    });
-  }, [itemsPerRow, rowsCount, itemsTotal]);
+  const [currentRow, setCurrentRow] = useState(0);
 
   const getItemStyle = useCallback(
     (index: number): React.CSSProperties => {
       const row = Math.floor(index / itemsPerRow);
       const col = index % itemsPerRow;
+      const titleHeight = withTitle ? 3 : 0;
 
       return {
         position: 'absolute',
         width: `${listViewProps.itemWidth}rem`,
-        height: `${listViewProps.itemHeight}rem`,
+        height: `${listViewProps.itemHeight + titleHeight}rem`,
         top: `${row * (listViewProps.itemHeight + rowGap)}rem`,
         [listViewProps.direction === 'rtl' ? 'right' : 'left']: `${col *
           (listViewProps.itemWidth + (listViewProps.gap || 0))}rem`,
@@ -94,11 +49,45 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
     ]
   );
 
+  useKeydown({
+    isActive,
+    down: () => {
+      if (!currentList?.length) return;
+
+      setCurrentRow(prev => Math.min(prev + 1, rowsCount - 1));
+    },
+    up: () => {
+      if (currentRow > 0) {
+        setCurrentRow(prev => prev - 1);
+      }
+    },
+  });
+
+  const getRowStyle = useCallback(
+    (index: number): React.CSSProperties => {
+      return {
+        position: 'absolute',
+        width: `${listViewProps.itemWidth * itemsPerRow}rem`,
+        height: `${listViewProps.itemHeight * rowsCount}rem`,
+        top: `${index * (listViewProps.itemHeight + rowGap)}rem`,
+      };
+    },
+    [
+      listViewProps.itemWidth,
+      listViewProps.itemHeight,
+      listViewProps.direction,
+      listViewProps.gap,
+      itemsPerRow,
+      rowsCount,
+      rowGap,
+    ]
+  );
+
   const renderRowItems = useCallback(
     ({ item, index, isActive }: ItemProps & { item: CategoryData }) => {
       return (
-        <div key={index}>
-          {withTitle ? <h3>{item.name}</h3> : null}
+        <div key={index} style={getRowStyle(index)}>
+          {withTitle ? <h3 className="ino-list-title">{item.name}</h3> : null}
           <ListView
             {...listViewProps}
             data={item.list}
@@ -110,10 +99,10 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
             buffer={3}
             itemWidth={20}
             itemHeight={30}
-            isActive={isActive && index === activeIndex}
+            gap={listViewProps.gap}
+            rowGap={rowGap}
+            isActive={isActive && currentRow === index}
             renderItem={listViewProps.renderItem}
-            onUp={handleUp}
-            onDown={handleDown}
             nativeControle={true}
           />
         </div>
@@ -125,38 +114,9 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
       listViewProps.renderItem,
       withTitle,
       activeIndex,
+      currentRow,
     ]
   );
-
-  //   useKeydown({
-  //     isActive,
-  //     onUp: () => {
-  //       console.log(activeIndex, 'active index');
-  //       setActiveIndex(prev => {
-  //         const currentRow = Math.floor(prev / itemsPerRow);
-  //         if (currentRow === 0) {
-  //           //   onUp();
-  //           console.log('up todo pass the callback when the active index is 0');
-  //           return prev;
-  //         }
-  //         return Math.max(0, prev - itemsPerRow);
-  //       });
-  //     },
-  //     onDown: () => {
-  //       console.log(activeIndex, 'active index');
-  //       setActiveIndex(prev => {
-  //         const currentRow = Math.floor(prev / itemsPerRow);
-  //         if (currentRow === rowsCount - 1) {
-  //           //   onDown();
-  //           console.log(
-  //             'down todo pass the callback when the active index is the last row'
-  //           );
-  //           return prev;
-  //         }
-  //         return Math.min(itemsTotal - 1, prev + itemsPerRow);
-  //       });
-  //     },
-  //   });
 
   return (
     <ListView
@@ -171,19 +131,20 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
       nativeControle={true}
       isActive={isActive}
       buffer={currentList.length}
+      gap={listViewProps.gap}
+      rowGap={rowGap}
       renderItem={({ index, item, style }) => {
-        const row = Math.floor(index / itemsPerRow);
-        if (row !== Math.floor(activeIndex / itemsPerRow)) {
-          onRowChange(row);
-        }
         return renderRowItems({
-          //   ...listViewProps,
           key: index,
           index,
           item,
           style,
           isActive: isActive,
-          onMouseEnter: () => onRowChange(row),
+          onMouseEnter: () => {
+            const row = Math.floor(index / itemsPerRow);
+            setCurrentRow(row);
+            onRowChange(row);
+          },
         });
       }}
     />
