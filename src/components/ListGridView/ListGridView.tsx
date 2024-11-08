@@ -28,12 +28,11 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
     (index: number): React.CSSProperties => {
       const row = Math.floor(index / itemsPerRow);
       const col = index % itemsPerRow;
-      const titleHeight = withTitle ? 3 : 0;
 
       return {
         position: 'absolute',
         width: `${listViewProps.itemWidth}rem`,
-        height: `${listViewProps.itemHeight + titleHeight}rem`,
+        height: `${listViewProps.itemHeight}rem`,
         top: `${row * (listViewProps.itemHeight + rowGap)}rem`,
         [listViewProps.direction === 'rtl' ? 'right' : 'left']: `${col *
           (listViewProps.itemWidth + (listViewProps.gap || 0))}rem`,
@@ -99,7 +98,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
             buffer={3}
             itemWidth={20}
             itemHeight={30}
-            gap={listViewProps.gap}
+            gap={withTitle ? listViewProps.gap + 2 : listViewProps.gap}
             rowGap={rowGap}
             isActive={isActive && currentRow === index}
             renderItem={listViewProps.renderItem}
