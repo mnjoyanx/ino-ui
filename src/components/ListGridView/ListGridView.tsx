@@ -4,6 +4,8 @@ import { CategoryData, ListGridViewProps } from './ListGridView.types';
 import { ItemProps } from '../ListView/ListView.types';
 import useKeydown from '../../hooks/useKeydown';
 
+export const TITLE_HEIGHT = 3; // 3rem for title height including margin
+
 export const ListGridView: React.FC<ListGridViewProps> = ({
   rowsCount,
   rowGap = 1,
@@ -64,21 +66,20 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
 
   const getRowStyle = useCallback(
     (index: number): React.CSSProperties => {
+      const titleOffset = withTitle ? TITLE_HEIGHT : 0;
       return {
         position: 'absolute',
         width: `${listViewProps.itemWidth * itemsPerRow}rem`,
-        height: `${listViewProps.itemHeight * rowsCount}rem`,
-        top: `${index * (listViewProps.itemHeight + rowGap)}rem`,
+        height: `${listViewProps.itemHeight}rem`,
+        top: `${index * (listViewProps.itemHeight + titleOffset + rowGap)}rem`,
       };
     },
     [
       listViewProps.itemWidth,
       listViewProps.itemHeight,
-      listViewProps.direction,
-      listViewProps.gap,
       itemsPerRow,
-      rowsCount,
       rowGap,
+      withTitle,
     ]
   );
 
@@ -86,7 +87,16 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
     ({ item, index, isActive }: ItemProps & { item: CategoryData }) => {
       return (
         <div key={index} style={getRowStyle(index)}>
-          {withTitle ? <h3 className="ino-list-title">{item.name}</h3> : null}
+          {withTitle ? (
+            <div
+              className="ino-list-title-wrapper"
+              style={{
+                height: `${TITLE_HEIGHT}rem`,
+              }}
+            >
+              <h3 className="ino-list-title">{item.name}</h3>
+            </div>
+          ) : null}
           <ListView
             {...listViewProps}
             data={item.list}
@@ -98,8 +108,9 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
             buffer={3}
             itemWidth={20}
             itemHeight={30}
-            gap={withTitle ? listViewProps.gap + 2 : listViewProps.gap}
+            gap={listViewProps.gap}
             rowGap={rowGap}
+            withTitle={withTitle}
             isActive={isActive && currentRow === index}
             renderItem={listViewProps.renderItem}
             nativeControle={true}

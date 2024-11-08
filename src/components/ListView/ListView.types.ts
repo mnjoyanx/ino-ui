@@ -57,12 +57,16 @@ export interface ListViewProps {
      */
     gap?: number;
     /**
-     * Optional index to scroll back to when the back button is pressed.
-     */
-    /**
      * Gap between rows in the ListView.
      */
     rowGap?: number;
+    /**
+     * Whether the ListView has a title.
+     */
+    withTitle?: boolean;
+    /**
+     * Index to scroll back to when the back button is pressed.
+     */
     onBackScrollIndex?: number | null;
     /**
      * Starting index for scrolling.
@@ -97,6 +101,12 @@ export interface ListViewProps {
      * Callback function for when the back navigation is triggered.
      */
     onBack?: () => void;
+    /**
+     * Callback function for when the OK/Enter action is triggered.
+     * @param item - The selected item
+     * @param index - The index of the selected item
+     */
+    onOk?: (item: any, index: number) => void;
     /**
      * Function to render each item in the ListView.
      * @param props - The props for the item.

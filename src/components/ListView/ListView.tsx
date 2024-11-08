@@ -13,6 +13,7 @@ import SvgArrowLeft from '../Svgs/SvgArrowLeft';
 import SvgArrowRight from '../Svgs/SvgArrowRight';
 import SvgArrowUp from '../Svgs/SvgArrowUp';
 import SvgArrowDown from '../Svgs/SvgArrowDown';
+import { TITLE_HEIGHT } from '../ListGridView/ListGridView';
 
 let TRANSFORM_TIMEOUT = null;
 
@@ -78,6 +79,8 @@ export const ListView: React.FC<ListViewProps> = memo(
     onBackScrollIndex = null,
     startScrollIndex = 0,
     direction = 'ltr',
+    withTitle = false,
+    rowGap = 0,
     debounce = 200,
     onMouseEnter = () => {},
     onUp = () => {},
@@ -99,6 +102,7 @@ export const ListView: React.FC<ListViewProps> = memo(
       interval: 700,
       startDelay: 1000,
     },
+    onOk = () => {},
   }) => {
     const scrollViewRef = useRef<HTMLDivElement>(null);
     const [startIndex, setStartIndex] = useState(0);
@@ -258,28 +262,36 @@ export const ListView: React.FC<ListViewProps> = memo(
       const applyTransform = () => {
         if (!scrollViewRef.current) return;
 
-        (window as any).transforming = true;
-        window.dispatchEvent(new Event('transformstart'));
-        clearTimeout(TRANSFORM_TIMEOUT);
-
-        TRANSFORM_TIMEOUT = setTimeout(
-          () => window.dispatchEvent(new Event('transformend')),
-          500
-        );
+        const titleOffset = withTitle ? TITLE_HEIGHT : 0;
+        const verticalSpacing = itemHeight + rowGap + titleOffset;
 
         const transform =
           listType === 'horizontal'
             ? `translate3d(${direction === 'ltr' ? '-' : ''}${startIndex *
                 (itemWidth + (gap || 0))}rem, 0, 0)`
-            : `translate3d(0, -${startIndex *
-                (itemHeight + (gap || 0))}rem, 0)`;
+            : `translate3d(0, -${startIndex * verticalSpacing}rem, 0)`;
 
         scrollViewRef.current.style.transform = transform;
         scrollViewRef.current.style.webkitTransform = transform;
+
+        window.dispatchEvent(new Event('transformstart'));
+        clearTimeout(TRANSFORM_TIMEOUT);
+        TRANSFORM_TIMEOUT = setTimeout(
+          () => window.dispatchEvent(new Event('transformend')),
+          500
+        );
       };
 
       applyTransform();
-    }, [startIndex, listType, direction, itemWidth, itemHeight]);
+    }, [
+      startIndex,
+      listType,
+      direction,
+      itemWidth,
+      itemHeight,
+      gap,
+      withTitle,
+    ]);
 
     useEffect(() => {
       if (arrows.show) {
@@ -288,10 +300,13 @@ export const ListView: React.FC<ListViewProps> = memo(
       }
     }, [startIndex, itemsTotal, itemsCount, arrows.show]);
 
+    const handleOk = useCallback(() => {
+      onOk(data[activeIndex], activeIndex);
+    }, [onOk, data, activeIndex]);
+
     const keyDownOptions = useMemo(
       () => ({
         isActive: isActive && nativeControle,
-        // debounce,
         left: () => listType === 'horizontal' && prev(),
         right: () => listType === 'horizontal' && next(),
         up: () => listType !== 'horizontal' && prev(),
@@ -299,6 +314,7 @@ export const ListView: React.FC<ListViewProps> = memo(
         channel_up: () => prev(itemsCount),
         channel_down: () => next(itemsCount),
         back,
+        ok: handleOk,
       }),
       [
         isActive,
@@ -308,7 +324,7 @@ export const ListView: React.FC<ListViewProps> = memo(
         next,
         itemsCount,
         back,
-        debounce,
+        handleOk,
       ]
     );
 
