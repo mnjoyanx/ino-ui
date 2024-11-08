@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import { ListView } from '../ListView/ListView';
 import { CategoryData, ListGridViewProps } from './ListGridView.types';
 import { ItemProps } from '../ListView/ListView.types';
@@ -26,6 +26,10 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
     rowsCount,
   ]);
 
+  useEffect(() => {
+    console.log('active index', activeIndex, itemsPerRow);
+  }, [activeIndex, itemsPerRow]);
+
   //   useEffect(() => {
   //     setActiveIndex(listViewProps.initialActiveIndex || 0);
   //   }, [listViewProps.initialActiveIndex]);
@@ -43,6 +47,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
   //   });
 
   const handleUp = useCallback(() => {
+    console.log('up');
     setActiveIndex(prev => {
       const currentRow = Math.floor(prev / itemsPerRow);
       if (currentRow === 0) {
@@ -54,6 +59,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
   }, [itemsPerRow]);
 
   const handleDown = useCallback(() => {
+    console.log('down');
     setActiveIndex(prev => {
       const currentRow = Math.floor(prev / itemsPerRow);
       if (currentRow === rowsCount - 1) {
@@ -90,7 +96,6 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
 
   const renderRowItems = useCallback(
     ({ item, index, isActive }: ItemProps & { item: CategoryData }) => {
-      console.log({ ...listViewProps }, 'list view props');
       return (
         <div key={index}>
           {withTitle ? <h3>{item.name}</h3> : null}
@@ -109,7 +114,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
             renderItem={listViewProps.renderItem}
             onUp={handleUp}
             onDown={handleDown}
-            // nativeControle={true}
+            nativeControle={true}
           />
         </div>
       );
