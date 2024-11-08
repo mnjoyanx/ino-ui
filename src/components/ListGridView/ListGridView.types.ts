@@ -10,6 +10,7 @@ export interface ListGridViewProps<T = any> extends Omit<ListViewProps, 'listTyp
     rowsCount: number;
     rowGap?: number;
     data: CategoryData<T>[];
-    selectedCategoryId?: number | string;
+    isActive: boolean;
+    withTitle?: boolean;
     onRowChange?: (row: number) => void;
 }

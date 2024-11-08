@@ -114,7 +114,7 @@ export interface ListViewProps {
 }
 
 export interface ItemProps {
-    key: string;
+    key: string | number;
     index: number;
     style: React.CSSProperties;
     isActive: boolean;
