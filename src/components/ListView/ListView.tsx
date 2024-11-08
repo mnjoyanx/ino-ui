@@ -100,7 +100,6 @@ export const ListView: React.FC<ListViewProps> = memo(
       startDelay: 1000,
     },
   }) => {
-    console.log(onLeft, 'on left', onDown);
     const scrollViewRef = useRef<HTMLDivElement>(null);
     const [startIndex, setStartIndex] = useState(0);
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);

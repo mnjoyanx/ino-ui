@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { ListView } from '../ListView/ListView';
 import { CategoryData, ListGridViewProps } from './ListGridView.types';
 import { ItemProps } from '../ListView/ListView.types';
-import useKeydown from '../../hooks/useKeydown';
+// import useKeydown from '../../hooks/useKeydown';
 // import useKeydown from '../../hooks/useKeydown';
 
 export const ListGridView: React.FC<ListGridViewProps> = ({
@@ -30,19 +30,17 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
   //     setActiveIndex(listViewProps.initialActiveIndex || 0);
   //   }, [listViewProps.initialActiveIndex]);
 
-  console.log(isActive, 'is active');
-
-  useKeydown({
-    isActive,
-    onUp: () => {
-      console.log('up');
-      setActiveIndex(prev => Math.max(0, prev - itemsPerRow));
-    },
-    onDown: () => {
-      alert('dodododoo');
-      setActiveIndex(prev => Math.min(itemsTotal - 1, prev + itemsPerRow));
-    },
-  });
+  //   useKeydown({
+  //     isActive: true,
+  //     onUp: () => {
+  //       console.log('up');
+  //       setActiveIndex(prev => Math.max(0, prev - itemsPerRow));
+  //     },
+  //     onDown: () => {
+  //       alert('dodododoo');
+  //       setActiveIndex(prev => Math.min(itemsTotal - 1, prev + itemsPerRow));
+  //     },
+  //   });
 
   //   const handleUp = useCallback(() => {
   //     setActiveIndex(prev => {
@@ -92,10 +90,12 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
 
   const renderRowItems = useCallback(
     ({ item, index, isActive }: ItemProps & { item: CategoryData }) => {
+      console.log({ ...listViewProps }, 'list view props');
       return (
         <div key={index}>
           {withTitle ? <h3>{item.name}</h3> : null}
           <ListView
+            {...listViewProps}
             data={item.list}
             id={`${index}-list-view`}
             uniqueKey={`${index}-list-view`}
@@ -107,7 +107,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
             itemHeight={30}
             isActive={isActive && index === activeIndex}
             renderItem={listViewProps.renderItem}
-            nativeControle={true}
+            // nativeControle={true}
           />
         </div>
       );
@@ -161,6 +161,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
       listType="vertical"
       itemsCount={itemsPerRow}
       itemsTotal={itemsTotal}
+      nativeControle={true}
       isActive={isActive}
       buffer={currentList.length}
       renderItem={({ index, item, style }) => {
