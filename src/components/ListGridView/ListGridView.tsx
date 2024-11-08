@@ -42,27 +42,27 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
   //     },
   //   });
 
-  //   const handleUp = useCallback(() => {
-  //     setActiveIndex(prev => {
-  //       const currentRow = Math.floor(prev / itemsPerRow);
-  //       if (currentRow === 0) {
-  //         onUp();
-  //         return prev;
-  //       }
-  //       return Math.max(0, prev - itemsPerRow);
-  //     });
-  //   }, [itemsPerRow, onUp]);
+  const handleUp = useCallback(() => {
+    setActiveIndex(prev => {
+      const currentRow = Math.floor(prev / itemsPerRow);
+      if (currentRow === 0) {
+        // onUp();
+        return prev;
+      }
+      return Math.max(0, prev - itemsPerRow);
+    });
+  }, [itemsPerRow]);
 
-  //   const handleDown = useCallback(() => {
-  //     setActiveIndex(prev => {
-  //       const currentRow = Math.floor(prev / itemsPerRow);
-  //       if (currentRow === rowsCount - 1) {
-  //         onDown();
-  //         return prev;
-  //       }
-  //       return Math.min(itemsTotal - 1, prev + itemsPerRow);
-  //     });
-  //   }, [itemsPerRow, rowsCount, itemsTotal, onDown]);
+  const handleDown = useCallback(() => {
+    setActiveIndex(prev => {
+      const currentRow = Math.floor(prev / itemsPerRow);
+      if (currentRow === rowsCount - 1) {
+        // onDown();
+        return prev;
+      }
+      return Math.min(itemsTotal - 1, prev + itemsPerRow);
+    });
+  }, [itemsPerRow, rowsCount, itemsTotal]);
 
   const getItemStyle = useCallback(
     (index: number): React.CSSProperties => {
@@ -107,6 +107,8 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
             itemHeight={30}
             isActive={isActive && index === activeIndex}
             renderItem={listViewProps.renderItem}
+            onUp={handleUp}
+            onDown={handleDown}
             // nativeControle={true}
           />
         </div>
