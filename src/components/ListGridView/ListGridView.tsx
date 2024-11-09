@@ -1,10 +1,14 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
 import { ListView } from '../ListView/ListView';
 import { CategoryData, ListGridViewProps } from './ListGridView.types';
 import { ItemProps } from '../ListView/ListView.types';
 import useKeydown from '../../hooks/useKeydown';
-
-export const TITLE_HEIGHT = 3; // 3rem for title height including margin
 
 export const ListGridView: React.FC<ListGridViewProps> = ({
   rowsCount,
@@ -25,30 +29,17 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
     rowsCount,
   ]);
   const [currentRow, setCurrentRow] = useState(0);
+  const titleRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [titleHeights, setTitleHeights] = useState<number[]>([]);
 
-  const getItemStyle = useCallback(
-    (index: number): React.CSSProperties => {
-      const row = Math.floor(index / itemsPerRow);
-      const col = index % itemsPerRow;
-
-      return {
-        position: 'absolute',
-        width: `${listViewProps.itemWidth}rem`,
-        height: `${listViewProps.itemHeight}rem`,
-        top: `${row * (listViewProps.itemHeight + rowGap)}rem`,
-        [listViewProps.direction === 'rtl' ? 'right' : 'left']: `${col *
-          (listViewProps.itemWidth + (listViewProps.gap || 0))}rem`,
-      };
-    },
-    [
-      itemsPerRow,
-      listViewProps.itemWidth,
-      listViewProps.itemHeight,
-      listViewProps.direction,
-      listViewProps.gap,
-      rowGap,
-    ]
-  );
+  useEffect(() => {
+    if (withTitle && titleRefs.current) {
+      const heights = titleRefs.current.map(
+        ref => (ref ? ref.getBoundingClientRect().height / 16 : 0) // Convert px to rem
+      );
+      setTitleHeights(heights);
+    }
+  }, [withTitle, data.length]);
 
   useKeydown({
     isActive,
@@ -66,12 +57,12 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
 
   const getRowStyle = useCallback(
     (index: number): React.CSSProperties => {
-      const titleOffset = withTitle ? TITLE_HEIGHT : 0;
+      const titleHeight = titleHeights[index] || 0;
       return {
         position: 'absolute',
         width: `${listViewProps.itemWidth * itemsPerRow}rem`,
         height: `${listViewProps.itemHeight}rem`,
-        top: `${index * (listViewProps.itemHeight + titleOffset + rowGap)}rem`,
+        top: `${index * (listViewProps.itemHeight + titleHeight + rowGap)}rem`,
       };
     },
     [
@@ -79,7 +70,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
       listViewProps.itemHeight,
       itemsPerRow,
       rowGap,
-      withTitle,
+      titleHeights,
     ]
   );
 
@@ -89,10 +80,8 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
         <div key={index} style={getRowStyle(index)}>
           {withTitle ? (
             <div
+              ref={el => (titleRefs.current[index] = el)}
               className="ino-list-title-wrapper"
-              style={{
-                height: `${TITLE_HEIGHT}rem`,
-              }}
             >
               <h3 className="ino-list-title">{item.name}</h3>
             </div>
@@ -119,12 +108,12 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
       );
     },
     [
-      itemsPerRow,
-      getItemStyle,
+      getRowStyle,
       listViewProps.renderItem,
       withTitle,
       activeIndex,
       currentRow,
+      titleHeights,
     ]
   );
 
@@ -142,6 +131,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
       isActive={isActive}
       buffer={currentList.length}
       gap={listViewProps.gap}
+      titleHeight={titleHeights[currentRow] || 0}
       rowGap={rowGap}
       renderItem={({ index, item, style }) => {
         return renderRowItems({

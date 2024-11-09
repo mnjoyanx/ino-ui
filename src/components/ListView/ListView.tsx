@@ -13,7 +13,6 @@ import SvgArrowLeft from '../Svgs/SvgArrowLeft';
 import SvgArrowRight from '../Svgs/SvgArrowRight';
 import SvgArrowUp from '../Svgs/SvgArrowUp';
 import SvgArrowDown from '../Svgs/SvgArrowDown';
-import { TITLE_HEIGHT } from '../ListGridView/ListGridView';
 
 let TRANSFORM_TIMEOUT = null;
 
@@ -80,8 +79,9 @@ export const ListView: React.FC<ListViewProps> = memo(
     startScrollIndex = 0,
     direction = 'ltr',
     withTitle = false,
+    titleHeight = 0,
     rowGap = 0,
-    debounce = 200,
+    // debounce = 200,
     onMouseEnter = () => {},
     onUp = () => {},
     onDown = () => {},
@@ -261,8 +261,9 @@ export const ListView: React.FC<ListViewProps> = memo(
     useEffect(() => {
       const applyTransform = () => {
         if (!scrollViewRef.current) return;
+        console.log('titleHeight', titleHeight);
 
-        const titleOffset = withTitle ? TITLE_HEIGHT : 0;
+        const titleOffset = withTitle ? titleHeight + 1 : 0;
         const verticalSpacing = itemHeight + rowGap + titleOffset;
 
         const transform =
