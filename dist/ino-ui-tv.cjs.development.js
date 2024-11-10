@@ -2057,6 +2057,109 @@ var InoKeyboard = function InoKeyboard(_ref) {
   }))));
 };
 
+var ScrollView = function ScrollView(_ref) {
+  var children = _ref.children,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    onReachBottom = _ref.onReachBottom,
+    onStartScroll = _ref.onStartScroll,
+    onEndScroll = _ref.onEndScroll,
+    onDown = _ref.onDown,
+    onUp = _ref.onUp,
+    onOk = _ref.onOk,
+    onBack = _ref.onBack,
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
+    _ref$scrollStep = _ref.scrollStep,
+    scrollStep = _ref$scrollStep === void 0 ? 50 : _ref$scrollStep,
+    _ref$showScrollIndica = _ref.showScrollIndicators,
+    showScrollIndicators = _ref$showScrollIndica === void 0 ? true : _ref$showScrollIndica;
+  var scrollRef = React.useRef(null);
+  var _useState = React.useState(false),
+    showTopIndicator = _useState[0],
+    setShowTopIndicator = _useState[1];
+  var _useState2 = React.useState(true),
+    showBottomIndicator = _useState2[0],
+    setShowBottomIndicator = _useState2[1];
+  var _useState3 = React.useState(false),
+    isScrolling = _useState3[0],
+    setIsScrolling = _useState3[1];
+  var scrollTimeout = React.useRef();
+  var handleScroll = React.useCallback(function () {
+    if (!scrollRef.current) return;
+    var _scrollRef$current = scrollRef.current,
+      scrollTop = _scrollRef$current.scrollTop,
+      scrollHeight = _scrollRef$current.scrollHeight,
+      clientHeight = _scrollRef$current.clientHeight;
+    // Show/hide scroll indicators
+    setShowTopIndicator(scrollTop > 0);
+    setShowBottomIndicator(scrollTop + clientHeight < scrollHeight);
+    // Handle scroll start/end
+    if (!isScrolling) {
+      setIsScrolling(true);
+      onStartScroll == null || onStartScroll();
+    }
+    clearTimeout(scrollTimeout.current);
+    scrollTimeout.current = setTimeout(function () {
+      setIsScrolling(false);
+      onEndScroll == null || onEndScroll();
+      // Check if reached bottom
+      if (Math.ceil(scrollTop + clientHeight) >= scrollHeight) {
+        onReachBottom == null || onReachBottom();
+      }
+    }, 150);
+  }, [isScrolling, onStartScroll, onEndScroll, onReachBottom]);
+  var scrollUp = React.useCallback(function () {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollBy({
+      top: -scrollStep,
+      behavior: 'smooth'
+    });
+    if (scrollRef.current.scrollTop === 0) {
+      onUp == null || onUp();
+    }
+  }, [scrollStep, onUp]);
+  var scrollDown = React.useCallback(function () {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollBy({
+      top: scrollStep,
+      behavior: 'smooth'
+    });
+    var _scrollRef$current2 = scrollRef.current,
+      scrollTop = _scrollRef$current2.scrollTop,
+      scrollHeight = _scrollRef$current2.scrollHeight,
+      clientHeight = _scrollRef$current2.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight) {
+      onDown == null || onDown();
+    }
+  }, [scrollStep, onDown]);
+  useKeydown({
+    isActive: isActive,
+    up: scrollUp,
+    down: scrollDown,
+    ok: onOk,
+    back: onBack
+  });
+  React.useEffect(function () {
+    return function () {
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+    };
+  }, []);
+  return React__default.createElement("div", {
+    className: "ino-scroll-view-container " + classNames
+  }, showScrollIndicators && showTopIndicator && React__default.createElement("div", {
+    className: "ino-scroll-indicator ino-scroll-indicator--top"
+  }, React__default.createElement(SvgArrowUp, null)), React__default.createElement("div", {
+    ref: scrollRef,
+    className: "ino-scroll-view-content",
+    onScroll: handleScroll
+  }, children), showScrollIndicators && showBottomIndicator && React__default.createElement("div", {
+    className: "ino-scroll-indicator ino-scroll-indicator--bottom"
+  }, React__default.createElement(SvgArrowDown, null)));
+};
+
 exports.CheckboxItem = CheckboxItem;
 exports.GridView = GridView;
 exports.InoButton = InoButton;
@@ -2064,5 +2167,6 @@ exports.InoKeyboard = InoKeyboard;
 exports.ListGridView = ListGridView;
 exports.ListView = ListView;
 exports.Modal = Modal;
+exports.ScrollView = ScrollView;
 exports.ThemeProvider = ThemeProvider;
 //# sourceMappingURL=ino-ui-tv.cjs.development.js.map
