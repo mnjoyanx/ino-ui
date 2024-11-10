@@ -1,19 +1,18 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { InoInputProps } from './InoInput.types';
-import useKeydown from '../../hooks/useKeydown';
 import '../../styles/InoInput.css';
+import { useMappedKeydown } from '../../hooks/useMappedKeydown';
 
 export const InoInput: React.FC<InoInputProps> = ({
   value = '',
   placeholder = '',
   onChange,
   onFocus,
-  onBlur,
   disabled = false,
   showCursor = true,
   classNames = '',
   maxLength,
-  isFocused = false,
+  isActive = false,
   type = 'text',
   variant = 'standard',
 }) => {
@@ -26,10 +25,6 @@ export const InoInput: React.FC<InoInputProps> = ({
       onFocus?.();
     }
   }, [disabled, onFocus]);
-
-  const handleBlur = useCallback(() => {
-    onBlur?.();
-  }, [onBlur]);
 
   const updateCursorPosition = useCallback(
     (direction: 'left' | 'right') => {
@@ -46,7 +41,8 @@ export const InoInput: React.FC<InoInputProps> = ({
 
   const handleKeyPress = useCallback(
     (e: KeyboardEvent) => {
-      if (!isFocused || disabled) return;
+      console.log('handleKeyPress', e);
+      if (!isActive || disabled) return;
 
       let newValue = value;
       let newPosition = cursorPosition;
@@ -69,26 +65,24 @@ export const InoInput: React.FC<InoInputProps> = ({
       onChange?.(newValue);
       setCursorPosition(newPosition);
     },
-    [value, onChange, maxLength, type, isFocused, disabled, cursorPosition]
+    [value, onChange, maxLength, type, isActive, disabled, cursorPosition]
   );
 
   const handleNavigation = useCallback(
     (direction: 'left' | 'right') => {
-      if (!isFocused) return;
+      if (!isActive) return;
       updateCursorPosition(direction);
     },
-    [isFocused, updateCursorPosition]
+    [isActive, updateCursorPosition]
   );
 
-  useKeydown({
-    isActive: isFocused,
-    back: handleBlur,
-    number: handleKeyPress,
-    letter: handleKeyPress,
-    left: () => handleNavigation('left'),
-    right: () => handleNavigation('right'),
+  useMappedKeydown({
+    isActive: isActive,
+    onNumber: handleKeyPress,
+    onLetter: handleKeyPress,
+    onLeft: () => handleNavigation('left'),
+    onRight: () => handleNavigation('right'),
   });
-
   useEffect(() => {
     if (contentRef.current && containerRef.current) {
       const container = containerRef.current;
@@ -103,7 +97,7 @@ export const InoInput: React.FC<InoInputProps> = ({
     <div
       ref={containerRef}
       className={`ino-input ino-input--${variant} ${
-        isFocused ? 'ino-input--focused' : ''
+        isActive ? 'ino-input--focused' : ''
       } ${disabled ? 'ino-input--disabled' : ''} ${classNames}`}
       onClick={handleFocus}
       role="textbox"
@@ -112,12 +106,10 @@ export const InoInput: React.FC<InoInputProps> = ({
     >
       <div ref={contentRef} className="ino-input__content">
         {displayValue.slice(0, cursorPosition)}
-        {showCursor && isFocused && (
-          <span className="ino-input__cursor">|</span>
-        )}
+        {showCursor && isActive && <span className="ino-input__cursor">|</span>}
         {displayValue.slice(cursorPosition)}
       </div>
-      {!displayValue && !isFocused && (
+      {!displayValue && (
         <span className="ino-input__placeholder">{placeholder}</span>
       )}
     </div>

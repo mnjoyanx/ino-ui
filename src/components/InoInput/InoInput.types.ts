@@ -18,7 +18,7 @@ export interface InoInputProps {
     /** Maximum length of input */
     maxLength?: number;
     /** Whether the input is focused */
-    isFocused?: boolean;
+    isActive?: boolean;
     /** Input type */
     type?: 'text' | 'password' | 'number';
     /** Input variant */

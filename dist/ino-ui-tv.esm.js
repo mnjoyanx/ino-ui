@@ -2183,6 +2183,11 @@ var InoInput = function InoInput(_ref) {
     type = _ref$type === void 0 ? 'text' : _ref$type,
     _ref$variant = _ref.variant,
     variant = _ref$variant === void 0 ? 'standard' : _ref$variant;
+  var _useState = useState(value.length),
+    cursorPosition = _useState[0],
+    setCursorPosition = _useState[1];
+  var contentRef = useRef(null);
+  var containerRef = useRef(null);
   var handleFocus = useCallback(function () {
     if (!disabled) {
       onFocus == null || onFocus();
@@ -2191,37 +2196,70 @@ var InoInput = function InoInput(_ref) {
   var handleBlur = useCallback(function () {
     onBlur == null || onBlur();
   }, [onBlur]);
+  var updateCursorPosition = useCallback(function (direction) {
+    setCursorPosition(function (prev) {
+      if (direction === 'left') {
+        return Math.max(0, prev - 1);
+      } else {
+        return Math.min(value.length, prev + 1);
+      }
+    });
+  }, [value.length]);
   var handleKeyPress = useCallback(function (e) {
     if (!isFocused || disabled) return;
     var newValue = value;
-    // Handle backspace
+    var newPosition = cursorPosition;
     if (e.key === 'Backspace') {
-      newValue = value.slice(0, -1);
-    }
-    // Handle regular input
-    else if (e.key.length === 1) {
+      if (cursorPosition > 0) {
+        newValue = value.slice(0, cursorPosition - 1) + value.slice(cursorPosition);
+        newPosition = cursorPosition - 1;
+      }
+    } else if (e.key.length === 1) {
       if (maxLength && value.length >= maxLength) return;
       if (type === 'number' && !/^\d$/.test(e.key)) return;
-      newValue = value + e.key;
+      newValue = value.slice(0, cursorPosition) + e.key + value.slice(cursorPosition);
+      newPosition = cursorPosition + 1;
     }
     onChange == null || onChange(newValue);
-  }, [value, onChange, maxLength, type, isFocused, disabled]);
+    setCursorPosition(newPosition);
+  }, [value, onChange, maxLength, type, isFocused, disabled, cursorPosition]);
+  var handleNavigation = useCallback(function (direction) {
+    if (!isFocused) return;
+    updateCursorPosition(direction);
+  }, [isFocused, updateCursorPosition]);
   useKeydown({
     isActive: isFocused,
     back: handleBlur,
     number: handleKeyPress,
-    letter: handleKeyPress
+    letter: handleKeyPress,
+    left: function left() {
+      return handleNavigation('left');
+    },
+    right: function right() {
+      return handleNavigation('right');
+    }
   });
+  useEffect(function () {
+    if (contentRef.current && containerRef.current) {
+      var container = containerRef.current;
+      var content = contentRef.current;
+      container.scrollLeft = content.scrollWidth;
+    }
+  }, [value]);
   var displayValue = type === 'password' ? '•'.repeat(value.length) : value;
   return React.createElement("div", {
+    ref: containerRef,
     className: "ino-input ino-input--" + variant + " " + (isFocused ? 'ino-input--focused' : '') + " " + (disabled ? 'ino-input--disabled' : '') + " " + classNames,
     onClick: handleFocus,
     role: "textbox",
     tabIndex: disabled ? -1 : 0,
     "aria-disabled": disabled
-  }, displayValue, showCursor && isFocused && React.createElement("span", {
+  }, React.createElement("div", {
+    ref: contentRef,
+    className: "ino-input__content"
+  }, displayValue.slice(0, cursorPosition), showCursor && isFocused && React.createElement("span", {
     className: "ino-input__cursor"
-  }, "|"), !displayValue && !isFocused && React.createElement("span", {
+  }, "|"), displayValue.slice(cursorPosition)), !displayValue && !isFocused && React.createElement("span", {
     className: "ino-input__placeholder"
   }, placeholder));
 };
