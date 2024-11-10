@@ -12,13 +12,14 @@ export interface MappedKeydownProps {
     onLetter?: (e: MouseKeyboardEvent, index?: number) => void;
     onNumber?: (e: MouseKeyboardEvent, index?: number) => void;
     onMouseEnter?: (e: MouseKeyboardEvent, index?: number) => void;
+    onMouseLeave?: (e: MouseKeyboardEvent, index?: number) => void;
     onRemove?: (e: MouseKeyboardEvent, index?: number) => void;
     index?: number;
     item?: any;
 }
 
 export function useMappedKeydown(props: MappedKeydownProps) {
-    const { isActive, onOk, onBack, onLeft, onRight, onUp, onDown, onMouseEnter, onLetter, onNumber, onRemove, index, item } = props;
+    const { isActive, onOk, onBack, onLeft, onRight, onUp, onDown, onMouseEnter, onMouseLeave, onLetter, onNumber, onRemove, index, item } = props;
 
     useKeydown({
         isActive,
@@ -55,6 +56,11 @@ export function useMappedKeydown(props: MappedKeydownProps) {
         mouseEnter: (e) => {
             if (onMouseEnter) {
                 onMouseEnter(e, index);
+            }
+        },
+        mouseLeave: (e) => {
+            if (onMouseLeave) {
+                onMouseLeave(e, index);
             }
         },
         letter: (e) => {

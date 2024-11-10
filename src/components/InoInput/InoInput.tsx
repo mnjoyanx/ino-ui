@@ -105,9 +105,10 @@ export const InoInput: React.FC<InoInputProps> = ({
     onRemove: handleKeyPress,
     onOk,
     onBack,
-    onMouseEnter,
     onUp,
     onDown,
+    onMouseEnter,
+    onMouseLeave,
   });
 
   useEffect(() => {
