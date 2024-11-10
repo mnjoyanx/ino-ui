@@ -45,10 +45,6 @@ export interface ListViewProps {
      */
     itemHeight: number;
     /**
-     * Height of the title in the ListView.
-     */
-    titleHeight: number;
-    /**
      * Flag indicating if the ListView is currently active.
      */
     isActive: boolean;
