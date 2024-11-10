@@ -49,6 +49,7 @@ const DefaultCheckbox: React.FC<DefaultCheckboxProps> = ({
  * Interface for CheckboxItem component props.
  *
  * @property {boolean} [defaultChecked] - Indicates if the checkbox is checked by default.
+ * @property {boolean} [checked] - Indicates if the checkbox is checked.
  * @property {string} label - The text label for the checkbox.
  * @property {(isChecked: boolean) => void} onChange - Callback function for when the checkbox state changes.
  * @property {boolean} isActive - Indicates if the checkbox is currently active.
@@ -63,10 +64,35 @@ const DefaultCheckbox: React.FC<DefaultCheckboxProps> = ({
  * @property {boolean} [isRTL] - Indicates if the checkbox item is in a right-to-left layout.
  */
 
+/**
+ * Example usage of CheckboxItem component:
+ *
+ * ```jsx
+ * // Controlled checkbox
+ * const [isChecked, setIsChecked] = useState(false);
+ *
+ * <CheckboxItem
+ *   checked={isChecked}
+ *   label="Accept terms and conditions"
+ *   onChange={(checked) => setIsChecked(checked)}
+ *   isActive={true}
+ * />
+ *
+ * // Uncontrolled checkbox with default state
+ * <CheckboxItem
+ *   defaultChecked={true}
+ *   label="Remember me"
+ *   onChange={(checked) => console.log('Checkbox changed:', checked)}
+ *   isActive={false}
+ * />
+ * ```
+ */
+
 export interface CheckboxItemProps {
   defaultChecked?: boolean;
+  checked?: boolean;
   label: string;
-  onChange: (isChecked: boolean) => void;
+  onChange?: (isChecked: boolean) => void;
   isActive: boolean;
   classNames?: string;
   icon?: React.FC<DefaultCheckboxProps>;
@@ -81,6 +107,7 @@ export interface CheckboxItemProps {
 
 export const CheckboxItem: React.FC<CheckboxItemProps> = ({
   defaultChecked = false,
+  checked,
   label,
   onChange,
   isActive,
@@ -94,13 +121,20 @@ export const CheckboxItem: React.FC<CheckboxItemProps> = ({
   onBack,
   isRTL = false,
 }) => {
-  const [isChecked, setIsChecked] = useState(defaultChecked);
+  const [internalChecked, setInternalChecked] = useState(defaultChecked);
+
+  // Use checked prop if provided, otherwise use internal state
+  const isChecked = checked !== undefined ? checked : internalChecked;
 
   const handleToggle = useCallback(() => {
     const newCheckedState = !isChecked;
-    setIsChecked(newCheckedState);
-    onChange(newCheckedState);
-  }, [isChecked, onChange]);
+    // Only update internal state if not controlled
+    if (checked === undefined) {
+      setInternalChecked(newCheckedState);
+    }
+    // Only call onChange if it exists
+    onChange?.(newCheckedState);
+  }, [isChecked, onChange, checked]);
 
   const keyDownOptions = {
     isActive,

@@ -234,23 +234,23 @@ var DefaultCheckbox = function DefaultCheckbox(_ref) {
   var isChecked = _ref.isChecked,
     isActive = _ref.isActive;
   return React__default.createElement("svg", {
-    width: "2rem",
-    height: "2rem",
+    width: "2.4rem",
+    height: "2.4rem",
     viewBox: "0 0 24 24",
     fill: "none"
   }, React__default.createElement("rect", {
     x: "2",
     y: "2",
-    width: "2rem",
-    height: "2rem",
-    rx: "4",
-    stroke: isChecked ? '#2196f3' : isActive ? '#1976d2' : '#ccc',
-    strokeWidth: "0.2rem",
-    fill: isChecked ? '#2196f3' : 'white'
+    width: "20",
+    height: "20",
+    rx: "6",
+    stroke: isChecked ? 'var(--ino-bg-primary)' : isActive ? 'var(--ino-bg-primary)' : 'var(--ino-border-secondary)',
+    strokeWidth: "2",
+    fill: isChecked ? 'var(--ino-bg-primary)' : 'white'
   }), isChecked && React__default.createElement("path", {
-    d: "M7 13L10 16L17 9",
+    d: "M7 12L10.5 15.5L17 9",
     stroke: "white",
-    strokeWidth: "0.2rem",
+    strokeWidth: "2.5",
     strokeLinecap: "round",
     strokeLinejoin: "round"
   }));
@@ -1335,6 +1335,11 @@ var InoButton = function InoButton(_ref) {
   }, rest), children);
 };
 
+var ModalPortal = function ModalPortal(_ref) {
+  var children = _ref.children;
+  var modalRoot = document.body;
+  return reactDom.createPortal(children, modalRoot);
+};
 /**
  * Modal component for displaying content in an overlay.
  *
@@ -1356,25 +1361,27 @@ var InoButton = function InoButton(_ref) {
  * </Modal>
  * ```
  */
-var Modal = function Modal(_ref) {
-  var isOpen = _ref.isOpen,
-    onClose = _ref.onClose,
-    title = _ref.title,
-    children = _ref.children,
-    _ref$classNames = _ref.classNames,
-    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
-    okBtnText = _ref.okBtnText,
-    onOk = _ref.onOk,
-    cancelBtnText = _ref.cancelBtnText,
-    onCancel = _ref.onCancel,
-    _ref$showCloseIcon = _ref.showCloseIcon,
-    showCloseIcon = _ref$showCloseIcon === void 0 ? true : _ref$showCloseIcon,
-    _ref$closeOnOverlayCl = _ref.closeOnOverlayClick,
-    closeOnOverlayClick = _ref$closeOnOverlayCl === void 0 ? true : _ref$closeOnOverlayCl,
-    onPrimaryMouseEnter = _ref.onPrimaryMouseEnter,
-    onPrimaryMouseLeave = _ref.onPrimaryMouseLeave,
-    onSecondaryMouseEnter = _ref.onSecondaryMouseEnter,
-    onSecondaryMouseLeave = _ref.onSecondaryMouseLeave;
+var Modal = function Modal(_ref2) {
+  var isOpen = _ref2.isOpen,
+    onClose = _ref2.onClose,
+    title = _ref2.title,
+    children = _ref2.children,
+    _ref2$classNames = _ref2.classNames,
+    classNames = _ref2$classNames === void 0 ? '' : _ref2$classNames,
+    okBtnText = _ref2.okBtnText,
+    onOk = _ref2.onOk,
+    cancelBtnText = _ref2.cancelBtnText,
+    onCancel = _ref2.onCancel,
+    _ref2$showCloseIcon = _ref2.showCloseIcon,
+    showCloseIcon = _ref2$showCloseIcon === void 0 ? true : _ref2$showCloseIcon,
+    _ref2$closeOnOverlayC = _ref2.closeOnOverlayClick,
+    closeOnOverlayClick = _ref2$closeOnOverlayC === void 0 ? true : _ref2$closeOnOverlayC,
+    onPrimaryMouseEnter = _ref2.onPrimaryMouseEnter,
+    onPrimaryMouseLeave = _ref2.onPrimaryMouseLeave,
+    onSecondaryMouseEnter = _ref2.onSecondaryMouseEnter,
+    onSecondaryMouseLeave = _ref2.onSecondaryMouseLeave,
+    _ref2$isFull = _ref2.isFull,
+    isFull = _ref2$isFull === void 0 ? false : _ref2$isFull;
   var _useState = React.useState(0),
     activeButtonIndex = _useState[0],
     setActiveButtonIndex = _useState[1];
@@ -1423,11 +1430,11 @@ var Modal = function Modal(_ref) {
   };
   useKeydown(keyDownOptions);
   if (!isOpen) return null;
-  var modalContent = React__default.createElement("div", {
+  return React__default.createElement(ModalPortal, null, React__default.createElement("div", {
     className: "ino-modal-overlay " + classNames,
     onClick: handleOverlayClick
   }, React__default.createElement("div", {
-    className: "ino-modal"
+    className: "ino-modal " + (isFull ? 'ino-modal-full-size' : '')
   }, React__default.createElement("div", {
     className: "ino-modal-header"
   }, React__default.createElement("h2", {
@@ -1443,7 +1450,7 @@ var Modal = function Modal(_ref) {
     index: 0,
     isActive: activeButtonIndex === 0,
     variant: "outline",
-    size: 'small',
+    size: "small",
     onClick: handleSecondaryAction,
     onMouseEnter: function onMouseEnter() {
       setActiveButtonIndex(0);
@@ -1457,7 +1464,7 @@ var Modal = function Modal(_ref) {
     isActive: activeButtonIndex === 1,
     variant: "primary",
     size: "small",
-    classNames: 'ok-btn',
+    classNames: "ok-btn",
     onClick: handlePrimaryAction,
     onMouseEnter: function onMouseEnter() {
       setActiveButtonIndex(1);
@@ -1466,8 +1473,7 @@ var Modal = function Modal(_ref) {
     onMouseLeave: function onMouseLeave() {
       if (onPrimaryMouseLeave) onPrimaryMouseLeave();
     }
-  }, okBtnText))));
-  return reactDom.createPortal(modalContent, document.body);
+  }, okBtnText)))));
 };
 
 var ThemeProvider = function ThemeProvider(_ref) {
