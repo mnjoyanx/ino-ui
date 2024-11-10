@@ -5,6 +5,7 @@ interface KeydownProps {
     [key: string]: ((e: KeyboardEvent) => void) | boolean | undefined;
     number?: ((e: KeyboardEvent) => void) | undefined;
     letter?: ((e: KeyboardEvent) => void) | undefined;
+    remove?: ((e: KeyboardEvent) => void) | undefined;
     isActive: boolean;
 }
 
@@ -13,6 +14,11 @@ function useKeydown(props: KeydownProps): void {
         if (!props.isActive) return;
 
         const key = e.key.toLowerCase();
+
+        if (key === 'backspace' && typeof props.remove === "function") {
+            props.remove(e);
+            return;
+        }
 
         // Handle numbers (both numpad and regular)
         if (/^\d$/.test(key) && typeof props.number === "function") {

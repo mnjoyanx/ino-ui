@@ -2,6 +2,7 @@ import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { InoInputProps } from './InoInput.types';
 import '../../styles/InoInput.css';
 import { useMappedKeydown } from '../../hooks/useMappedKeydown';
+import { MouseKeyboardEvent } from '../../types';
 
 export const InoInput: React.FC<InoInputProps> = ({
   value = '',
@@ -15,6 +16,14 @@ export const InoInput: React.FC<InoInputProps> = ({
   isActive = false,
   type = 'text',
   variant = 'standard',
+  onBack,
+  onOk,
+  onLeft,
+  onRight,
+  onUp,
+  onDown,
+  onMouseEnter,
+  onMouseLeave,
 }) => {
   const [cursorPosition, setCursorPosition] = useState(value.length);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -41,7 +50,6 @@ export const InoInput: React.FC<InoInputProps> = ({
 
   const handleKeyPress = useCallback(
     (e: KeyboardEvent) => {
-      console.log('handleKeyPress', e);
       if (!isActive || disabled) return;
 
       let newValue = value;
@@ -80,8 +88,26 @@ export const InoInput: React.FC<InoInputProps> = ({
     isActive: isActive,
     onNumber: handleKeyPress,
     onLetter: handleKeyPress,
-    onLeft: () => handleNavigation('left'),
-    onRight: () => handleNavigation('right'),
+    onLeft: (e: MouseKeyboardEvent, index?: number) => {
+      if (showCursor) {
+        handleNavigation('left');
+      } else {
+        onLeft?.(e, index);
+      }
+    },
+    onRight: (e: MouseKeyboardEvent, index?: number) => {
+      if (showCursor) {
+        handleNavigation('right');
+      } else {
+        onRight?.(e, index);
+      }
+    },
+    onRemove: handleKeyPress,
+    onOk,
+    onBack,
+    onMouseEnter,
+    onUp,
+    onDown,
   });
 
   useEffect(() => {
@@ -97,9 +123,14 @@ export const InoInput: React.FC<InoInputProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`ino-input ino-input--${variant} ${
-        isActive ? 'ino-input--focused' : ''
-      } ${disabled ? 'ino-input--disabled' : ''} ${classNames}`}
+      onMouseEnter={(e: React.MouseEvent) => {
+        if (onMouseEnter) {
+          onMouseEnter(e as MouseKeyboardEvent);
+        }
+      }}
+      className={`ino-input ino-input--${variant} ${isActive ? 'active' : ''} ${
+        disabled ? 'ino-input--disabled' : ''
+      } ${classNames}`}
       onClick={handleFocus}
       role="textbox"
       tabIndex={disabled ? -1 : 0}

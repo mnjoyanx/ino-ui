@@ -1,8 +1,12 @@
+import { MouseKeyboardEvent } from "../../types";
+
 export interface InoInputProps {
     /** Value of the input */
     value?: string;
     /** Placeholder text */
     placeholder?: string;
+    /** Index of the input */
+    index?: number;
     /** Called when value changes */
     onChange?: (value: string) => void;
     /** Called when input is focused */
@@ -22,5 +26,13 @@ export interface InoInputProps {
     /** Input type */
     type?: 'text' | 'password' | 'number';
     /** Input variant */
-    variant?: 'standard' | 'netflix';
+    variant?: 'standard' | 'underlined';
+    onOk?: (e: MouseKeyboardEvent, index?: number) => void;
+    onBack?: (e: MouseKeyboardEvent, index?: number) => void;
+    onLeft?: (e: MouseKeyboardEvent, index?: number) => void;
+    onRight?: (e: MouseKeyboardEvent, index?: number) => void;
+    onUp?: (e: MouseKeyboardEvent, index?: number) => void;
+    onDown?: (e: MouseKeyboardEvent, index?: number) => void;
+    onMouseEnter?: (e: MouseKeyboardEvent, index?: number) => void;
+    onMouseLeave?: (e: MouseKeyboardEvent, index?: number) => void;
 } 
