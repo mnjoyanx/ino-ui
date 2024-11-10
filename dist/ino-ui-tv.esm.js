@@ -2196,8 +2196,6 @@ var InoInput = function InoInput(_ref) {
     value = _ref$value === void 0 ? '' : _ref$value,
     _ref$placeholder = _ref.placeholder,
     placeholder = _ref$placeholder === void 0 ? '' : _ref$placeholder,
-    onChange = _ref.onChange,
-    onFocus = _ref.onFocus,
     _ref$disabled = _ref.disabled,
     disabled = _ref$disabled === void 0 ? false : _ref$disabled,
     _ref$showCursor = _ref.showCursor,
@@ -2207,18 +2205,23 @@ var InoInput = function InoInput(_ref) {
     maxLength = _ref.maxLength,
     _ref$isActive = _ref.isActive,
     isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    index = _ref.index,
     _ref$type = _ref.type,
     type = _ref$type === void 0 ? 'text' : _ref$type,
     _ref$variant = _ref.variant,
     variant = _ref$variant === void 0 ? 'standard' : _ref$variant,
-    onBack = _ref.onBack,
+    onChange = _ref.onChange,
+    onFocus = _ref.onFocus,
+    onBlur = _ref.onBlur,
+    _onBack = _ref.onBack,
     onOk = _ref.onOk,
     _onLeft = _ref.onLeft,
     _onRight = _ref.onRight,
     onUp = _ref.onUp,
     onDown = _ref.onDown,
     _onMouseEnter = _ref.onMouseEnter,
-    onMouseLeave = _ref.onMouseLeave;
+    _onMouseLeave = _ref.onMouseLeave,
+    _onPaste = _ref.onPaste;
   var _useState = useState(value.length),
     cursorPosition = _useState[0],
     setCursorPosition = _useState[1];
@@ -2280,11 +2283,14 @@ var InoInput = function InoInput(_ref) {
     },
     onRemove: handleKeyPress,
     onOk: onOk,
-    onBack: onBack,
+    onBack: function onBack(e, index) {
+      _onBack == null || _onBack(e, index);
+      onBlur == null || onBlur(e, index);
+    },
     onUp: onUp,
     onDown: onDown,
     onMouseEnter: _onMouseEnter,
-    onMouseLeave: onMouseLeave
+    onMouseLeave: _onMouseLeave
   });
   useEffect(function () {
     if (contentRef.current && containerRef.current) {
@@ -2301,6 +2307,18 @@ var InoInput = function InoInput(_ref) {
         _onMouseEnter(e);
       }
     },
+    onMouseLeave: function onMouseLeave(e) {
+      if (_onMouseLeave) {
+        _onMouseLeave(e);
+      }
+    },
+    onPaste: function onPaste(e) {
+      if (_onPaste) {
+        _onPaste(e, index);
+      } else {
+        onChange == null || onChange(e.clipboardData.getData('text'));
+      }
+    },
     className: "ino-input ino-input--" + variant + " " + (isActive ? 'active' : '') + " " + (disabled ? 'ino-input--disabled' : '') + " " + classNames,
     onClick: handleFocus,
     role: "textbox",
@@ -2311,7 +2329,7 @@ var InoInput = function InoInput(_ref) {
     className: "ino-input__content"
   }, displayValue.slice(0, cursorPosition), showCursor && isActive && React.createElement("span", {
     className: "ino-input__cursor"
-  }, "|"), displayValue.slice(cursorPosition)), !displayValue && React.createElement("span", {
+  }, "|"), displayValue.slice(cursorPosition)), !displayValue && placeholder && !isActive && React.createElement("span", {
     className: "ino-input__placeholder"
   }, placeholder));
 };
