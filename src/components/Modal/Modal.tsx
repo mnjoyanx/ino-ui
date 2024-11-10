@@ -113,6 +113,7 @@ export const Modal: React.FC<ModalProps> = ({
                 index={0}
                 isActive={activeButtonIndex === 0}
                 variant="outline"
+                size='small'
                 onClick={handleSecondaryAction}
                 onMouseEnter={() => {
                   setActiveButtonIndex(0);
@@ -130,6 +131,8 @@ export const Modal: React.FC<ModalProps> = ({
                 index={1}
                 isActive={activeButtonIndex === 1}
                 variant="primary"
+                size="small"
+                classNames='ok-btn'
                 onClick={handlePrimaryAction}
                 onMouseEnter={() => {
                   setActiveButtonIndex(1);

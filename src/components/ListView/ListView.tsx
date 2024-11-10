@@ -79,7 +79,6 @@ export const ListView: React.FC<ListViewProps> = memo(
     startScrollIndex = 0,
     direction = 'ltr',
     withTitle = false,
-    titleHeight = 0,
     rowGap = 0,
     // debounce = 200,
     onMouseEnter = () => {},
@@ -261,10 +260,8 @@ export const ListView: React.FC<ListViewProps> = memo(
     useEffect(() => {
       const applyTransform = () => {
         if (!scrollViewRef.current) return;
-        console.log('titleHeight', titleHeight);
 
-        const titleOffset = withTitle ? titleHeight + 1 : 0;
-        const verticalSpacing = itemHeight + rowGap + titleOffset;
+        const verticalSpacing = itemHeight + rowGap;
 
         const transform =
           listType === 'horizontal'
