@@ -2,17 +2,12 @@
   background-color: var(--ino-input-bg, #2a2435);
   color: var(--ino-input-text, #ffffff);
   padding: 0.8rem 1rem;
-  border-radius: var(--ino-border-radius-small, 0.3rem);
+  border-radius: var(--ino-border-radius-small);
   min-height: 3rem;
-  font-size: 1rem;
+  font-size: var(--ino-font-size-medium);
   position: relative;
   cursor: pointer;
   transition: background-color 0.2s ease;
-}
-
-.ino-input--focused {
-  background-color: var(--ino-input-bg-focused, #3a3445);
-  outline: 2px solid var(--ino-primary-color, #4a4455);
 }
 
 .ino-input--disabled {
@@ -23,11 +18,10 @@
 .ino-input__cursor {
   display: inline-block;
   animation: blink 1s step-end infinite;
-  margin-left: 2px;
 }
 
 .ino-input__placeholder {
-  color: var(--ino-input-placeholder, #666);
+  color: var(--ino-text-secondary);
 }
 
 @keyframes blink {

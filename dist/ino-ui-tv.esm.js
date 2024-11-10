@@ -2158,6 +2158,7 @@ var InoInput = function InoInput(_ref) {
     value = _ref$value === void 0 ? '' : _ref$value,
     _ref$placeholder = _ref.placeholder,
     placeholder = _ref$placeholder === void 0 ? '' : _ref$placeholder,
+    onChange = _ref.onChange,
     onFocus = _ref.onFocus,
     onBlur = _ref.onBlur,
     _ref$disabled = _ref.disabled,
@@ -2166,6 +2167,7 @@ var InoInput = function InoInput(_ref) {
     showCursor = _ref$showCursor === void 0 ? true : _ref$showCursor,
     _ref$classNames = _ref.classNames,
     classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
+    maxLength = _ref.maxLength,
     _ref$isFocused = _ref.isFocused,
     isFocused = _ref$isFocused === void 0 ? false : _ref$isFocused,
     _ref$type = _ref.type,
@@ -2180,9 +2182,26 @@ var InoInput = function InoInput(_ref) {
   var handleBlur = useCallback(function () {
     onBlur == null || onBlur();
   }, [onBlur]);
+  var handleKeyPress = useCallback(function (e) {
+    if (!isFocused || disabled) return;
+    var newValue = value;
+    // Handle backspace
+    if (e.key === 'Backspace') {
+      newValue = value.slice(0, -1);
+    }
+    // Handle regular input
+    else if (e.key.length === 1) {
+      if (maxLength && value.length >= maxLength) return;
+      if (type === 'number' && !/^\d$/.test(e.key)) return;
+      newValue = value + e.key;
+    }
+    onChange == null || onChange(newValue);
+  }, [value, onChange, maxLength, type, isFocused, disabled]);
   useKeydown({
     isActive: isFocused,
-    back: handleBlur
+    back: handleBlur,
+    number: handleKeyPress,
+    letter: handleKeyPress
   });
   var displayValue = type === 'password' ? '•'.repeat(value.length) : value;
   return React.createElement("div", {

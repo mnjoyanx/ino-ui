@@ -4,22 +4,33 @@ import { checkKey } from "../utils/keys";
 interface KeydownProps {
     [key: string]: ((e: KeyboardEvent) => void) | boolean | undefined;
     number?: ((e: KeyboardEvent) => void) | undefined;
+    letter?: ((e: KeyboardEvent) => void) | undefined;
     isActive: boolean;
 }
 
 function useKeydown(props: KeydownProps): void {
     const handleKeydown = useCallback((e: KeyboardEvent): void => {
-        e.preventDefault();
-        let key = checkKey(e);
+        if (!props.isActive) return;
 
-        if (key && !isNaN(Number(key)) && typeof props["number"] === "function") {
-            key = "number";
+        const key = e.key.toLowerCase();
+
+        // Handle numbers (both numpad and regular)
+        if (/^\d$/.test(key) && typeof props.number === "function") {
+            props.number(e);
+            return;
         }
 
-        if (typeof props[key] === "function") {
-            (props[key] as (e: KeyboardEvent) => void)(e);
+        // Handle letters
+        if (/^[a-z]$/.test(key) && typeof props.letter === "function") {
+            props.letter(e);
+            return;
         }
 
+        // Handle special keys through checkKey
+        const specialKey = checkKey(e);
+        if (specialKey && typeof props[specialKey] === "function") {
+            (props[specialKey] as (e: KeyboardEvent) => void)(e);
+        }
     }, [props]);
 
     useEffect(() => {
