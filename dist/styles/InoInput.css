@@ -1,7 +1,8 @@
 .ino-input {
-  background-color: var(--ino-input-bg, #2a2435);
-  color: var(--ino-input-text, #ffffff);
+  background-color: var(--ino-bg-secondary, #2a2435);
+  color: var(--ino-text-primary, #ffffff);
   padding: 0.8rem 1rem;
+  border: 1px solid transparent;
   border-radius: var(--ino-border-radius-small);
   min-height: 3rem;
   font-size: var(--ino-font-size-medium);
@@ -12,6 +13,15 @@
   white-space: nowrap;
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+
+.ino-input.active {
+  border-color: var(--ino-border-primary);
+}
+
+.ino-input--underlined {
+  border: none !important;
+  border-bottom: 1px solid var(--ino-input-border, #ffffff);
 }
 
 .ino-input::-webkit-scrollbar {
