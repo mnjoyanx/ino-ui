@@ -16,22 +16,28 @@ const DefaultCheckbox: React.FC<DefaultCheckboxProps> = ({
   isChecked,
   isActive,
 }) => (
-  <svg width="2rem" height="2rem" viewBox="0 0 24 24" fill="none">
+  <svg width="2.4rem" height="2.4rem" viewBox="0 0 24 24" fill="none">
     <rect
       x="2"
       y="2"
-      width="2rem"
-      height="2rem"
-      rx="4"
-      stroke={isChecked ? '#2196f3' : isActive ? '#1976d2' : '#ccc'}
-      strokeWidth="0.2rem"
-      fill={isChecked ? '#2196f3' : 'white'}
+      width="20"
+      height="20"
+      rx="6"
+      stroke={
+        isChecked
+          ? 'var(--ino-bg-primary)'
+          : isActive
+          ? 'var(--ino-bg-primary)'
+          : 'var(--ino-border-secondary)'
+      }
+      strokeWidth="2"
+      fill={isChecked ? 'var(--ino-bg-primary)' : 'white'}
     />
     {isChecked && (
       <path
-        d="M7 13L10 16L17 9"
+        d="M7 12L10.5 15.5L17 9"
         stroke="white"
-        strokeWidth="0.2rem"
+        strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

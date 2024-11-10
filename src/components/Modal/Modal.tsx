@@ -4,6 +4,11 @@ import { ModalProps } from './Modal.types';
 import useKeydown from '../../hooks/useKeydown';
 import { InoButton } from '../InoButton/Index';
 
+const ModalPortal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const modalRoot = document.body;
+  return createPortal(children, modalRoot);
+};
+
 /**
  * Modal component for displaying content in an overlay.
  *
@@ -41,6 +46,7 @@ export const Modal: React.FC<ModalProps> = ({
   onPrimaryMouseLeave,
   onSecondaryMouseEnter,
   onSecondaryMouseLeave,
+  isFull = false,
 }) => {
   const [activeButtonIndex, setActiveButtonIndex] = useState<number>(0);
 
@@ -91,65 +97,65 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (!isOpen) return null;
 
-  const modalContent = (
-    <div
-      className={`ino-modal-overlay ${classNames}`}
-      onClick={handleOverlayClick}
-    >
-      <div className="ino-modal">
-        <div className="ino-modal-header">
-          <h2 className="ino-modal-title">{title}</h2>
-          {showCloseIcon && (
-            <button className="ino-modal-close" onClick={handleClose}>
-              &times;
-            </button>
-          )}
-        </div>
-        <div className="ino-modal-content">{children}</div>
-        {(okBtnText || cancelBtnText) && (
-          <div className="ino-modal-footer">
-            {cancelBtnText && (
-              <InoButton
-                index={0}
-                isActive={activeButtonIndex === 0}
-                variant="outline"
-                size='small'
-                onClick={handleSecondaryAction}
-                onMouseEnter={() => {
-                  setActiveButtonIndex(0);
-                  if (onSecondaryMouseEnter) onSecondaryMouseEnter();
-                }}
-                onMouseLeave={() => {
-                  if (onSecondaryMouseLeave) onSecondaryMouseLeave();
-                }}
-              >
-                {cancelBtnText}
-              </InoButton>
-            )}
-            {okBtnText && (
-              <InoButton
-                index={1}
-                isActive={activeButtonIndex === 1}
-                variant="primary"
-                size="small"
-                classNames='ok-btn'
-                onClick={handlePrimaryAction}
-                onMouseEnter={() => {
-                  setActiveButtonIndex(1);
-                  if (onPrimaryMouseEnter) onPrimaryMouseEnter();
-                }}
-                onMouseLeave={() => {
-                  if (onPrimaryMouseLeave) onPrimaryMouseLeave();
-                }}
-              >
-                {okBtnText}
-              </InoButton>
+  return (
+    <ModalPortal>
+      <div
+        className={`ino-modal-overlay ${classNames}`}
+        onClick={handleOverlayClick}
+      >
+        <div className={`ino-modal ${isFull ? 'ino-modal-full-size' : ''}`}>
+          <div className="ino-modal-header">
+            <h2 className="ino-modal-title">{title}</h2>
+            {showCloseIcon && (
+              <button className="ino-modal-close" onClick={handleClose}>
+                &times;
+              </button>
             )}
           </div>
-        )}
+          <div className="ino-modal-content">{children}</div>
+          {(okBtnText || cancelBtnText) && (
+            <div className="ino-modal-footer">
+              {cancelBtnText && (
+                <InoButton
+                  index={0}
+                  isActive={activeButtonIndex === 0}
+                  variant="outline"
+                  size="small"
+                  onClick={handleSecondaryAction}
+                  onMouseEnter={() => {
+                    setActiveButtonIndex(0);
+                    if (onSecondaryMouseEnter) onSecondaryMouseEnter();
+                  }}
+                  onMouseLeave={() => {
+                    if (onSecondaryMouseLeave) onSecondaryMouseLeave();
+                  }}
+                >
+                  {cancelBtnText}
+                </InoButton>
+              )}
+              {okBtnText && (
+                <InoButton
+                  index={1}
+                  isActive={activeButtonIndex === 1}
+                  variant="primary"
+                  size="small"
+                  classNames="ok-btn"
+                  onClick={handlePrimaryAction}
+                  onMouseEnter={() => {
+                    setActiveButtonIndex(1);
+                    if (onPrimaryMouseEnter) onPrimaryMouseEnter();
+                  }}
+                  onMouseLeave={() => {
+                    if (onPrimaryMouseLeave) onPrimaryMouseLeave();
+                  }}
+                >
+                  {okBtnText}
+                </InoButton>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </ModalPortal>
   );
-
-  return createPortal(modalContent, document.body);
 };
