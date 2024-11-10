@@ -9,6 +9,7 @@ export * from './components/Modal/Modal';
 export * from './components/InoButton/Index';
 export * from './components/ThemeProvider/ThemeProvider';
 export * from './components/InoKeyboard/InoKeyboard';
+export * from './components/ScrollView/ScrollView';
 
 // Type exports
 export * from './types/index';
