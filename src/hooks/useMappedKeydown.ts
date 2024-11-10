@@ -57,6 +57,7 @@ export function useMappedKeydown(props: MappedKeydownProps) {
             }
         },
         letter: (e) => {
+            console.log('letter', e);
             if (onLetter) {
                 onLetter(e, index);
             }

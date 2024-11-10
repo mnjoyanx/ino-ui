@@ -83,6 +83,7 @@ export const InoInput: React.FC<InoInputProps> = ({
     onLeft: () => handleNavigation('left'),
     onRight: () => handleNavigation('right'),
   });
+
   useEffect(() => {
     if (contentRef.current && containerRef.current) {
       const container = containerRef.current;
