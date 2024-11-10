@@ -2153,5 +2153,50 @@ var ScrollView = function ScrollView(_ref) {
   }, React.createElement(SvgArrowDown, null)));
 };
 
-export { CheckboxItem, GridView, InoButton, InoKeyboard, ListGridView, ListView, Modal, ScrollView, ThemeProvider };
+var InoInput = function InoInput(_ref) {
+  var _ref$value = _ref.value,
+    value = _ref$value === void 0 ? '' : _ref$value,
+    _ref$placeholder = _ref.placeholder,
+    placeholder = _ref$placeholder === void 0 ? '' : _ref$placeholder,
+    onFocus = _ref.onFocus,
+    onBlur = _ref.onBlur,
+    _ref$disabled = _ref.disabled,
+    disabled = _ref$disabled === void 0 ? false : _ref$disabled,
+    _ref$showCursor = _ref.showCursor,
+    showCursor = _ref$showCursor === void 0 ? true : _ref$showCursor,
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
+    _ref$isFocused = _ref.isFocused,
+    isFocused = _ref$isFocused === void 0 ? false : _ref$isFocused,
+    _ref$type = _ref.type,
+    type = _ref$type === void 0 ? 'text' : _ref$type,
+    _ref$variant = _ref.variant,
+    variant = _ref$variant === void 0 ? 'standard' : _ref$variant;
+  var handleFocus = useCallback(function () {
+    if (!disabled) {
+      onFocus == null || onFocus();
+    }
+  }, [disabled, onFocus]);
+  var handleBlur = useCallback(function () {
+    onBlur == null || onBlur();
+  }, [onBlur]);
+  useKeydown({
+    isActive: isFocused,
+    back: handleBlur
+  });
+  var displayValue = type === 'password' ? '•'.repeat(value.length) : value;
+  return React.createElement("div", {
+    className: "ino-input ino-input--" + variant + " " + (isFocused ? 'ino-input--focused' : '') + " " + (disabled ? 'ino-input--disabled' : '') + " " + classNames,
+    onClick: handleFocus,
+    role: "textbox",
+    tabIndex: disabled ? -1 : 0,
+    "aria-disabled": disabled
+  }, displayValue, showCursor && isFocused && React.createElement("span", {
+    className: "ino-input__cursor"
+  }, "|"), !displayValue && !isFocused && React.createElement("span", {
+    className: "ino-input__placeholder"
+  }, placeholder));
+};
+
+export { CheckboxItem, GridView, InoButton, InoInput, InoKeyboard, ListGridView, ListView, Modal, ScrollView, ThemeProvider };
 //# sourceMappingURL=ino-ui-tv.esm.js.map
