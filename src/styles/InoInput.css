@@ -8,6 +8,19 @@
   position: relative;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.ino-input::-webkit-scrollbar {
+  display: none;
+}
+
+.ino-input__content {
+  display: inline-block;
+  min-width: 100%;
 }
 
 .ino-input--disabled {
@@ -22,6 +35,10 @@
 
 .ino-input__placeholder {
   color: var(--ino-text-secondary);
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 @keyframes blink {

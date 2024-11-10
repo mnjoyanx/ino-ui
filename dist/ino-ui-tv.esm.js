@@ -204,13 +204,22 @@ function checkKey(e) {
 
 function useKeydown(props) {
   var handleKeydown = useCallback(function (e) {
-    e.preventDefault();
-    var key = checkKey(e);
-    if (key && !isNaN(Number(key)) && typeof props["number"] === "function") {
-      key = "number";
+    if (!props.isActive) return;
+    var key = e.key.toLowerCase();
+    // Handle numbers (both numpad and regular)
+    if (/^\d$/.test(key) && typeof props.number === "function") {
+      props.number(e);
+      return;
     }
-    if (typeof props[key] === "function") {
-      props[key](e);
+    // Handle letters
+    if (/^[a-z]$/.test(key) && typeof props.letter === "function") {
+      props.letter(e);
+      return;
+    }
+    // Handle special keys through checkKey
+    var specialKey = checkKey(e);
+    if (specialKey && typeof props[specialKey] === "function") {
+      props[specialKey](e);
     }
   }, [props]);
   useEffect(function () {
