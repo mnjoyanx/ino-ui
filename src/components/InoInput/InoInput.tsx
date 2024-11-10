@@ -7,15 +7,17 @@ import { MouseKeyboardEvent } from '../../types';
 export const InoInput: React.FC<InoInputProps> = ({
   value = '',
   placeholder = '',
-  onChange,
-  onFocus,
   disabled = false,
   showCursor = true,
   classNames = '',
   maxLength,
   isActive = false,
+  index,
   type = 'text',
   variant = 'standard',
+  onChange,
+  onFocus,
+  onBlur,
   onBack,
   onOk,
   onLeft,
@@ -24,6 +26,7 @@ export const InoInput: React.FC<InoInputProps> = ({
   onDown,
   onMouseEnter,
   onMouseLeave,
+  onPaste,
 }) => {
   const [cursorPosition, setCursorPosition] = useState(value.length);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -104,7 +107,10 @@ export const InoInput: React.FC<InoInputProps> = ({
     },
     onRemove: handleKeyPress,
     onOk,
-    onBack,
+    onBack: (e: MouseKeyboardEvent, index?: number) => {
+      onBack?.(e, index);
+      onBlur?.(e, index);
+    },
     onUp,
     onDown,
     onMouseEnter,
@@ -129,6 +135,18 @@ export const InoInput: React.FC<InoInputProps> = ({
           onMouseEnter(e as MouseKeyboardEvent);
         }
       }}
+      onMouseLeave={(e: React.MouseEvent) => {
+        if (onMouseLeave) {
+          onMouseLeave(e as MouseKeyboardEvent);
+        }
+      }}
+      onPaste={(e: React.ClipboardEvent) => {
+        if (onPaste) {
+          onPaste(e, index);
+        } else {
+          onChange?.(e.clipboardData.getData('text'));
+        }
+      }}
       className={`ino-input ino-input--${variant} ${isActive ? 'active' : ''} ${
         disabled ? 'ino-input--disabled' : ''
       } ${classNames}`}
@@ -142,7 +160,7 @@ export const InoInput: React.FC<InoInputProps> = ({
         {showCursor && isActive && <span className="ino-input__cursor">|</span>}
         {displayValue.slice(cursorPosition)}
       </div>
-      {!displayValue && (
+      {!displayValue && placeholder && !isActive && (
         <span className="ino-input__placeholder">{placeholder}</span>
       )}
     </div>
