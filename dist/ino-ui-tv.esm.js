@@ -251,6 +251,7 @@ var DefaultCheckbox = function DefaultCheckbox(_ref) {
 var CheckboxItem = function CheckboxItem(_ref2) {
   var _ref2$defaultChecked = _ref2.defaultChecked,
     defaultChecked = _ref2$defaultChecked === void 0 ? false : _ref2$defaultChecked,
+    checked = _ref2.checked,
     label = _ref2.label,
     onChange = _ref2.onChange,
     isActive = _ref2.isActive,
@@ -266,13 +267,19 @@ var CheckboxItem = function CheckboxItem(_ref2) {
     _ref2$isRTL = _ref2.isRTL,
     isRTL = _ref2$isRTL === void 0 ? false : _ref2$isRTL;
   var _useState = useState(defaultChecked),
-    isChecked = _useState[0],
-    setIsChecked = _useState[1];
+    internalChecked = _useState[0],
+    setInternalChecked = _useState[1];
+  // Use checked prop if provided, otherwise use internal state
+  var isChecked = checked !== undefined ? checked : internalChecked;
   var handleToggle = useCallback(function () {
     var newCheckedState = !isChecked;
-    setIsChecked(newCheckedState);
-    onChange(newCheckedState);
-  }, [isChecked, onChange]);
+    // Only update internal state if not controlled
+    if (checked === undefined) {
+      setInternalChecked(newCheckedState);
+    }
+    // Only call onChange if it exists
+    onChange == null || onChange(newCheckedState);
+  }, [isChecked, onChange, checked]);
   var keyDownOptions = {
     isActive: isActive,
     ok: function ok() {

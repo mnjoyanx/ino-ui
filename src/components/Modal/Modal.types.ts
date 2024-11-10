@@ -19,7 +19,7 @@ export interface ModalProps {
     /** Determines if the modal should close when the overlay is clicked */
     closeOnOverlayClick?: boolean;
     /** Determines if the modal should be full size */
-    isFull?: boolean;
+    size?: 'small' | 'mid' | 'large' | 'full';
     /** Function to call when the primary button is clicked */
     onOk?: () => void;
     /** Text for the secondary action button (e.g., "Cancel" or "Close") */

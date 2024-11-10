@@ -40,13 +40,13 @@ export const Modal: React.FC<ModalProps> = ({
   onOk,
   cancelBtnText,
   onCancel,
-  showCloseIcon = true,
+  showCloseIcon = false,
   closeOnOverlayClick = true,
   onPrimaryMouseEnter,
   onPrimaryMouseLeave,
   onSecondaryMouseEnter,
   onSecondaryMouseLeave,
-  isFull = false,
+  size = 'small',
 }) => {
   const [activeButtonIndex, setActiveButtonIndex] = useState<number>(0);
 
@@ -103,7 +103,7 @@ export const Modal: React.FC<ModalProps> = ({
         className={`ino-modal-overlay ${classNames}`}
         onClick={handleOverlayClick}
       >
-        <div className={`ino-modal ${isFull ? 'ino-modal-full-size' : ''}`}>
+        <div className={`ino-modal ino-modal--${size}`}>
           <div className="ino-modal-header">
             <h2 className="ino-modal-title">{title}</h2>
             {showCloseIcon && (
