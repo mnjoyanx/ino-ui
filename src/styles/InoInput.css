@@ -13,6 +13,10 @@
   white-space: nowrap;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
 }
 
 .ino-input.active {
@@ -59,4 +63,13 @@
   50% {
     opacity: 0;
   }
+}
+
+.ino-input[contenteditable='true'] {
+  cursor: text;
+}
+
+.ino-input[contenteditable='true']:empty:before {
+  content: attr(placeholder);
+  color: var(--ino-text-secondary);
 }

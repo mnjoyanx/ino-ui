@@ -38,6 +38,28 @@ export const InoInput: React.FC<InoInputProps> = ({
     }
   }, [disabled, onFocus]);
 
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (disabled) return;
+
+      const rect = contentRef.current?.getBoundingClientRect();
+      if (!rect) return;
+
+      const x = e.clientX - rect.left;
+      const text = value;
+      let newPosition = text.length;
+
+      // Calculate approximate character position based on click position
+      const charWidth = 8; // Approximate character width in pixels
+      const clickedPosition = Math.floor(x / charWidth);
+      newPosition = Math.min(Math.max(0, clickedPosition), text.length);
+
+      setCursorPosition(newPosition);
+      handleFocus();
+    },
+    [value, disabled, handleFocus]
+  );
+
   const updateCursorPosition = useCallback(
     (direction: 'left' | 'right') => {
       setCursorPosition(prev => {
@@ -130,27 +152,34 @@ export const InoInput: React.FC<InoInputProps> = ({
   return (
     <div
       ref={containerRef}
+      contentEditable={!disabled}
+      onContextMenu={e => e.preventDefault()} // Prevent default context menu
       onMouseEnter={(e: React.MouseEvent) => {
-        if (onMouseEnter) {
-          onMouseEnter(e as MouseKeyboardEvent);
-        }
+        onMouseEnter?.(e as MouseKeyboardEvent);
       }}
       onMouseLeave={(e: React.MouseEvent) => {
-        if (onMouseLeave) {
-          onMouseLeave(e as MouseKeyboardEvent);
-        }
+        onMouseLeave?.(e as MouseKeyboardEvent);
       }}
       onPaste={(e: React.ClipboardEvent) => {
+        e.preventDefault(); // Prevent default paste
+        const pastedText = e.clipboardData.getData('text');
         if (onPaste) {
           onPaste(e, index);
-        } else {
-          onChange?.(e.clipboardData.getData('text'));
+        } else if (!disabled) {
+          const newText =
+            value.slice(0, cursorPosition) +
+            pastedText +
+            value.slice(cursorPosition);
+          if (!maxLength || newText.length <= maxLength) {
+            onChange?.(newText);
+            setCursorPosition(cursorPosition + pastedText.length);
+          }
         }
       }}
       className={`ino-input ino-input--${variant} ${isActive ? 'active' : ''} ${
         disabled ? 'ino-input--disabled' : ''
       } ${classNames}`}
-      onClick={handleFocus}
+      onClick={handleClick}
       role="textbox"
       tabIndex={disabled ? -1 : 0}
       aria-disabled={disabled}
