@@ -2399,53 +2399,44 @@ var InoInput = function InoInput(_ref) {
   }, placeholder));
 };
 
-var InoTab = function InoTab(_ref) {
-  var label = _ref.label,
-    _ref$isActive = _ref.isActive,
-    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
-    _ref$disabled = _ref.disabled,
-    disabled = _ref$disabled === void 0 ? false : _ref$disabled,
-    index = _ref.index,
-    _ref$classNames = _ref.classNames,
-    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
+var InoTabs = function InoTabs(_ref) {
+  var children = _ref.children,
+    _ref$activeIndex = _ref.activeIndex,
+    activeIndex = _ref$activeIndex === void 0 ? 0 : _ref$activeIndex,
+    onChange = _ref.onChange,
     _ref$variant = _ref.variant,
     variant = _ref$variant === void 0 ? 'primary' : _ref$variant,
     _ref$size = _ref.size,
     size = _ref$size === void 0 ? 'medium' : _ref$size,
-    _onClick = _ref.onClick,
-    onLeft = _ref.onLeft,
-    onRight = _ref.onRight,
-    onUp = _ref.onUp,
-    onDown = _ref.onDown,
-    onBack = _ref.onBack,
-    _onMouseEnter = _ref.onMouseEnter;
-  useMappedKeydown({
-    isActive: isActive,
-    onOk: _onClick,
-    onBack: onBack,
-    onLeft: onLeft,
-    onRight: onRight,
-    onUp: onUp,
-    onDown: onDown,
-    onMouseEnter: _onMouseEnter,
-    index: index
-  });
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames;
+  var _useState = React.useState(activeIndex),
+    selectedIndex = _useState[0],
+    setSelectedIndex = _useState[1];
+  React.useEffect(function () {
+    setSelectedIndex(activeIndex);
+  }, [activeIndex]);
+  var handleTabChange = function handleTabChange(index) {
+    setSelectedIndex(index);
+    onChange == null || onChange(index);
+  };
   return React__default.createElement("div", {
-    role: "tab",
-    "aria-selected": isActive,
-    "aria-disabled": disabled,
-    onClick: function onClick(e) {
-      if (!disabled && _onClick) {
-        _onClick(e, index);
-      }
-    },
-    onMouseEnter: function onMouseEnter(e) {
-      if (_onMouseEnter) {
-        _onMouseEnter(e, index);
-      }
-    },
-    className: "ino-tab ino-tab--" + variant + " ino-tab--" + size + " " + (isActive ? 'ino-tab--active' : '') + " " + (disabled ? 'ino-tab--disabled' : '') + " " + classNames
-  }, label);
+    role: "tablist",
+    className: "ino-tabs ino-tabs--" + variant + " ino-tabs--" + size + " " + classNames
+  }, React__default.Children.map(children, function (child, index) {
+    if (React__default.isValidElement(child)) {
+      return React__default.cloneElement(child, {
+        isActive: index === selectedIndex,
+        onClick: function onClick() {
+          return handleTabChange(index);
+        },
+        index: index,
+        variant: variant,
+        size: size
+      });
+    }
+    return child;
+  }));
 };
 
 var InoElementWrapper = function InoElementWrapper(_ref) {
@@ -2600,7 +2591,7 @@ exports.InoCol = InoCol;
 exports.InoInput = InoInput;
 exports.InoKeyboard = InoKeyboard;
 exports.InoRow = InoRow;
-exports.InoTab = InoTab;
+exports.InoTabs = InoTabs;
 exports.ListGridView = ListGridView;
 exports.ListView = ListView;
 exports.Modal = Modal;
