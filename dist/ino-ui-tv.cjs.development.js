@@ -1208,7 +1208,7 @@ var ListGridView = function ListGridView(_ref) {
       uniqueKey: index + "-list-view",
       listType: "horizontal",
       itemsTotal: item.list.length,
-      itemsCount: item.list.length,
+      itemsCount: listViewProps.itemsCount || 1,
       buffer: listViewProps.buffer || 3,
       itemWidth: listViewProps.itemWidth || 20,
       itemHeight: listViewProps.itemHeight || 30,
