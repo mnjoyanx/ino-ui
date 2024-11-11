@@ -637,7 +637,7 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
       back: back,
       ok: ok
     };
-  }, [isActive, nativeControle, left, right, up, down, back, onOk]);
+  }, [isActive, nativeControle, left, right, up, down, back, onOk, debounce]);
   useKeydown(keyDownOptions);
   return React__default.createElement("div", {
     ref: containerRef,
@@ -1073,7 +1073,8 @@ var ListView = /*#__PURE__*/React.memo(function (_ref) {
         return next(itemsCount);
       },
       back: back,
-      ok: handleOk
+      ok: handleOk,
+      debounce: debounce
     };
   }, [isActive, nativeControle, listType, prev, next, itemsCount, back, handleOk, debounce]);
   useKeydown(keyDownOptions);
