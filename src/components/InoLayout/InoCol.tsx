@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { InoColProps } from './InoLayout.types';
 import { useMappedKeydown } from '../../hooks/useMappedKeydown';
+import { InoElementWrapper } from './InoElementWrapper';
 import '../../styles/InoLayout.css';
 
 export const InoCol: React.FC<InoColProps> = ({
@@ -50,17 +51,23 @@ export const InoCol: React.FC<InoColProps> = ({
   return (
     <div className={`ino-col ${classNames}`}>
       {React.Children.map(children, (child, idx) => {
-        if (React.isValidElement<InoColProps & { className: string }>(child)) {
-          return React.cloneElement(child, {
-            ...child.props,
-            isActive: isActive && idx === activeIndex,
-            index: idx,
-            className: `${child.props.className || ''} ${
-              isActive && !child.props.className?.includes('active')
-                ? 'active'
-                : ''
-            }`,
-          });
+        if (React.isValidElement(child)) {
+          if ('isActive' in child.props) {
+            return React.cloneElement(child, {
+              ...child.props,
+              isActive: isActive && idx === activeIndex,
+              index: idx,
+            });
+          } else {
+            return (
+              <InoElementWrapper
+                isActive={isActive && idx === activeIndex}
+                index={idx}
+              >
+                {child}
+              </InoElementWrapper>
+            );
+          }
         }
         return child;
       })}

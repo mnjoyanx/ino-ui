@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { InoRowProps } from './InoLayout.types';
 import { useMappedKeydown } from '../../hooks/useMappedKeydown';
+import { InoElementWrapper } from './InoElementWrapper';
 import '../../styles/InoLayout.css';
 
 export const InoRow: React.FC<InoRowProps> = ({
@@ -50,17 +51,23 @@ export const InoRow: React.FC<InoRowProps> = ({
   return (
     <div className={`ino-row ${classNames}`}>
       {React.Children.map(children, (child, idx) => {
-        if (React.isValidElement<InoRowProps & { className: string }>(child)) {
-          return React.cloneElement(child, {
-            ...child.props,
-            isActive: isActive && idx === activeIndex,
-            index: idx,
-            className: `${child.props.classNames} ${classNames} ${
-              isActive && !child.props.classNames?.includes('active')
-                ? 'active'
-                : ''
-            }`,
-          });
+        if (React.isValidElement(child)) {
+          if ('isActive' in child.props) {
+            return React.cloneElement(child, {
+              ...child.props,
+              isActive: isActive && idx === activeIndex,
+              index: idx,
+            });
+          } else {
+            return (
+              <InoElementWrapper
+                isActive={isActive && idx === activeIndex}
+                index={idx}
+              >
+                {child}
+              </InoElementWrapper>
+            );
+          }
         }
         return child;
       })}

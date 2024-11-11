@@ -2492,10 +2492,11 @@ var InoRow = function InoRow(_ref) {
     className: "ino-row " + classNames
   }, React.Children.map(children, function (child, idx) {
     if (React.isValidElement(child)) {
+      var _child$props$classNam;
       return React.cloneElement(child, _extends({}, child.props, {
         isActive: isActive && idx === activeIndex,
         index: idx,
-        classNames: child.props.classNames + " " + classNames + " " + (isActive ? 'active' : '')
+        className: child.props.classNames + " " + classNames + " " + (isActive && !((_child$props$classNam = child.props.classNames) != null && _child$props$classNam.includes('active')) ? 'active' : '')
       }));
     }
     return child;
@@ -2553,10 +2554,11 @@ var InoCol = function InoCol(_ref) {
     className: "ino-col " + classNames
   }, React.Children.map(children, function (child, idx) {
     if (React.isValidElement(child)) {
+      var _child$props$classNam;
       return React.cloneElement(child, _extends({}, child.props, {
         isActive: isActive && idx === activeIndex,
         index: idx,
-        classNames: child.props.classNames + " " + classNames + " " + (isActive ? 'active' : '')
+        className: (child.props.className || '') + " " + (isActive && !((_child$props$classNam = child.props.className) != null && _child$props$classNam.includes('active')) ? 'active' : '')
       }));
     }
     return child;

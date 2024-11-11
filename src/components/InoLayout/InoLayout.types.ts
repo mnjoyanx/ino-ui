@@ -1,8 +1,8 @@
-import { ReactElement } from 'react';
+import { ReactNode } from 'react';
 import { MouseKeyboardEvent } from '../../types';
 
 export interface InoRowProps {
-    children: ReactElement | ReactElement[];
+    children: ReactNode;
     /** Whether the row navigation is active */
     isActive?: boolean;
     /** Index of the row */
@@ -19,7 +19,7 @@ export interface InoRowProps {
 }
 
 export interface InoColProps {
-    children: ReactElement | ReactElement[];
+    children: ReactNode;
     /** Whether the column navigation is active */
     isActive?: boolean;
     /** Index of the column */
@@ -33,4 +33,12 @@ export interface InoColProps {
     /** Navigation callbacks */
     onLeft?: (e: MouseKeyboardEvent, index?: number) => void;
     onRight?: (e: MouseKeyboardEvent, index?: number) => void;
-} 
+}
+
+// Create a wrapper component type for HTML elements
+export interface InoElementWrapperProps {
+    children: ReactNode;
+    isActive?: boolean;
+    index?: number;
+    classNames?: string;
+}
