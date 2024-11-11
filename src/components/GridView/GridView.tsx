@@ -334,7 +334,7 @@ export const GridView: React.FC<GridViewProps> = memo(
         back,
         ok,
       }),
-      [isActive, nativeControle, left, right, up, down, back, onOk]
+      [isActive, nativeControle, left, right, up, down, back, onOk, debounce]
     );
 
     useKeydown(keyDownOptions);

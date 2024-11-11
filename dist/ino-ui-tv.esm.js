@@ -229,6 +229,7 @@ function useKeydown(props) {
         executeKeyHandler(specialKey);
       }
     }
+    console.log(props.debounce, 'debounce');
     // Set up debounced repeat
     intervalRef.current = setInterval(function () {
       if (/^\d$/.test(key) && props.number) {

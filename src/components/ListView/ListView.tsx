@@ -313,6 +313,7 @@ export const ListView: React.FC<ListViewProps> = memo(
         channel_down: () => next(itemsCount),
         back,
         ok: handleOk,
+        debounce,
       }),
       [
         isActive,
