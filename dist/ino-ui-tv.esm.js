@@ -1216,8 +1216,8 @@ var ListGridView = function ListGridView(_ref) {
   return React.createElement(ListView, {
     id: activeIndex + "-list-grid-view",
     uniqueKey: activeIndex + "-list-grid-view",
-    itemWidth: 20,
-    itemHeight: 30,
+    itemWidth: listViewProps.itemWidth,
+    itemHeight: listViewProps.itemHeight,
     data: currentList,
     listType: "vertical",
     itemsCount: itemsPerRow,

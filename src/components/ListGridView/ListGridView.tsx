@@ -67,11 +67,11 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
             listType="horizontal"
             itemsTotal={item.list.length}
             itemsCount={item.list.length}
-            buffer={3}
-            itemWidth={20}
-            itemHeight={30}
-            gap={listViewProps.gap}
-            rowGap={rowGap}
+            buffer={listViewProps.buffer || 3}
+            itemWidth={listViewProps.itemWidth || 20}
+            itemHeight={listViewProps.itemHeight || 30}
+            gap={listViewProps.gap || 0}
+            rowGap={rowGap || 0}
             withTitle={withTitle}
             isActive={isActive && currentRow === index}
             renderItem={listViewProps.renderItem}
