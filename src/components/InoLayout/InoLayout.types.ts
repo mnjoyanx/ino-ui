@@ -16,6 +16,9 @@ export interface InoRowProps {
     /** Navigation callbacks */
     onUp?: (e: MouseKeyboardEvent, index?: number) => void;
     onDown?: (e: MouseKeyboardEvent, index?: number) => void;
+    onLeft?: (e: MouseKeyboardEvent, index?: number) => void;
+    onRight?: (e: MouseKeyboardEvent, index?: number) => void;
+    onOk?: (e: MouseKeyboardEvent, index?: number) => void;
 }
 
 export interface InoColProps {
@@ -33,6 +36,9 @@ export interface InoColProps {
     /** Navigation callbacks */
     onLeft?: (e: MouseKeyboardEvent, index?: number) => void;
     onRight?: (e: MouseKeyboardEvent, index?: number) => void;
+    onUp?: (e: MouseKeyboardEvent, index?: number) => void;
+    onDown?: (e: MouseKeyboardEvent, index?: number) => void;
+    onOk?: (e: MouseKeyboardEvent, index?: number) => void;
 }
 
 // Create a wrapper component type for HTML elements

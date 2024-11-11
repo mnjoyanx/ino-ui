@@ -12,6 +12,9 @@ export const InoCol: React.FC<InoColProps> = ({
   onActiveChange,
   onLeft,
   onRight,
+  onUp,
+  onDown,
+  onOk,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const childrenArray = React.Children.toArray(children);
@@ -42,10 +45,25 @@ export const InoCol: React.FC<InoColProps> = ({
 
   useMappedKeydown({
     isActive,
-    onUp: () => handleNavigation('up'),
-    onDown: () => handleNavigation('down'),
+    onUp: e => {
+      handleNavigation('up');
+      if (onUp) {
+        if (activeIndex === 0 && !infinite) {
+          onUp(e, activeIndex);
+        }
+      }
+    },
+    onDown: e => {
+      handleNavigation('down');
+      if (onDown) {
+        if (activeIndex === childrenArray.length - 1 && !infinite) {
+          onDown(e, activeIndex);
+        }
+      }
+    },
     onLeft,
     onRight,
+    onOk,
   });
 
   return (

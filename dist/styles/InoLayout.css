@@ -9,15 +9,3 @@
   flex-direction: column;
   gap: var(--ino-spacing-medium, 1rem);
 }
-
-.ino-element-wrapper {
-  padding: 0.5rem;
-  border: 2px solid transparent;
-  border-radius: var(--ino-border-radius-small, 4px);
-  transition: all 0.2s ease;
-}
-
-.ino-element-wrapper.active {
-  border-color: var(--ino-border-primary, #007bff);
-  background-color: var(--ino-bg-active, rgba(0, 123, 255, 0.1));
-}
