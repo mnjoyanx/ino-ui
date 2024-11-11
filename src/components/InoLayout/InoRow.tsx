@@ -50,13 +50,15 @@ export const InoRow: React.FC<InoRowProps> = ({
   return (
     <div className={`ino-row ${classNames}`}>
       {React.Children.map(children, (child, idx) => {
-        if (React.isValidElement<InoRowProps>(child)) {
+        if (React.isValidElement<InoRowProps & { className: string }>(child)) {
           return React.cloneElement(child, {
             ...child.props,
             isActive: isActive && idx === activeIndex,
             index: idx,
-            classNames: `${child.props.classNames} ${classNames} ${
-              isActive ? 'active' : ''
+            className: `${child.props.classNames} ${classNames} ${
+              isActive && !child.props.classNames?.includes('active')
+                ? 'active'
+                : ''
             }`,
           });
         }

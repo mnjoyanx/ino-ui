@@ -50,13 +50,15 @@ export const InoCol: React.FC<InoColProps> = ({
   return (
     <div className={`ino-col ${classNames}`}>
       {React.Children.map(children, (child, idx) => {
-        if (React.isValidElement<InoColProps>(child)) {
+        if (React.isValidElement<InoColProps & { className: string }>(child)) {
           return React.cloneElement(child, {
             ...child.props,
             isActive: isActive && idx === activeIndex,
             index: idx,
-            classNames: `${child.props.classNames} ${classNames} ${
-              isActive ? 'active' : ''
+            className: `${child.props.className || ''} ${
+              isActive && !child.props.className?.includes('active')
+                ? 'active'
+                : ''
             }`,
           });
         }

@@ -2494,7 +2494,8 @@ var InoRow = function InoRow(_ref) {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, _extends({}, child.props, {
         isActive: isActive && idx === activeIndex,
-        index: idx
+        index: idx,
+        classNames: child.props.classNames + " " + classNames + " " + (isActive ? 'active' : '')
       }));
     }
     return child;
@@ -2554,7 +2555,8 @@ var InoCol = function InoCol(_ref) {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, _extends({}, child.props, {
         isActive: isActive && idx === activeIndex,
-        index: idx
+        index: idx,
+        classNames: child.props.classNames + " " + classNames + " " + (isActive ? 'active' : '')
       }));
     }
     return child;
