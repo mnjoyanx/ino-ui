@@ -12,6 +12,7 @@ export * from './components/InoKeyboard/InoKeyboard';
 export * from './components/ScrollView/ScrollView';
 export * from './components/InoInput/InoInput';
 export * from './components/InoTab/InoTabs';
+export * from './components/InoTab/InoTab';
 export * from './components/InoLayout/index';
 export * from './components/InoLayout/InoCol';
 export * from './components/InoLayout/InoRow';

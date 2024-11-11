@@ -2439,6 +2439,55 @@ var InoTabs = function InoTabs(_ref) {
   }));
 };
 
+var InoTab = function InoTab(_ref) {
+  var label = _ref.label,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    _ref$disabled = _ref.disabled,
+    disabled = _ref$disabled === void 0 ? false : _ref$disabled,
+    index = _ref.index,
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
+    _ref$variant = _ref.variant,
+    variant = _ref$variant === void 0 ? 'primary' : _ref$variant,
+    _ref$size = _ref.size,
+    size = _ref$size === void 0 ? 'medium' : _ref$size,
+    _onClick = _ref.onClick,
+    onLeft = _ref.onLeft,
+    onRight = _ref.onRight,
+    onUp = _ref.onUp,
+    onDown = _ref.onDown,
+    onBack = _ref.onBack,
+    _onMouseEnter = _ref.onMouseEnter;
+  useMappedKeydown({
+    isActive: isActive,
+    onOk: _onClick,
+    onBack: onBack,
+    onLeft: onLeft,
+    onRight: onRight,
+    onUp: onUp,
+    onDown: onDown,
+    onMouseEnter: _onMouseEnter,
+    index: index
+  });
+  return React__default.createElement("div", {
+    role: "tab",
+    "aria-selected": isActive,
+    "aria-disabled": disabled,
+    onClick: function onClick(e) {
+      if (!disabled && _onClick) {
+        _onClick(e, index);
+      }
+    },
+    onMouseEnter: function onMouseEnter(e) {
+      if (_onMouseEnter) {
+        _onMouseEnter(e, index);
+      }
+    },
+    className: "ino-tab ino-tab--" + variant + " ino-tab--" + size + " " + (isActive ? 'ino-tab--active' : '') + " " + (disabled ? 'ino-tab--disabled' : '') + " " + classNames
+  }, label);
+};
+
 var InoElementWrapper = function InoElementWrapper(_ref) {
   var children = _ref.children,
     _ref$isActive = _ref.isActive,
@@ -2460,7 +2509,10 @@ var InoRow = function InoRow(_ref) {
     classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
     onActiveChange = _ref.onActiveChange,
     onUp = _ref.onUp,
-    onDown = _ref.onDown;
+    onDown = _ref.onDown,
+    _onLeft = _ref.onLeft,
+    _onRight = _ref.onRight,
+    onOk = _ref.onOk;
   var _useState = React.useState(0),
     activeIndex = _useState[0],
     setActiveIndex = _useState[1];
@@ -2488,14 +2540,23 @@ var InoRow = function InoRow(_ref) {
   };
   useMappedKeydown({
     isActive: isActive,
-    onLeft: function onLeft() {
-      return handleNavigation('left');
+    onLeft: function onLeft(e) {
+      if (activeIndex === 0 && !infinite && _onLeft) {
+        _onLeft(e, activeIndex);
+      } else {
+        handleNavigation('left');
+      }
     },
-    onRight: function onRight() {
-      return handleNavigation('right');
+    onRight: function onRight(e) {
+      if (activeIndex === childrenArray.length - 1 && !infinite && _onRight) {
+        _onRight(e, activeIndex);
+      } else {
+        handleNavigation('right');
+      }
     },
     onUp: onUp,
-    onDown: onDown
+    onDown: onDown,
+    onOk: onOk
   });
   return React__default.createElement("div", {
     className: "ino-row " + classNames
@@ -2527,7 +2588,10 @@ var InoCol = function InoCol(_ref) {
     classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
     onActiveChange = _ref.onActiveChange,
     onLeft = _ref.onLeft,
-    onRight = _ref.onRight;
+    onRight = _ref.onRight,
+    _onUp = _ref.onUp,
+    _onDown = _ref.onDown,
+    onOk = _ref.onOk;
   var _useState = React.useState(0),
     activeIndex = _useState[0],
     setActiveIndex = _useState[1];
@@ -2555,14 +2619,23 @@ var InoCol = function InoCol(_ref) {
   };
   useMappedKeydown({
     isActive: isActive,
-    onUp: function onUp() {
-      return handleNavigation('up');
+    onUp: function onUp(e) {
+      if (activeIndex === 0 && !infinite && _onUp) {
+        _onUp(e, activeIndex);
+      } else {
+        handleNavigation('up');
+      }
     },
-    onDown: function onDown() {
-      return handleNavigation('down');
+    onDown: function onDown(e) {
+      if (activeIndex === childrenArray.length - 1 && !infinite && _onDown) {
+        _onDown(e, activeIndex);
+      } else {
+        handleNavigation('down');
+      }
     },
     onLeft: onLeft,
-    onRight: onRight
+    onRight: onRight,
+    onOk: onOk
   });
   return React__default.createElement("div", {
     className: "ino-col " + classNames
@@ -2591,6 +2664,7 @@ exports.InoCol = InoCol;
 exports.InoInput = InoInput;
 exports.InoKeyboard = InoKeyboard;
 exports.InoRow = InoRow;
+exports.InoTab = InoTab;
 exports.InoTabs = InoTabs;
 exports.ListGridView = ListGridView;
 exports.ListView = ListView;

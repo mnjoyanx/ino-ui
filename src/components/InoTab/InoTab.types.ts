@@ -34,14 +34,22 @@ export interface InoTabProps {
 export interface InoTabsProps {
     /** Tab components */
     children: React.ReactElement<InoTabProps> | React.ReactElement<InoTabProps>[];
-    /** Index of the currently active tab */
+    /** Index of the currently selected tab */
+    selectedIndex?: number;
+    /** Index of the currently active (focused) tab */
     activeIndex?: number;
-    /** Called when active tab changes */
+    /** Whether to change tab only on OK press */
+    changeByOnOk?: boolean;
+    /** Called when selected tab changes */
     onChange?: (index: number) => void;
+    /** Called when active tab changes */
+    onActiveChange?: (index: number) => void;
     /** Visual variant applied to all tabs */
     variant?: 'primary' | 'secondary';
     /** Size variant applied to all tabs */
     size?: 'small' | 'medium' | 'large';
+    /** Whether to enable infinite navigation */
+    infinite?: boolean;
     /** Additional class names */
     classNames?: string;
 } 

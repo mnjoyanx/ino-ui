@@ -15,6 +15,9 @@ export interface InoRowProps {
     /** Navigation callbacks */
     onUp?: (e: MouseKeyboardEvent, index?: number) => void;
     onDown?: (e: MouseKeyboardEvent, index?: number) => void;
+    onLeft?: (e: MouseKeyboardEvent, index?: number) => void;
+    onRight?: (e: MouseKeyboardEvent, index?: number) => void;
+    onOk?: (e: MouseKeyboardEvent, index?: number) => void;
 }
 export interface InoColProps {
     children: ReactNode;
@@ -31,6 +34,9 @@ export interface InoColProps {
     /** Navigation callbacks */
     onLeft?: (e: MouseKeyboardEvent, index?: number) => void;
     onRight?: (e: MouseKeyboardEvent, index?: number) => void;
+    onUp?: (e: MouseKeyboardEvent, index?: number) => void;
+    onDown?: (e: MouseKeyboardEvent, index?: number) => void;
+    onOk?: (e: MouseKeyboardEvent, index?: number) => void;
 }
 export interface InoElementWrapperProps {
     children: ReactNode;

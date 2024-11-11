@@ -46,19 +46,17 @@ export const InoRow: React.FC<InoRowProps> = ({
   useMappedKeydown({
     isActive,
     onLeft: e => {
-      handleNavigation('left');
-      if (onLeft) {
-        if (activeIndex === 0 && !infinite) {
-          onLeft(e, activeIndex);
-        }
+      if (activeIndex === 0 && !infinite && onLeft) {
+        onLeft(e, activeIndex);
+      } else {
+        handleNavigation('left');
       }
     },
     onRight: e => {
-      handleNavigation('right');
-      if (onRight) {
-        if (activeIndex === childrenArray.length - 1 && !infinite) {
-          onRight(e, activeIndex);
-        }
+      if (activeIndex === childrenArray.length - 1 && !infinite && onRight) {
+        onRight(e, activeIndex);
+      } else {
+        handleNavigation('right');
       }
     },
     onUp,

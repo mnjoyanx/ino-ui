@@ -12,7 +12,7 @@ export interface InoButtonProps {
     /**
      * The index of the button.
      */
-    index: number;
+    index?: number;
 
     /**
      * The content to be displayed inside the button.

@@ -46,19 +46,17 @@ export const InoCol: React.FC<InoColProps> = ({
   useMappedKeydown({
     isActive,
     onUp: e => {
-      handleNavigation('up');
-      if (onUp) {
-        if (activeIndex === 0 && !infinite) {
-          onUp(e, activeIndex);
-        }
+      if (activeIndex === 0 && !infinite && onUp) {
+        onUp(e, activeIndex);
+      } else {
+        handleNavigation('up');
       }
     },
     onDown: e => {
-      handleNavigation('down');
-      if (onDown) {
-        if (activeIndex === childrenArray.length - 1 && !infinite) {
-          onDown(e, activeIndex);
-        }
+      if (activeIndex === childrenArray.length - 1 && !infinite && onDown) {
+        onDown(e, activeIndex);
+      } else {
+        handleNavigation('down');
       }
     },
     onLeft,

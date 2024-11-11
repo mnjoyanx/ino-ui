@@ -6,6 +6,7 @@ import { MouseKeyboardEvent } from '../../types';
 export const InoTab: React.FC<InoTabProps> = ({
   label,
   isActive = false,
+  isSelected = false,
   disabled = false,
   index,
   classNames = '',
@@ -34,7 +35,7 @@ export const InoTab: React.FC<InoTabProps> = ({
   return (
     <div
       role="tab"
-      aria-selected={isActive}
+      aria-selected={isSelected}
       aria-disabled={disabled}
       onClick={(e: React.MouseEvent) => {
         if (!disabled && onClick) {
@@ -46,9 +47,11 @@ export const InoTab: React.FC<InoTabProps> = ({
           onMouseEnter(e as MouseKeyboardEvent, index);
         }
       }}
-      className={`ino-tab ino-tab--${variant} ino-tab--${size} ${
-        isActive ? 'ino-tab--active' : ''
-      } ${disabled ? 'ino-tab--disabled' : ''} ${classNames}`}
+      className={`ino-tab ino-tab--${variant} ino-tab--${size} 
+        ${isActive ? 'ino-tab--active' : ''} 
+        ${isSelected ? 'ino-tab--selected' : ''} 
+        ${disabled ? 'ino-tab--disabled' : ''} 
+        ${classNames}`}
     >
       {label}
     </div>
