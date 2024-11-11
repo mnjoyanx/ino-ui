@@ -3,6 +3,8 @@ import { MouseKeyboardEvent } from "../../types";
 export interface InoTabProps {
     /** Label text for the tab */
     label: string;
+    /** Content of the tab panel */
+    children?: React.ReactNode;
     /** Whether the tab is currently active (focused) */
     isActive?: boolean;
     /** Whether the tab is currently selected */

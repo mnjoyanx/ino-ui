@@ -25,7 +25,9 @@
 
 /* Active (focused) state */
 .ino-tab--active {
-  color: var(--ino-text-primary);
+  background-color: var(--ino-bg-hover);
+  box-shadow: 0 0 0 2px var(--ino-border-focus);
+  transform: scale(1.02);
 }
 
 /* Selected state */
@@ -36,7 +38,7 @@
 
 /* Active and selected combined state */
 .ino-tab--active.ino-tab--selected {
-  box-shadow: 0 0 0 2px var(--ino-border-focus, var(--ino-bg-primary));
+  box-shadow: 0 0 0 2px var(--ino-border-focus);
   transform: scale(1.02);
 }
 
@@ -51,41 +53,16 @@
 
 /* Size variants */
 .ino-tab--small {
-  padding: 1.2rem 2.4rem;
+  padding: 4px 8px;
   font-size: var(--ino-font-size-small);
 }
 
 .ino-tab--medium {
-  padding: 1.2rem 2.4rem;
+  padding: 8px 16px;
   font-size: var(--ino-font-size-medium);
 }
 
 .ino-tab--large {
-  padding: 1.2rem 2.4rem;
+  padding: 12px 24px;
   font-size: var(--ino-font-size-large);
-}
-
-.ino-tabs-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
-}
-
-.ino-tab-panels {
-  background-color: var(--ino-bg-secondary);
-  border-radius: var(--ino-border-radius-medium);
-  padding: 1.6rem;
-}
-
-.ino-tab-panel {
-  animation: fadeIn 0.2s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }

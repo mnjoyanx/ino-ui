@@ -67,24 +67,41 @@ export const InoTabs: React.FC<InoTabsProps> = ({
   });
 
   return (
-    <div
-      role="tablist"
-      className={`ino-tabs ino-tabs--${variant} ino-tabs--${size} ${classNames}`}
-    >
-      {React.Children.map(children, (child, index) => {
-        if (React.isValidElement<InoTabProps>(child)) {
-          return React.cloneElement(child, {
-            ...child.props,
-            isActive: index === activeTabIndex,
-            isSelected: index === selectedTabIndex,
-            onClick: () => handleTabChange(index),
-            variant,
-            size,
-            index,
-          });
-        }
-        return child;
-      })}
+    <div className="ino-tabs-container">
+      <div
+        role="tablist"
+        className={`ino-tabs ino-tabs--${variant} ino-tabs--${size} ${classNames}`}
+      >
+        {React.Children.map(children, (child, index) => {
+          if (React.isValidElement<InoTabProps>(child)) {
+            return React.cloneElement(child, {
+              ...child.props,
+              isActive: index === activeTabIndex,
+              isSelected: index === selectedTabIndex,
+              onClick: () => handleTabChange(index),
+              variant,
+              size,
+              index,
+            });
+          }
+          return child;
+        })}
+      </div>
+      <div className="ino-tab-panels">
+        {React.Children.map(children, (child, index) => {
+          if (
+            React.isValidElement<InoTabProps>(child) &&
+            index === selectedTabIndex
+          ) {
+            return (
+              <div role="tabpanel" className="ino-tab-panel">
+                {child.props.children}
+              </div>
+            );
+          }
+          return null;
+        })}
+      </div>
     </div>
   );
 };
