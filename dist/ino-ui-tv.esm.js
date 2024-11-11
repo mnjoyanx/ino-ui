@@ -2441,6 +2441,17 @@ var InoTab = function InoTab(_ref) {
   }, label);
 };
 
+var InoElementWrapper = function InoElementWrapper(_ref) {
+  var children = _ref.children,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames;
+  return React.createElement("div", {
+    className: "ino-element-wrapper " + (isActive ? 'active' : '') + " " + classNames
+  }, children);
+};
+
 var InoRow = function InoRow(_ref) {
   var children = _ref.children,
     _ref$isActive = _ref.isActive,
@@ -2492,12 +2503,17 @@ var InoRow = function InoRow(_ref) {
     className: "ino-row " + classNames
   }, React.Children.map(children, function (child, idx) {
     if (React.isValidElement(child)) {
-      var _child$props$classNam;
-      return React.cloneElement(child, _extends({}, child.props, {
-        isActive: isActive && idx === activeIndex,
-        index: idx,
-        className: child.props.classNames + " " + classNames + " " + (isActive && !((_child$props$classNam = child.props.classNames) != null && _child$props$classNam.includes('active')) ? 'active' : '')
-      }));
+      if ('isActive' in child.props) {
+        return React.cloneElement(child, _extends({}, child.props, {
+          isActive: isActive && idx === activeIndex,
+          index: idx
+        }));
+      } else {
+        return React.createElement(InoElementWrapper, {
+          isActive: isActive && idx === activeIndex,
+          index: idx
+        }, child);
+      }
     }
     return child;
   }));
@@ -2554,12 +2570,17 @@ var InoCol = function InoCol(_ref) {
     className: "ino-col " + classNames
   }, React.Children.map(children, function (child, idx) {
     if (React.isValidElement(child)) {
-      var _child$props$classNam;
-      return React.cloneElement(child, _extends({}, child.props, {
-        isActive: isActive && idx === activeIndex,
-        index: idx,
-        className: (child.props.className || '') + " " + (isActive && !((_child$props$classNam = child.props.className) != null && _child$props$classNam.includes('active')) ? 'active' : '')
-      }));
+      if ('isActive' in child.props) {
+        return React.cloneElement(child, _extends({}, child.props, {
+          isActive: isActive && idx === activeIndex,
+          index: idx
+        }));
+      } else {
+        return React.createElement(InoElementWrapper, {
+          isActive: isActive && idx === activeIndex,
+          index: idx
+        }, child);
+      }
     }
     return child;
   }));
