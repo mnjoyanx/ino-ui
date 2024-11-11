@@ -2441,45 +2441,125 @@ var InoTab = function InoTab(_ref) {
   }, label);
 };
 
-var InoTabs = function InoTabs(_ref) {
+var InoRow = function InoRow(_ref) {
   var children = _ref.children,
-    _ref$activeIndex = _ref.activeIndex,
-    activeIndex = _ref$activeIndex === void 0 ? 0 : _ref$activeIndex,
-    onChange = _ref.onChange,
-    _ref$variant = _ref.variant,
-    variant = _ref$variant === void 0 ? 'primary' : _ref$variant,
-    _ref$size = _ref.size,
-    size = _ref$size === void 0 ? 'medium' : _ref$size,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    _ref$infinite = _ref.infinite,
+    infinite = _ref$infinite === void 0 ? false : _ref$infinite,
     _ref$classNames = _ref.classNames,
-    classNames = _ref$classNames === void 0 ? '' : _ref$classNames;
-  var _useState = useState(activeIndex),
-    selectedIndex = _useState[0],
-    setSelectedIndex = _useState[1];
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
+    onActiveChange = _ref.onActiveChange,
+    onUp = _ref.onUp,
+    onDown = _ref.onDown;
+  var _useState = useState(0),
+    activeIndex = _useState[0],
+    setActiveIndex = _useState[1];
+  var childrenArray = React.Children.toArray(children);
   useEffect(function () {
-    setSelectedIndex(activeIndex);
-  }, [activeIndex]);
-  var handleTabChange = function handleTabChange(index) {
-    setSelectedIndex(index);
-    onChange == null || onChange(index);
+    if (isActive && onActiveChange) {
+      onActiveChange(activeIndex);
+    }
+  }, [isActive, activeIndex, onActiveChange]);
+  var handleNavigation = function handleNavigation(direction) {
+    if (!isActive) return;
+    setActiveIndex(function (prev) {
+      if (direction === 'left') {
+        if (prev === 0 && infinite) {
+          return childrenArray.length - 1;
+        }
+        return Math.max(0, prev - 1);
+      } else {
+        if (prev === childrenArray.length - 1 && infinite) {
+          return 0;
+        }
+        return Math.min(childrenArray.length - 1, prev + 1);
+      }
+    });
   };
+  useMappedKeydown({
+    isActive: isActive,
+    onLeft: function onLeft() {
+      return handleNavigation('left');
+    },
+    onRight: function onRight() {
+      return handleNavigation('right');
+    },
+    onUp: onUp,
+    onDown: onDown
+  });
   return React.createElement("div", {
-    role: "tablist",
-    className: "ino-tabs ino-tabs--" + variant + " ino-tabs--" + size + " " + classNames
-  }, React.Children.map(children, function (child, index) {
+    className: "ino-row " + classNames
+  }, React.Children.map(children, function (child, idx) {
     if (React.isValidElement(child)) {
-      return React.cloneElement(child, {
-        isActive: index === selectedIndex,
-        onClick: function onClick() {
-          return handleTabChange(index);
-        },
-        index: index,
-        variant: variant,
-        size: size
-      });
+      return React.cloneElement(child, _extends({}, child.props, {
+        isActive: isActive && idx === activeIndex,
+        index: idx
+      }));
     }
     return child;
   }));
 };
 
-export { CheckboxItem, GridView, InoButton, InoInput, InoKeyboard, InoTab, InoTabs, ListGridView, ListView, Modal, ScrollView, ThemeProvider };
+var InoCol = function InoCol(_ref) {
+  var children = _ref.children,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    _ref$infinite = _ref.infinite,
+    infinite = _ref$infinite === void 0 ? false : _ref$infinite,
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
+    onActiveChange = _ref.onActiveChange,
+    onLeft = _ref.onLeft,
+    onRight = _ref.onRight;
+  var _useState = useState(0),
+    activeIndex = _useState[0],
+    setActiveIndex = _useState[1];
+  var childrenArray = React.Children.toArray(children);
+  useEffect(function () {
+    if (isActive && onActiveChange) {
+      onActiveChange(activeIndex);
+    }
+  }, [isActive, activeIndex, onActiveChange]);
+  var handleNavigation = function handleNavigation(direction) {
+    if (!isActive) return;
+    setActiveIndex(function (prev) {
+      if (direction === 'up') {
+        if (prev === 0 && infinite) {
+          return childrenArray.length - 1;
+        }
+        return Math.max(0, prev - 1);
+      } else {
+        if (prev === childrenArray.length - 1 && infinite) {
+          return 0;
+        }
+        return Math.min(childrenArray.length - 1, prev + 1);
+      }
+    });
+  };
+  useMappedKeydown({
+    isActive: isActive,
+    onUp: function onUp() {
+      return handleNavigation('up');
+    },
+    onDown: function onDown() {
+      return handleNavigation('down');
+    },
+    onLeft: onLeft,
+    onRight: onRight
+  });
+  return React.createElement("div", {
+    className: "ino-col " + classNames
+  }, React.Children.map(children, function (child, idx) {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, _extends({}, child.props, {
+        isActive: isActive && idx === activeIndex,
+        index: idx
+      }));
+    }
+    return child;
+  }));
+};
+
+export { CheckboxItem, GridView, InoButton, InoCol, InoInput, InoKeyboard, InoRow, InoTab, ListGridView, ListView, Modal, ScrollView, ThemeProvider };
 //# sourceMappingURL=ino-ui-tv.esm.js.map

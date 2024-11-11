@@ -55,6 +55,9 @@ export const InoRow: React.FC<InoRowProps> = ({
             ...child.props,
             isActive: isActive && idx === activeIndex,
             index: idx,
+            classNames: `${child.props.classNames} ${classNames} ${
+              isActive ? 'active' : ''
+            }`,
           });
         }
         return child;

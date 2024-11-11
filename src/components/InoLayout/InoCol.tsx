@@ -55,6 +55,9 @@ export const InoCol: React.FC<InoColProps> = ({
             ...child.props,
             isActive: isActive && idx === activeIndex,
             index: idx,
+            classNames: `${child.props.classNames} ${classNames} ${
+              isActive ? 'active' : ''
+            }`,
           });
         }
         return child;
