@@ -3,8 +3,10 @@ import { MouseKeyboardEvent } from "../../types";
 export interface InoTabProps {
     /** Label text for the tab */
     label: string;
-    /** Whether the tab is currently active */
+    /** Whether the tab is currently active (focused) */
     isActive?: boolean;
+    /** Whether the tab is currently selected */
+    isSelected?: boolean;
     /** Whether the tab is disabled */
     disabled?: boolean;
     /** Index of the tab */

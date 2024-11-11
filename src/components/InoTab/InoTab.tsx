@@ -1,7 +1,7 @@
 import React from 'react';
-import { InoTabProps } from './InoTab.types';
 import { useMappedKeydown } from '../../hooks/useMappedKeydown';
 import { MouseKeyboardEvent } from '../../types';
+import { InoTabProps } from './InoTab.types';
 
 export const InoTab: React.FC<InoTabProps> = ({
   label,
@@ -48,10 +48,10 @@ export const InoTab: React.FC<InoTabProps> = ({
         }
       }}
       className={`ino-tab ino-tab--${variant} ino-tab--${size} 
-        ${isActive ? 'ino-tab--active' : ''} 
-        ${isSelected ? 'ino-tab--selected' : ''} 
-        ${disabled ? 'ino-tab--disabled' : ''} 
-        ${classNames}`}
+          ${isActive ? 'ino-tab--active' : ''} 
+          ${isSelected ? 'ino-tab--selected' : ''} 
+          ${disabled ? 'ino-tab--disabled' : ''} 
+          ${classNames}`}
     >
       {label}
     </div>

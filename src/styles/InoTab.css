@@ -23,10 +23,23 @@
   color: var(--ino-text-secondary);
 }
 
+/* Active (focused) state */
 .ino-tab--active {
+  background-color: var(--ino-bg-hover);
+  box-shadow: 0 0 0 2px var(--ino-border-focus);
+  transform: scale(1.02);
+}
+
+/* Selected state */
+.ino-tab--selected {
   background-color: var(--ino-bg-primary);
   color: var(--ino-text-inverse);
-  transform: scale(1.05);
+}
+
+/* Active and selected combined state */
+.ino-tab--active.ino-tab--selected {
+  box-shadow: 0 0 0 2px var(--ino-border-focus);
+  transform: scale(1.02);
 }
 
 .ino-tab--disabled {
@@ -34,7 +47,7 @@
   cursor: not-allowed;
 }
 
-.ino-tab:hover:not(.ino-tab--disabled):not(.ino-tab--active) {
+.ino-tab:hover:not(.ino-tab--disabled):not(.ino-tab--active):not(.ino-tab--selected) {
   background-color: var(--ino-bg-hover);
 }
 
