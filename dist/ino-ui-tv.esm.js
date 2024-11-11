@@ -1208,7 +1208,8 @@ var ListGridView = function ListGridView(_ref) {
           return prev - 1;
         });
       }
-    }
+    },
+    debounce: listViewProps.debounce || 200
   });
   var getRowStyle = useCallback(function (index) {
     return {
