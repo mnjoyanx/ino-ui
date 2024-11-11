@@ -26,17 +26,19 @@ export const InoInput: React.FC<InoInputProps> = ({
   onDown,
   onMouseEnter,
   onMouseLeave,
-  onPaste,
 }) => {
   const [cursorPosition, setCursorPosition] = useState(value.length);
   const contentRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleFocus = useCallback(() => {
-    if (!disabled) {
-      onFocus?.();
-    }
-  }, [disabled, onFocus]);
+  const handleFocus = useCallback(
+    (e: MouseKeyboardEvent) => {
+      if (!disabled) {
+        onFocus?.(e, index);
+      }
+    },
+    [disabled, onFocus]
+  );
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -55,7 +57,7 @@ export const InoInput: React.FC<InoInputProps> = ({
       newPosition = Math.min(Math.max(0, clickedPosition), text.length);
 
       setCursorPosition(newPosition);
-      handleFocus();
+      handleFocus(e as MouseKeyboardEvent);
     },
     [value, disabled, handleFocus]
   );
@@ -88,7 +90,7 @@ export const InoInput: React.FC<InoInputProps> = ({
         }
       } else if (e.key.length === 1) {
         if (maxLength && value.length >= maxLength) return;
-        if (type === 'number' && !/^\d$/.test(e.key)) return;
+        if (type === 'password' && !/^\d$/.test(e.key)) return;
 
         newValue =
           value.slice(0, cursorPosition) + e.key + value.slice(cursorPosition);
@@ -147,34 +149,20 @@ export const InoInput: React.FC<InoInputProps> = ({
     }
   }, [value]);
 
+  useEffect(() => {
+    setCursorPosition(value.length);
+  }, [value]);
+
   const displayValue = type === 'password' ? '•'.repeat(value.length) : value;
 
   return (
     <div
       ref={containerRef}
-      contentEditable={!disabled}
-      onContextMenu={e => e.preventDefault()} // Prevent default context menu
       onMouseEnter={(e: React.MouseEvent) => {
         onMouseEnter?.(e as MouseKeyboardEvent);
       }}
       onMouseLeave={(e: React.MouseEvent) => {
         onMouseLeave?.(e as MouseKeyboardEvent);
-      }}
-      onPaste={(e: React.ClipboardEvent) => {
-        e.preventDefault(); // Prevent default paste
-        const pastedText = e.clipboardData.getData('text');
-        if (onPaste) {
-          onPaste(e, index);
-        } else if (!disabled) {
-          const newText =
-            value.slice(0, cursorPosition) +
-            pastedText +
-            value.slice(cursorPosition);
-          if (!maxLength || newText.length <= maxLength) {
-            onChange?.(newText);
-            setCursorPosition(cursorPosition + pastedText.length);
-          }
-        }
       }}
       className={`ino-input ino-input--${variant} ${isActive ? 'active' : ''} ${
         disabled ? 'ino-input--disabled' : ''

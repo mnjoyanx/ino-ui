@@ -2460,6 +2460,8 @@ var InoTabs = function InoTabs(_ref) {
     }
   });
   return React__default.createElement("div", {
+    className: "ino-tabs-container"
+  }, React__default.createElement("div", {
     role: "tablist",
     className: "ino-tabs ino-tabs--" + variant + " ino-tabs--" + size + " " + classNames
   }, React__default.Children.map(children, function (child, index) {
@@ -2476,7 +2478,17 @@ var InoTabs = function InoTabs(_ref) {
       }));
     }
     return child;
-  }));
+  })), React__default.createElement("div", {
+    className: "ino-tab-panels"
+  }, React__default.Children.map(children, function (child, index) {
+    if (React__default.isValidElement(child) && index === selectedTabIndex) {
+      return React__default.createElement("div", {
+        role: "tabpanel",
+        className: "ino-tab-panel"
+      }, child.props.children);
+    }
+    return null;
+  })));
 };
 
 var InoTab = function InoTab(_ref) {

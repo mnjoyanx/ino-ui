@@ -18,13 +18,13 @@ export interface InoInputProps {
     /** Whether the input is focused */
     isActive?: boolean;
     /** Input type */
-    type?: 'text' | 'password' | 'number';
+    type?: 'text' | 'password';
     /** Input variant */
-    variant?: 'standard' | 'underlined';
+    variant?: 'standard' | 'outlined';
     /** Called when value changes */
     onChange?: (value: string) => void;
     /** Called when input is focused */
-    onFocus?: () => void;
+    onFocus?: (e: MouseKeyboardEvent, index?: number) => void;
     /** Called when input is blurred */
     onBlur?: (e: MouseKeyboardEvent, index?: number) => void;
     /** Called when the OK button is pressed */
@@ -43,6 +43,4 @@ export interface InoInputProps {
     onMouseEnter?: (e: MouseKeyboardEvent, index?: number) => void;
     /** Called when the mouse leaves the input */
     onMouseLeave?: (e: MouseKeyboardEvent, index?: number) => void;
-    /** Called when the paste event is triggered */
-    onPaste?: (e: React.ClipboardEvent, index?: number) => void;
 } 
