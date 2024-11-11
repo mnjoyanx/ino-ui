@@ -229,7 +229,6 @@ function useKeydown(props) {
         executeKeyHandler(specialKey);
       }
     }
-    console.log(props.debounce, 'debounce');
     // Set up debounced repeat
     intervalRef.current = setInterval(function () {
       if (/^\d$/.test(key) && props.number) {
@@ -1238,6 +1237,7 @@ var ListGridView = function ListGridView(_ref) {
       itemsTotal: item.list.length,
       itemsCount: listViewProps.itemsCount || 1,
       buffer: listViewProps.buffer || 3,
+      debounce: listViewProps.debounce || 200,
       itemWidth: listViewProps.itemWidth || 20,
       itemHeight: listViewProps.itemHeight || 30,
       gap: listViewProps.gap || 0,
@@ -1259,6 +1259,7 @@ var ListGridView = function ListGridView(_ref) {
     itemsTotal: itemsTotal,
     nativeControle: true,
     isActive: isActive,
+    debounce: listViewProps.debounce || 200,
     buffer: currentList.length,
     gap: listViewProps.gap,
     rowGap: rowGap,

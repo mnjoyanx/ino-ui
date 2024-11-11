@@ -36,6 +36,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
         setCurrentRow(prev => prev - 1);
       }
     },
+    debounce: listViewProps.debounce || 200,
   });
 
   const getRowStyle = useCallback(
