@@ -80,7 +80,7 @@ export const ListView: React.FC<ListViewProps> = memo(
     direction = 'ltr',
     withTitle = false,
     rowGap = 0,
-    // debounce = 200,
+    debounce = 200,
     onMouseEnter = () => {},
     onUp = () => {},
     onDown = () => {},
@@ -323,6 +323,7 @@ export const ListView: React.FC<ListViewProps> = memo(
         itemsCount,
         back,
         handleOk,
+        debounce,
       ]
     );
 

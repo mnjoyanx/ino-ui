@@ -39,6 +39,7 @@ const TRANSFORM_TIMEOUT = 800;
  *   itemWidth={20}
  *   itemHeight={20}
  *   isActive={true}
+ *   debounce={200}
  *   initialActiveIndex={0}
  *   direction="ltr"
  *   onMouseEnter={() => {}}
@@ -67,6 +68,7 @@ export const GridView: React.FC<GridViewProps> = memo(
     isActive,
     initialActiveIndex = 0,
     direction = 'ltr',
+    debounce = 200,
     onMouseEnter = () => {},
     onChangeRow = () => {},
     onUp = () => {},
@@ -324,7 +326,7 @@ export const GridView: React.FC<GridViewProps> = memo(
     const keyDownOptions = useMemo(
       () => ({
         isActive: isActive && nativeControle,
-        //   debounce,
+        debounce,
         left,
         right,
         up,

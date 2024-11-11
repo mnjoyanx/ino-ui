@@ -24,6 +24,7 @@ export interface GridViewProps {
     /**
      * Optional debounce time in milliseconds for scroll events.
      */
+    debounce?: number;
     scrollOffset?: number;
     /**
      * Number of items per row in the GridView.

@@ -210,37 +210,65 @@ function checkKey(e) {
 }
 
 function useKeydown(props) {
+  var pressed = React.useRef({});
+  var intervalRef = React.useRef(null);
   var handleKeydown = React.useCallback(function (e) {
     if (!props.isActive) return;
     var key = e.key.toLowerCase();
-    if (key === 'backspace' && typeof props.remove === "function") {
-      props.remove(e);
-      return;
-    }
-    // Handle numbers (both numpad and regular)
-    if (/^\d$/.test(key) && typeof props.number === "function") {
-      props.number(e);
-      return;
-    }
-    // Handle letters
-    if (/^[a-z]$/.test(key) && typeof props.letter === "function") {
-      props.letter(e);
-      return;
-    }
-    // Handle special keys through checkKey
     var specialKey = checkKey(e);
-    if (specialKey && typeof props[specialKey] === "function") {
-      props[specialKey](e);
+    // Prevent default browser behavior
+    e.preventDefault();
+    // If key is already pressed and interval exists, return
+    if (pressed.current[key] && intervalRef.current) return;
+    var executeKeyHandler = function executeKeyHandler(handlerKey) {
+      if (typeof props[handlerKey] === "function") {
+        props[handlerKey](e);
+      }
+    };
+    // Handle the initial key press
+    if (!pressed.current[key]) {
+      pressed.current[key] = true;
+      if (/^\d$/.test(key) && props.number) {
+        executeKeyHandler('number');
+      } else if (/^[a-z]$/.test(key) && props.letter) {
+        executeKeyHandler('letter');
+      } else if (specialKey && props[specialKey]) {
+        executeKeyHandler(specialKey);
+      }
     }
+    // Set up debounced repeat
+    intervalRef.current = setInterval(function () {
+      if (/^\d$/.test(key) && props.number) {
+        executeKeyHandler('number');
+      } else if (/^[a-z]$/.test(key) && props.letter) {
+        executeKeyHandler('letter');
+      } else if (specialKey && props[specialKey]) {
+        executeKeyHandler(specialKey);
+      }
+    }, props.debounce || 100);
   }, [props]);
+  var handleKeyup = React.useCallback(function (e) {
+    var key = e.key.toLowerCase();
+    pressed.current[key] = false;
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
   React.useEffect(function () {
     if (props.isActive) {
       window.addEventListener("keydown", handleKeydown);
+      window.addEventListener("keyup", handleKeyup);
     }
     return function () {
       window.removeEventListener("keydown", handleKeydown);
+      window.removeEventListener("keyup", handleKeyup);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     };
-  }, [props.isActive, handleKeydown]);
+  }, [props.isActive, handleKeydown, handleKeyup]);
 }
 
 var DefaultCheckbox = function DefaultCheckbox(_ref) {
