@@ -1,8 +1,4 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { ListView } from '../ListView/ListView';
 import { CategoryData, ListGridViewProps } from './ListGridView.types';
 import { ItemProps } from '../ListView/ListView.types';
@@ -51,12 +47,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
         top: `${index * (listViewProps.itemHeight + rowGap)}rem`,
       };
     },
-    [
-      listViewProps.itemWidth,
-      listViewProps.itemHeight,
-      itemsPerRow,
-      rowGap,
-    ]
+    [listViewProps.itemWidth, listViewProps.itemHeight, itemsPerRow, rowGap]
   );
 
   const renderRowItems = useCallback(
@@ -64,9 +55,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
       return (
         <div key={index} style={getRowStyle(index)}>
           {withTitle ? (
-            <div
-              className="ino-list-title-wrapper"
-            >
+            <div className="ino-list-title-wrapper">
               <h3 className="ino-list-title">{item.name}</h3>
             </div>
           ) : null}
@@ -91,21 +80,15 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
         </div>
       );
     },
-    [
-      getRowStyle,
-      listViewProps.renderItem,
-      withTitle,
-      activeIndex,
-      currentRow,
-    ]
+    [getRowStyle, listViewProps.renderItem, withTitle, activeIndex, currentRow]
   );
 
   return (
     <ListView
       id={`${activeIndex}-list-grid-view`}
       uniqueKey={`${activeIndex}-list-grid-view`}
-      itemWidth={20}
-      itemHeight={30}
+      itemWidth={listViewProps.itemWidth}
+      itemHeight={listViewProps.itemHeight}
       data={currentList}
       listType="vertical"
       itemsCount={itemsPerRow}

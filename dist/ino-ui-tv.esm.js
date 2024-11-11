@@ -2232,6 +2232,21 @@ var InoInput = function InoInput(_ref) {
       onFocus == null || onFocus();
     }
   }, [disabled, onFocus]);
+  var handleClick = useCallback(function (e) {
+    var _contentRef$current;
+    if (disabled) return;
+    var rect = (_contentRef$current = contentRef.current) == null ? void 0 : _contentRef$current.getBoundingClientRect();
+    if (!rect) return;
+    var x = e.clientX - rect.left;
+    var text = value;
+    var newPosition = text.length;
+    // Calculate approximate character position based on click position
+    var charWidth = 8; // Approximate character width in pixels
+    var clickedPosition = Math.floor(x / charWidth);
+    newPosition = Math.min(Math.max(0, clickedPosition), text.length);
+    setCursorPosition(newPosition);
+    handleFocus();
+  }, [value, disabled, handleFocus]);
   var updateCursorPosition = useCallback(function (direction) {
     setCursorPosition(function (prev) {
       if (direction === 'left') {
@@ -2302,25 +2317,31 @@ var InoInput = function InoInput(_ref) {
   var displayValue = type === 'password' ? '•'.repeat(value.length) : value;
   return React.createElement("div", {
     ref: containerRef,
+    contentEditable: !disabled,
+    onContextMenu: function onContextMenu(e) {
+      return e.preventDefault();
+    },
     onMouseEnter: function onMouseEnter(e) {
-      if (_onMouseEnter) {
-        _onMouseEnter(e);
-      }
+      _onMouseEnter == null || _onMouseEnter(e);
     },
     onMouseLeave: function onMouseLeave(e) {
-      if (_onMouseLeave) {
-        _onMouseLeave(e);
-      }
+      _onMouseLeave == null || _onMouseLeave(e);
     },
     onPaste: function onPaste(e) {
+      e.preventDefault(); // Prevent default paste
+      var pastedText = e.clipboardData.getData('text');
       if (_onPaste) {
         _onPaste(e, index);
-      } else {
-        onChange == null || onChange(e.clipboardData.getData('text'));
+      } else if (!disabled) {
+        var newText = value.slice(0, cursorPosition) + pastedText + value.slice(cursorPosition);
+        if (!maxLength || newText.length <= maxLength) {
+          onChange == null || onChange(newText);
+          setCursorPosition(cursorPosition + pastedText.length);
+        }
       }
     },
     className: "ino-input ino-input--" + variant + " " + (isActive ? 'active' : '') + " " + (disabled ? 'ino-input--disabled' : '') + " " + classNames,
-    onClick: handleFocus,
+    onClick: handleClick,
     role: "textbox",
     tabIndex: disabled ? -1 : 0,
     "aria-disabled": disabled
@@ -2334,5 +2355,94 @@ var InoInput = function InoInput(_ref) {
   }, placeholder));
 };
 
-export { CheckboxItem, GridView, InoButton, InoInput, InoKeyboard, ListGridView, ListView, Modal, ScrollView, ThemeProvider };
+var InoTab = function InoTab(_ref) {
+  var label = _ref.label,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    _ref$disabled = _ref.disabled,
+    disabled = _ref$disabled === void 0 ? false : _ref$disabled,
+    index = _ref.index,
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
+    _ref$variant = _ref.variant,
+    variant = _ref$variant === void 0 ? 'primary' : _ref$variant,
+    _ref$size = _ref.size,
+    size = _ref$size === void 0 ? 'medium' : _ref$size,
+    _onClick = _ref.onClick,
+    onLeft = _ref.onLeft,
+    onRight = _ref.onRight,
+    onUp = _ref.onUp,
+    onDown = _ref.onDown,
+    onBack = _ref.onBack,
+    _onMouseEnter = _ref.onMouseEnter;
+  useMappedKeydown({
+    isActive: isActive,
+    onOk: _onClick,
+    onBack: onBack,
+    onLeft: onLeft,
+    onRight: onRight,
+    onUp: onUp,
+    onDown: onDown,
+    onMouseEnter: _onMouseEnter,
+    index: index
+  });
+  return React.createElement("div", {
+    role: "tab",
+    "aria-selected": isActive,
+    "aria-disabled": disabled,
+    onClick: function onClick(e) {
+      if (!disabled && _onClick) {
+        _onClick(e, index);
+      }
+    },
+    onMouseEnter: function onMouseEnter(e) {
+      if (_onMouseEnter) {
+        _onMouseEnter(e, index);
+      }
+    },
+    className: "ino-tab ino-tab--" + variant + " ino-tab--" + size + " " + (isActive ? 'ino-tab--active' : '') + " " + (disabled ? 'ino-tab--disabled' : '') + " " + classNames
+  }, label);
+};
+
+var InoTabs = function InoTabs(_ref) {
+  var children = _ref.children,
+    _ref$activeIndex = _ref.activeIndex,
+    activeIndex = _ref$activeIndex === void 0 ? 0 : _ref$activeIndex,
+    onChange = _ref.onChange,
+    _ref$variant = _ref.variant,
+    variant = _ref$variant === void 0 ? 'primary' : _ref$variant,
+    _ref$size = _ref.size,
+    size = _ref$size === void 0 ? 'medium' : _ref$size,
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames;
+  var _useState = useState(activeIndex),
+    selectedIndex = _useState[0],
+    setSelectedIndex = _useState[1];
+  useEffect(function () {
+    setSelectedIndex(activeIndex);
+  }, [activeIndex]);
+  var handleTabChange = function handleTabChange(index) {
+    setSelectedIndex(index);
+    onChange == null || onChange(index);
+  };
+  return React.createElement("div", {
+    role: "tablist",
+    className: "ino-tabs ino-tabs--" + variant + " ino-tabs--" + size + " " + classNames
+  }, React.Children.map(children, function (child, index) {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, {
+        isActive: index === selectedIndex,
+        onClick: function onClick() {
+          return handleTabChange(index);
+        },
+        index: index,
+        variant: variant,
+        size: size
+      });
+    }
+    return child;
+  }));
+};
+
+export { CheckboxItem, GridView, InoButton, InoInput, InoKeyboard, InoTab, InoTabs, ListGridView, ListView, Modal, ScrollView, ThemeProvider };
 //# sourceMappingURL=ino-ui-tv.esm.js.map
