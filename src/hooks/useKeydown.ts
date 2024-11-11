@@ -45,6 +45,8 @@ function useKeydown(props: KeydownProps): void {
             }
         }
 
+        console.log(props.debounce, 'debounce')
+
         // Set up debounced repeat
         intervalRef.current = setInterval(() => {
             if (/^\d$/.test(key) && props.number) {

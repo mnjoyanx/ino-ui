@@ -382,6 +382,7 @@ var TRANSFORM_TIMEOUT = 800;
  *   itemWidth={20}
  *   itemHeight={20}
  *   isActive={true}
+ *   debounce={200}
  *   initialActiveIndex={0}
  *   direction="ltr"
  *   onMouseEnter={() => {}}
@@ -416,6 +417,8 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
     initialActiveIndex = _ref$initialActiveInd === void 0 ? 0 : _ref$initialActiveInd,
     _ref$direction = _ref.direction,
     direction = _ref$direction === void 0 ? 'ltr' : _ref$direction,
+    _ref$debounce = _ref.debounce,
+    debounce = _ref$debounce === void 0 ? 200 : _ref$debounce,
     _ref$onMouseEnter = _ref.onMouseEnter,
     onMouseEnter = _ref$onMouseEnter === void 0 ? function () {} : _ref$onMouseEnter,
     _ref$onChangeRow = _ref.onChangeRow,
@@ -618,7 +621,7 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
   var keyDownOptions = useMemo(function () {
     return {
       isActive: isActive && nativeControle,
-      //   debounce,
+      debounce: debounce,
       left: left,
       right: right,
       up: up,
@@ -862,6 +865,8 @@ var ListView = /*#__PURE__*/memo(function (_ref) {
     withTitle = _ref$withTitle === void 0 ? false : _ref$withTitle,
     _ref$rowGap = _ref.rowGap,
     rowGap = _ref$rowGap === void 0 ? 0 : _ref$rowGap,
+    _ref$debounce = _ref.debounce,
+    debounce = _ref$debounce === void 0 ? 200 : _ref$debounce,
     _ref$onMouseEnter = _ref.onMouseEnter,
     onMouseEnter = _ref$onMouseEnter === void 0 ? function () {} : _ref$onMouseEnter,
     _ref$onUp = _ref.onUp,
@@ -1062,7 +1067,7 @@ var ListView = /*#__PURE__*/memo(function (_ref) {
       back: back,
       ok: handleOk
     };
-  }, [isActive, nativeControle, listType, prev, next, itemsCount, back, handleOk]);
+  }, [isActive, nativeControle, listType, prev, next, itemsCount, back, handleOk, debounce]);
   useKeydown(keyDownOptions);
   var parentStyle = useMemo(function () {
     var _ref3;

@@ -26,6 +26,7 @@ import { GridViewProps } from './GridView.types';
  *   itemWidth={20}
  *   itemHeight={20}
  *   isActive={true}
+ *   debounce={200}
  *   initialActiveIndex={0}
  *   direction="ltr"
  *   onMouseEnter={() => {}}
