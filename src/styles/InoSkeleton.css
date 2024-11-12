@@ -1,0 +1,25 @@
+.ino-skeleton-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 1.2rem;
+}
+
+.ino-skeleton--text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex: 1;
+}
+
+.ino-skeleton--text:nth-child(1) {
+  width: 40%;
+}
+
+.ino-skeleton--text:nth-child(2) {
+  width: 90%;
+}
+
+.ino-skeleton--text:nth-child(3) {
+  width: 60%;
+}
