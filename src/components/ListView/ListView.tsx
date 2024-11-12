@@ -298,9 +298,12 @@ export const ListView: React.FC<ListViewProps> = memo(
       }
     }, [startIndex, itemsTotal, itemsCount, arrows.show]);
 
-    const handleOk = useCallback(() => {
+    // const handleOk = useCallback(() => {
+    //   onOk(data[activeIndex], activeIndex);
+    // }, [onOk, data, activeIndex]);
+    const handleOk = () => {
       onOk(data[activeIndex], activeIndex);
-    }, [onOk, data, activeIndex]);
+    };
 
     const keyDownOptions = useMemo(
       () => ({

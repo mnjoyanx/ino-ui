@@ -638,6 +638,9 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
     };
   }, [isActive, nativeControle, left, right, up, down, back, onOk, debounce]);
   useKeydown(keyDownOptions);
+  React.useEffect(function () {
+    setStartRow(0);
+  }, [data]);
   return React__default.createElement("div", {
     ref: containerRef,
     className: "scroll-view-parent",
