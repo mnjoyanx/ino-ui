@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { InoRowProps } from './InoLayout.types';
 import { useMappedKeydown } from '../../hooks/useMappedKeydown';
 import { InoElementWrapper } from './InoElementWrapper';
+import { hasInoColChildren } from './utils';
+import { InoCol } from './InoCol';
 import '../../styles/InoLayout.css';
 
 export const InoRow: React.FC<InoRowProps> = ({
@@ -18,6 +20,7 @@ export const InoRow: React.FC<InoRowProps> = ({
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const childrenArray = React.Children.toArray(children);
+  const hasColChildren = hasInoColChildren(children);
 
   useEffect(() => {
     if (isActive && onActiveChange) {
@@ -26,7 +29,7 @@ export const InoRow: React.FC<InoRowProps> = ({
   }, [isActive, activeIndex, onActiveChange]);
 
   const handleNavigation = (direction: 'left' | 'right') => {
-    if (!isActive) return;
+    if (!isActive || hasColChildren) return;
 
     setActiveIndex(prev => {
       if (direction === 'left') {
@@ -46,14 +49,22 @@ export const InoRow: React.FC<InoRowProps> = ({
   useMappedKeydown({
     isActive,
     onLeft: e => {
-      if (activeIndex === 0 && !infinite && onLeft) {
+      if (hasColChildren) {
+        onLeft?.(e, activeIndex);
+      } else if (activeIndex === 0 && !infinite && onLeft) {
         onLeft(e, activeIndex);
       } else {
         handleNavigation('left');
       }
     },
     onRight: e => {
-      if (activeIndex === childrenArray.length - 1 && !infinite && onRight) {
+      if (hasColChildren) {
+        onRight?.(e, activeIndex);
+      } else if (
+        activeIndex === childrenArray.length - 1 &&
+        !infinite &&
+        onRight
+      ) {
         onRight(e, activeIndex);
       } else {
         handleNavigation('right');
@@ -67,25 +78,32 @@ export const InoRow: React.FC<InoRowProps> = ({
   return (
     <div className={`ino-row ${classNames}`}>
       {React.Children.map(children, (child, idx) => {
-        if (React.isValidElement(child)) {
-          if ('isActive' in child.props) {
-            return React.cloneElement(child, {
-              ...child.props,
-              isActive: isActive && idx === activeIndex,
-              index: idx,
-            });
-          } else {
-            return (
-              <InoElementWrapper
-                isActive={isActive && idx === activeIndex}
-                index={idx}
-              >
-                {child}
-              </InoElementWrapper>
-            );
-          }
+        if (!React.isValidElement(child)) return child;
+
+        if (child.type === InoCol) {
+          return React.cloneElement(child, {
+            ...child.props,
+            isActive: isActive && idx === activeIndex,
+            index: idx,
+          });
         }
-        return child;
+
+        if ('isActive' in child.props) {
+          return React.cloneElement(child, {
+            ...child.props,
+            isActive: isActive && idx === activeIndex,
+            index: idx,
+          });
+        }
+
+        return (
+          <InoElementWrapper
+            isActive={isActive && idx === activeIndex}
+            index={idx}
+          >
+            {child}
+          </InoElementWrapper>
+        );
       })}
     </div>
   );

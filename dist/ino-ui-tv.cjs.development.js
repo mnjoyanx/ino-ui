@@ -1194,6 +1194,10 @@ var ListGridView = function ListGridView(_ref) {
     isActive = _ref.isActive,
     _ref$onRowChange = _ref.onRowChange,
     onRowChange = _ref$onRowChange === void 0 ? function () {} : _ref$onRowChange,
+    _ref$onUp = _ref.onUp,
+    onUp = _ref$onUp === void 0 ? function () {} : _ref$onUp,
+    _ref$onDown = _ref.onDown,
+    onDown = _ref$onDown === void 0 ? function () {} : _ref$onDown,
     listViewProps = _objectWithoutPropertiesLoose(_ref, _excluded);
   var _useState = React.useState(0),
     activeIndex = _useState[0];
@@ -1210,7 +1214,12 @@ var ListGridView = function ListGridView(_ref) {
   useKeydown({
     isActive: isActive,
     down: function down() {
-      if (!(currentList != null && currentList.length)) return;
+      if (!(currentList != null && currentList.length)) {
+        if (onDown) {
+          onDown();
+        }
+        return;
+      }
       setCurrentRow(function (prev) {
         return Math.min(prev + 1, rowsCount - 1);
       });
@@ -1220,6 +1229,10 @@ var ListGridView = function ListGridView(_ref) {
         setCurrentRow(function (prev) {
           return prev - 1;
         });
+      } else {
+        if (onUp) {
+          onUp();
+        }
       }
     },
     debounce: listViewProps.debounce || 200
