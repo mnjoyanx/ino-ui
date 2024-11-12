@@ -2557,6 +2557,83 @@ var InoElementWrapper = function InoElementWrapper(_ref) {
   }, children);
 };
 
+var InoCol = function InoCol(props) {
+  var parent = React__default.useContext(React__default.createContext(null));
+  if (!parent || parent.type !== InoRow) {
+    console.warn('InoCol must be used as a child of InoRow');
+    return null;
+  }
+  var _useState = React.useState(0),
+    activeIndex = _useState[0],
+    setActiveIndex = _useState[1];
+  var childrenArray = React__default.Children.toArray(props.children);
+  React.useEffect(function () {
+    if (props.isActive && props.onActiveChange) {
+      props.onActiveChange(activeIndex);
+    }
+  }, [props.isActive, activeIndex, props.onActiveChange]);
+  var handleNavigation = function handleNavigation(direction) {
+    if (!props.isActive) return;
+    setActiveIndex(function (prev) {
+      if (direction === 'up') {
+        if (prev === 0 && props.infinite) {
+          return childrenArray.length - 1;
+        }
+        return Math.max(0, prev - 1);
+      } else {
+        if (prev === childrenArray.length - 1 && props.infinite) {
+          return 0;
+        }
+        return Math.min(childrenArray.length - 1, prev + 1);
+      }
+    });
+  };
+  useMappedKeydown({
+    isActive: props.isActive,
+    onUp: function onUp(e) {
+      if (activeIndex === 0 && !props.infinite && props.onUp) {
+        props.onUp(e, activeIndex);
+      } else {
+        handleNavigation('up');
+      }
+    },
+    onDown: function onDown(e) {
+      if (activeIndex === childrenArray.length - 1 && !props.infinite && props.onDown) {
+        props.onDown(e, activeIndex);
+      } else {
+        handleNavigation('down');
+      }
+    },
+    onLeft: props.onLeft,
+    onRight: props.onRight,
+    onOk: props.onOk
+  });
+  return React__default.createElement("div", {
+    className: "ino-col " + props.classNames
+  }, React__default.Children.map(props.children, function (child, idx) {
+    if (React__default.isValidElement(child)) {
+      if ('isActive' in child.props) {
+        return React__default.cloneElement(child, _extends({}, child.props, {
+          isActive: props.isActive && idx === activeIndex,
+          index: idx
+        }));
+      } else {
+        return React__default.createElement(InoElementWrapper, {
+          isActive: props.isActive && idx === activeIndex,
+          index: idx
+        }, child);
+      }
+    }
+    return child;
+  }));
+};
+
+var hasInoColChildren = function hasInoColChildren(children) {
+  return React__default.Children.toArray(children).some(function (child) {
+    return React__default.isValidElement(child) && child.type === InoCol;
+  });
+};
+
 var InoRow = function InoRow(_ref) {
   var children = _ref.children,
     _ref$isActive = _ref.isActive,
@@ -2575,13 +2652,14 @@ var InoRow = function InoRow(_ref) {
     activeIndex = _useState[0],
     setActiveIndex = _useState[1];
   var childrenArray = React__default.Children.toArray(children);
+  var hasColChildren = hasInoColChildren(children);
   React.useEffect(function () {
     if (isActive && onActiveChange) {
       onActiveChange(activeIndex);
     }
   }, [isActive, activeIndex, onActiveChange]);
   var handleNavigation = function handleNavigation(direction) {
-    if (!isActive) return;
+    if (!isActive || hasColChildren) return;
     setActiveIndex(function (prev) {
       if (direction === 'left') {
         if (prev === 0 && infinite) {
@@ -2599,14 +2677,18 @@ var InoRow = function InoRow(_ref) {
   useMappedKeydown({
     isActive: isActive,
     onLeft: function onLeft(e) {
-      if (activeIndex === 0 && !infinite && _onLeft) {
+      if (hasColChildren) {
+        _onLeft == null || _onLeft(e, activeIndex);
+      } else if (activeIndex === 0 && !infinite && _onLeft) {
         _onLeft(e, activeIndex);
       } else {
         handleNavigation('left');
       }
     },
     onRight: function onRight(e) {
-      if (activeIndex === childrenArray.length - 1 && !infinite && _onRight) {
+      if (hasColChildren) {
+        _onRight == null || _onRight(e, activeIndex);
+      } else if (activeIndex === childrenArray.length - 1 && !infinite && _onRight) {
         _onRight(e, activeIndex);
       } else {
         handleNavigation('right');
@@ -2619,99 +2701,23 @@ var InoRow = function InoRow(_ref) {
   return React__default.createElement("div", {
     className: "ino-row " + classNames
   }, React__default.Children.map(children, function (child, idx) {
-    if (React__default.isValidElement(child)) {
-      if ('isActive' in child.props) {
-        return React__default.cloneElement(child, _extends({}, child.props, {
-          isActive: isActive && idx === activeIndex,
-          index: idx
-        }));
-      } else {
-        return React__default.createElement(InoElementWrapper, {
-          isActive: isActive && idx === activeIndex,
-          index: idx
-        }, child);
-      }
+    if (!React__default.isValidElement(child)) return child;
+    if (child.type === InoCol) {
+      return React__default.cloneElement(child, _extends({}, child.props, {
+        isActive: isActive && idx === activeIndex,
+        index: idx
+      }));
     }
-    return child;
-  }));
-};
-
-var InoCol = function InoCol(_ref) {
-  var children = _ref.children,
-    _ref$isActive = _ref.isActive,
-    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
-    _ref$infinite = _ref.infinite,
-    infinite = _ref$infinite === void 0 ? false : _ref$infinite,
-    _ref$classNames = _ref.classNames,
-    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
-    onActiveChange = _ref.onActiveChange,
-    onLeft = _ref.onLeft,
-    onRight = _ref.onRight,
-    _onUp = _ref.onUp,
-    _onDown = _ref.onDown,
-    onOk = _ref.onOk;
-  var _useState = React.useState(0),
-    activeIndex = _useState[0],
-    setActiveIndex = _useState[1];
-  var childrenArray = React__default.Children.toArray(children);
-  React.useEffect(function () {
-    if (isActive && onActiveChange) {
-      onActiveChange(activeIndex);
+    if ('isActive' in child.props) {
+      return React__default.cloneElement(child, _extends({}, child.props, {
+        isActive: isActive && idx === activeIndex,
+        index: idx
+      }));
     }
-  }, [isActive, activeIndex, onActiveChange]);
-  var handleNavigation = function handleNavigation(direction) {
-    if (!isActive) return;
-    setActiveIndex(function (prev) {
-      if (direction === 'up') {
-        if (prev === 0 && infinite) {
-          return childrenArray.length - 1;
-        }
-        return Math.max(0, prev - 1);
-      } else {
-        if (prev === childrenArray.length - 1 && infinite) {
-          return 0;
-        }
-        return Math.min(childrenArray.length - 1, prev + 1);
-      }
-    });
-  };
-  useMappedKeydown({
-    isActive: isActive,
-    onUp: function onUp(e) {
-      if (activeIndex === 0 && !infinite && _onUp) {
-        _onUp(e, activeIndex);
-      } else {
-        handleNavigation('up');
-      }
-    },
-    onDown: function onDown(e) {
-      if (activeIndex === childrenArray.length - 1 && !infinite && _onDown) {
-        _onDown(e, activeIndex);
-      } else {
-        handleNavigation('down');
-      }
-    },
-    onLeft: onLeft,
-    onRight: onRight,
-    onOk: onOk
-  });
-  return React__default.createElement("div", {
-    className: "ino-col " + classNames
-  }, React__default.Children.map(children, function (child, idx) {
-    if (React__default.isValidElement(child)) {
-      if ('isActive' in child.props) {
-        return React__default.cloneElement(child, _extends({}, child.props, {
-          isActive: isActive && idx === activeIndex,
-          index: idx
-        }));
-      } else {
-        return React__default.createElement(InoElementWrapper, {
-          isActive: isActive && idx === activeIndex,
-          index: idx
-        }, child);
-      }
-    }
-    return child;
+    return React__default.createElement(InoElementWrapper, {
+      isActive: isActive && idx === activeIndex,
+      index: idx
+    }, child);
   }));
 };
 

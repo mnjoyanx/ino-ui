@@ -81,6 +81,7 @@ export const InoRow: React.FC<InoRowProps> = ({
         if (!React.isValidElement(child)) return child;
 
         if (child.type === InoCol) {
+          console.log('child.type === InoCol');
           return React.cloneElement(child, {
             ...child.props,
             isActive: isActive && idx === activeIndex,
