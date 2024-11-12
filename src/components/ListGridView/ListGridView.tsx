@@ -27,13 +27,22 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
   useKeydown({
     isActive,
     down: () => {
-      if (!currentList?.length) return;
+      if (!currentList?.length) {
+        if (onDown) {
+          onDown();
+        }
+        return;
+      }
 
       setCurrentRow(prev => Math.min(prev + 1, rowsCount - 1));
     },
     up: () => {
       if (currentRow > 0) {
         setCurrentRow(prev => prev - 1);
+      } else {
+        if (onUp) {
+          onUp();
+        }
       }
     },
     debounce: listViewProps.debounce || 200,

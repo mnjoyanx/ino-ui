@@ -1050,9 +1050,12 @@ var ListView = /*#__PURE__*/React.memo(function (_ref) {
       setShowEndArrow(startIndex < itemsTotal - itemsCount);
     }
   }, [startIndex, itemsTotal, itemsCount, arrows.show]);
-  var handleOk = React.useCallback(function () {
+  // const handleOk = useCallback(() => {
+  //   onOk(data[activeIndex], activeIndex);
+  // }, [onOk, data, activeIndex]);
+  var handleOk = function handleOk() {
     onOk(data[activeIndex], activeIndex);
-  }, [onOk, data, activeIndex]);
+  };
   var keyDownOptions = React.useMemo(function () {
     return {
       isActive: isActive && nativeControle,

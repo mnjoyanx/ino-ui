@@ -1043,9 +1043,12 @@ var ListView = /*#__PURE__*/memo(function (_ref) {
       setShowEndArrow(startIndex < itemsTotal - itemsCount);
     }
   }, [startIndex, itemsTotal, itemsCount, arrows.show]);
-  var handleOk = useCallback(function () {
+  // const handleOk = useCallback(() => {
+  //   onOk(data[activeIndex], activeIndex);
+  // }, [onOk, data, activeIndex]);
+  var handleOk = function handleOk() {
     onOk(data[activeIndex], activeIndex);
-  }, [onOk, data, activeIndex]);
+  };
   var keyDownOptions = useMemo(function () {
     return {
       isActive: isActive && nativeControle,
