@@ -2264,16 +2264,15 @@ var InoInput = function InoInput(_ref) {
     onUp = _ref.onUp,
     onDown = _ref.onDown,
     _onMouseEnter = _ref.onMouseEnter,
-    _onMouseLeave = _ref.onMouseLeave,
-    _onPaste = _ref.onPaste;
+    _onMouseLeave = _ref.onMouseLeave;
   var _useState = React.useState(value.length),
     cursorPosition = _useState[0],
     setCursorPosition = _useState[1];
   var contentRef = React.useRef(null);
   var containerRef = React.useRef(null);
-  var handleFocus = React.useCallback(function () {
+  var handleFocus = React.useCallback(function (e) {
     if (!disabled) {
-      onFocus == null || onFocus();
+      onFocus == null || onFocus(e, index);
     }
   }, [disabled, onFocus]);
   var handleClick = React.useCallback(function (e) {
@@ -2289,7 +2288,7 @@ var InoInput = function InoInput(_ref) {
     var clickedPosition = Math.floor(x / charWidth);
     newPosition = Math.min(Math.max(0, clickedPosition), text.length);
     setCursorPosition(newPosition);
-    handleFocus();
+    handleFocus(e);
   }, [value, disabled, handleFocus]);
   var updateCursorPosition = React.useCallback(function (direction) {
     setCursorPosition(function (prev) {
@@ -2311,7 +2310,7 @@ var InoInput = function InoInput(_ref) {
       }
     } else if (e.key.length === 1) {
       if (maxLength && value.length >= maxLength) return;
-      if (type === 'number' && !/^\d$/.test(e.key)) return;
+      if (type === 'password' && !/^\d$/.test(e.key)) return;
       newValue = value.slice(0, cursorPosition) + e.key + value.slice(cursorPosition);
       newPosition = cursorPosition + 1;
     }
@@ -2358,31 +2357,17 @@ var InoInput = function InoInput(_ref) {
       container.scrollLeft = content.scrollWidth;
     }
   }, [value]);
+  React.useEffect(function () {
+    setCursorPosition(value.length);
+  }, [value]);
   var displayValue = type === 'password' ? '•'.repeat(value.length) : value;
   return React__default.createElement("div", {
     ref: containerRef,
-    contentEditable: !disabled,
-    onContextMenu: function onContextMenu(e) {
-      return e.preventDefault();
-    },
     onMouseEnter: function onMouseEnter(e) {
       _onMouseEnter == null || _onMouseEnter(e);
     },
     onMouseLeave: function onMouseLeave(e) {
       _onMouseLeave == null || _onMouseLeave(e);
-    },
-    onPaste: function onPaste(e) {
-      e.preventDefault(); // Prevent default paste
-      var pastedText = e.clipboardData.getData('text');
-      if (_onPaste) {
-        _onPaste(e, index);
-      } else if (!disabled) {
-        var newText = value.slice(0, cursorPosition) + pastedText + value.slice(cursorPosition);
-        if (!maxLength || newText.length <= maxLength) {
-          onChange == null || onChange(newText);
-          setCursorPosition(cursorPosition + pastedText.length);
-        }
-      }
     },
     className: "ino-input ino-input--" + variant + " " + (isActive ? 'active' : '') + " " + (disabled ? 'ino-input--disabled' : '') + " " + classNames,
     onClick: handleClick,

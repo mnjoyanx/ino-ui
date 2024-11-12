@@ -339,6 +339,10 @@ export const GridView: React.FC<GridViewProps> = memo(
 
     useKeydown(keyDownOptions);
 
+    useEffect(() => {
+      setStartRow(0);
+    }, [data]);
+
     return (
       <div
         ref={containerRef}
