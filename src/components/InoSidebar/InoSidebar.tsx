@@ -60,9 +60,7 @@ export const InoSidebar: React.FC<InoSidebarProps> = ({
 
   if (loading) {
     return (
-      <aside
-        className={`ino-sidebar ${collapsed ? 'collapsed' : ''} ${className}`}
-      >
+      <aside className={classes}>
         {Array(skeletonCount)
           .fill(0)
           .map((_, index) => (
@@ -77,18 +75,18 @@ export const InoSidebar: React.FC<InoSidebarProps> = ({
   }
 
   return (
-    <aside
-      className={`ino-sidebar ${collapsed ? 'collapsed' : ''} ${className}`}
-    >
+    <aside className={classes}>
       {items.map((item, index) => (
         <div
           key={item.id}
-          className={`
-            ino-sidebar-item
-            ${selectedId === item.id ? 'selected' : ''}
-            ${isActive && activeIndex === index ? 'active' : ''}
-            ${item.disabled ? 'disabled' : ''}
-          `}
+          className={[
+            'ino-sidebar-item',
+            selectedId === item.id && 'selected',
+            isActive && activeIndex === index && 'active',
+            item.disabled && 'disabled',
+          ]
+            .filter(Boolean)
+            .join(' ')}
           onClick={() => !item.disabled && onSelect?.(item)}
         >
           {item.icon && (
