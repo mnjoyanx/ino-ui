@@ -32,6 +32,10 @@ export interface InoSidebarProps {
     rtl?: boolean;
     /** Z-index for the sidebar */
     zIndex?: number;
+    /** Width of the sidebar in rem units */
+    width?: number;
+    /** Width of the sidebar when collapsed in rem units */
+    collapsedWidth?: number;
     /** Called when an item is selected */
     onSelect?: (item: InoSidebarItem) => void;
     /** Called when navigation events occur */

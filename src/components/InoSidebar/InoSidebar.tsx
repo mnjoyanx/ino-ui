@@ -12,6 +12,8 @@ export const InoSidebar: React.FC<InoSidebarProps> = ({
   collapsed = false,
   isActive = false,
   className = '',
+  position = 'left',
+  rtl = false,
   onSelect,
   onUp,
   onDown,
@@ -19,6 +21,16 @@ export const InoSidebar: React.FC<InoSidebarProps> = ({
   onLeft,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const classes = [
+    'ino-sidebar',
+    `ino-sidebar--${position}`,
+    collapsed && 'collapsed',
+    rtl && 'ino-sidebar--rtl',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   useMappedKeydown({
     isActive,
