@@ -10,12 +10,12 @@
   width: var(--ino-sidebar-width);
   background-color: var(--ino-bg-secondary);
   padding: 1.6rem 0.8rem;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  box-shadow: var(--ino-shadow-medium);
   overflow: hidden;
+  will-change: transform;
 }
 
 .ino-sidebar--left {
@@ -92,5 +92,3 @@
   visibility: visible;
   transition: opacity 0.2s ease, visibility 0.2s ease;
 }
-
-/* Rest of the CSS remains the same */

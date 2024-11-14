@@ -2856,6 +2856,9 @@ var InoSidebar = function InoSidebar(_ref) {
   }, items.map(function (item, index) {
     return React__default.createElement("div", {
       key: item.id,
+      onMouseEnter: function onMouseEnter() {
+        return setActiveIndex(index);
+      },
       className: ['ino-sidebar-item', selectedId === item.id && 'selected', isActive && activeIndex === index && 'active', item.disabled && 'disabled'].filter(Boolean).join(' '),
       onClick: function onClick() {
         return !item.disabled && (onSelect == null ? void 0 : onSelect(item));
@@ -2868,12 +2871,55 @@ var InoSidebar = function InoSidebar(_ref) {
   }));
 };
 
+var InoListItem = function InoListItem(_ref) {
+  var children = _ref.children,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    _ref$disabled = _ref.disabled,
+    disabled = _ref$disabled === void 0 ? false : _ref$disabled,
+    icon = _ref.icon,
+    rightContent = _ref.rightContent,
+    _ref$className = _ref.className,
+    className = _ref$className === void 0 ? '' : _ref$className,
+    index = _ref.index,
+    _onClick = _ref.onClick,
+    onUp = _ref.onUp,
+    onDown = _ref.onDown,
+    onLeft = _ref.onLeft,
+    onOk = _ref.onOk,
+    onRight = _ref.onRight;
+  useMappedKeydown({
+    isActive: isActive,
+    onOk: onOk,
+    onUp: onUp,
+    onDown: onDown,
+    onLeft: onLeft,
+    onRight: onRight
+  });
+  return React__default.createElement("div", {
+    className: "ino-list-item " + (isActive ? 'active' : '') + " " + (disabled ? 'disabled' : '') + " " + className,
+    onClick: function onClick(e) {
+      return !disabled && (_onClick == null ? void 0 : _onClick(e, index));
+    },
+    role: "button",
+    tabIndex: disabled ? -1 : 0,
+    "aria-disabled": disabled
+  }, icon && React__default.createElement("div", {
+    className: "ino-list-item__icon"
+  }, icon), React__default.createElement("div", {
+    className: "ino-list-item__content"
+  }, children), rightContent && React__default.createElement("div", {
+    className: "ino-list-item__right"
+  }, rightContent));
+};
+
 exports.CheckboxItem = CheckboxItem;
 exports.GridView = GridView;
 exports.InoButton = InoButton;
 exports.InoCol = InoCol;
 exports.InoInput = InoInput;
 exports.InoKeyboard = InoKeyboard;
+exports.InoListItem = InoListItem;
 exports.InoRow = InoRow;
 exports.InoSidebar = InoSidebar;
 exports.InoSkeleton = InoSkeleton;

@@ -19,4 +19,6 @@ export * from './components/InoSkeleton/InoSkeleton';
 export * from './components/InoSkeleton/InoSkeletonListItem';
 export * from './components/InoSidebar/InoSidebar';
 export * from './components/InoSidebar/InoSidebar.types';
+export * from './components/InoListItem/InoListItem';
+export * from './components/InoListItem/InoListItem.types';
 export * from './types/index';
