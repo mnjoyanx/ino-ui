@@ -79,6 +79,7 @@ export const InoSidebar: React.FC<InoSidebarProps> = ({
       {items.map((item, index) => (
         <div
           key={item.id}
+          onMouseEnter={() => setActiveIndex(index)}
           className={[
             'ino-sidebar-item',
             selectedId === item.id && 'selected',
