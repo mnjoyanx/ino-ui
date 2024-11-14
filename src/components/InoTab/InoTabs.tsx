@@ -42,7 +42,6 @@ export const InoTabs: React.FC<InoTabsProps> = ({
   };
 
   const handleNavigation = (direction: 'up' | 'down' | 'left' | 'right') => {
-    const isVertical = direction === 'up' || direction === 'down';
     const isBackward = direction === 'up' || direction === 'left';
 
     const newIndex = isBackward
