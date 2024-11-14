@@ -15,7 +15,6 @@ export const InoCol: React.FC<InoColProps> = ({
   onLeft,
   onRight,
   onOk,
-  index,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const childrenArray = React.Children.toArray(children);

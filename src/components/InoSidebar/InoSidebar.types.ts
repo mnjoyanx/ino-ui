@@ -17,9 +17,6 @@ export interface InoSidebarProps {
     /** Currently selected item ID */
     selectedId?: string;
     /** Whether the sidebar is in a loading state */
-    loading?: boolean;
-    /** Number of skeleton items to show while loading */
-    skeletonCount?: number;
     /** Whether the sidebar is collapsed */
     collapsed?: boolean;
     /** Whether the sidebar is active (for navigation) */

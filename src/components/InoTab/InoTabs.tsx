@@ -8,12 +8,13 @@ export const InoTabs: React.FC<InoTabsProps> = ({
   selectedIndex = 0,
   activeIndex: controlledActiveIndex,
   changeByOnOk = false,
-  onChange,
-  onActiveChange,
+  direction = 'horizontal',
   variant = 'primary',
   size = 'medium',
   infinite = false,
   classNames = '',
+  onChange,
+  onActiveChange,
 }) => {
   const [selectedTabIndex, setSelectedTabIndex] = useState(selectedIndex);
   const [activeTabIndex, setActiveTabIndex] = useState(
@@ -40,15 +41,17 @@ export const InoTabs: React.FC<InoTabsProps> = ({
     onActiveChange?.(index);
   };
 
-  const handleNavigation = (direction: 'left' | 'right') => {
-    const newIndex =
-      direction === 'left'
-        ? activeTabIndex === 0 && infinite
-          ? childrenArray.length - 1
-          : Math.max(0, activeTabIndex - 1)
-        : activeTabIndex === childrenArray.length - 1 && infinite
-        ? 0
-        : Math.min(childrenArray.length - 1, activeTabIndex + 1);
+  const handleNavigation = (direction: 'up' | 'down' | 'left' | 'right') => {
+    const isVertical = direction === 'up' || direction === 'down';
+    const isBackward = direction === 'up' || direction === 'left';
+
+    const newIndex = isBackward
+      ? activeTabIndex === 0 && infinite
+        ? childrenArray.length - 1
+        : Math.max(0, activeTabIndex - 1)
+      : activeTabIndex === childrenArray.length - 1 && infinite
+      ? 0
+      : Math.min(childrenArray.length - 1, activeTabIndex + 1);
 
     setActiveTabIndex(newIndex);
     onActiveChange?.(newIndex);
@@ -56,8 +59,10 @@ export const InoTabs: React.FC<InoTabsProps> = ({
 
   useMappedKeydown({
     isActive: true,
-    onLeft: () => handleNavigation('left'),
-    onRight: () => handleNavigation('right'),
+    onLeft: () => direction === 'horizontal' && handleNavigation('left'),
+    onRight: () => direction === 'horizontal' && handleNavigation('right'),
+    onUp: () => direction === 'vertical' && handleNavigation('up'),
+    onDown: () => direction === 'vertical' && handleNavigation('down'),
     onOk: () => {
       if (changeByOnOk) {
         setSelectedTabIndex(activeTabIndex);
@@ -70,7 +75,7 @@ export const InoTabs: React.FC<InoTabsProps> = ({
     <div className="ino-tabs-container">
       <div
         role="tablist"
-        className={`ino-tabs ino-tabs--${variant} ino-tabs--${size} ${classNames}`}
+        className={`ino-tabs ino-tabs--${direction} ino-tabs--${variant} ino-tabs--${size} ${classNames}`}
       >
         {React.Children.map(children, (child, index) => {
           if (React.isValidElement<InoTabProps>(child)) {

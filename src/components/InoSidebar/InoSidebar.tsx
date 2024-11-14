@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { InoSidebarProps } from './InoSidebar.types';
-import { InoSkeletonListItem } from '../InoSkeleton/InoSkeletonListItem';
 import { useMappedKeydown } from '../../hooks/useMappedKeydown';
 import '../../styles/InoSidebar.css';
 
 export const InoSidebar: React.FC<InoSidebarProps> = ({
   items = [],
   selectedId,
-  loading = false,
-  skeletonCount = 5,
   collapsed = false,
   isActive = false,
   className = '',
@@ -58,22 +55,6 @@ export const InoSidebar: React.FC<InoSidebarProps> = ({
     },
   });
 
-  if (loading) {
-    return (
-      <aside className={classes}>
-        {Array(skeletonCount)
-          .fill(0)
-          .map((_, index) => (
-            <InoSkeletonListItem
-              key={index}
-              avatarSize={3.2}
-              lines={collapsed ? 0 : 1}
-            />
-          ))}
-      </aside>
-    );
-  }
-
   return (
     <aside className={classes}>
       {items.map((item, index) => (
@@ -90,11 +71,11 @@ export const InoSidebar: React.FC<InoSidebarProps> = ({
             .join(' ')}
           onClick={() => !item.disabled && onSelect?.(item)}
         >
-          {item.icon && (
-            <div className="ino-sidebar-item__icon">{item.icon}</div>
-          )}
+          <div className="ino-sidebar-item__icon">{item.icon}</div>
           {!collapsed && (
-            <span className="ino-sidebar-item__label">{item.label}</span>
+            <div className="ino-sidebar-item__content">
+              <span className="ino-sidebar-item__label">{item.label}</span>
+            </div>
           )}
         </div>
       ))}

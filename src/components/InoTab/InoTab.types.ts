@@ -46,6 +46,8 @@ export interface InoTabsProps {
     changeByOnOk?: boolean;
     /** Called when selected tab changes */
     onChange?: (index: number) => void;
+    /** Layout direction */
+    direction?: 'horizontal' | 'vertical';
     /** Called when active tab changes */
     onActiveChange?: (index: number) => void;
     /** Visual variant applied to all tabs */
@@ -56,4 +58,5 @@ export interface InoTabsProps {
     infinite?: boolean;
     /** Additional class names */
     classNames?: string;
-} 
+}
+
