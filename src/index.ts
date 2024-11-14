@@ -23,5 +23,6 @@ export * from './components/InoSidebar/InoSidebar';
 export * from './components/InoSidebar/InoSidebar.types';
 export * from './components/InoListItem/InoListItem';
 export * from './components/InoListItem/InoListItem.types';
+export * from './components/InoImage/Index';
 // Type exports
 export * from './types/index';
