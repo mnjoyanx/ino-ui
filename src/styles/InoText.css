@@ -1,0 +1,71 @@
+.ino-text {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.ino-text__content {
+  transition: transform 0.1s linear;
+}
+
+.ino-text--h1 {
+  font-size: var(--ino-font-size-xxlarge);
+  line-height: 1.2;
+}
+
+.ino-text--h2 {
+  font-size: var(--ino-font-size-xlarge);
+  line-height: 1.25;
+}
+
+.ino-text--h3 {
+  font-size: var(--ino-font-size-large);
+  line-height: 1.3;
+}
+
+.ino-text--h4 {
+  font-size: var(--ino-font-size-medium);
+  line-height: 1.4;
+}
+
+.ino-text--body {
+  font-size: var(--ino-font-size-medium);
+  line-height: 1.5;
+}
+
+.ino-text--caption {
+  font-size: var(--ino-font-size-small);
+  line-height: 1.5;
+}
+
+.ino-text--primary {
+  color: var(--ino-text-primary);
+}
+
+.ino-text--secondary {
+  color: var(--ino-text-secondary);
+}
+
+.ino-text--error {
+  color: var(--ino-color-error);
+}
+
+.ino-text--success {
+  color: var(--ino-color-success);
+}
+
+.ino-text--normal {
+  font-weight: 400;
+}
+
+.ino-text--medium {
+  font-weight: 500;
+}
+
+.ino-text--bold {
+  font-weight: 700;
+}
+
+.ino-text--active .ino-text__content {
+  will-change: transform;
+}

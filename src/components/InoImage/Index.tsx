@@ -1,117 +1,100 @@
-import React, { useEffect, useState } from 'react';
-import sharp from 'sharp';
+import React, { useEffect, useRef, useState } from 'react';
 
-interface InoImageProps {
+interface ImageComponentProps {
   src: string;
   alt: string;
-  width?: number;
-  height?: number;
-  quality?: number;
-  format?: 'jpeg' | 'png' | 'webp' | 'avif';
-  placeholder?: 'blur' | 'empty';
-  className?: string;
-  onLoad?: () => void;
-  onError?: (error: Error) => void;
+  fallbackSrc?: string; // Optional fallback image source in case of error
+  quality?: number; // Compression quality (0 to 1)
+  backgroundColor?: string; // Background color while loading
 }
 
-export const InoImage: React.FC<InoImageProps> = ({
+const InoImage: React.FC<ImageComponentProps> = ({
   src,
   alt,
-  width,
-  height,
-  quality = 80,
-  format = 'webp',
-  placeholder = 'empty',
-  className = '',
-  onLoad,
-  onError,
+  fallbackSrc = 'fallback.jpg',
+  quality = 0.7,
+  backgroundColor = '#e0e0e0', // Default loading background color
 }) => {
-  const [optimizedSrc, setOptimizedSrc] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [displaySrc, setDisplaySrc] = useState<string>(''); // Initially empty to show background color
+  const [, setHasError] = useState<boolean>(false); // Track if an error occurs
+  const [isLoaded, setIsLoaded] = useState<boolean>(false); // Controls fade-in effect
+  const containerRef = useRef<HTMLDivElement>(null); // Reference to image container
+  const canvasRef = useRef<HTMLCanvasElement>(null); // Reference to canvas for compression
 
+  // Step 1: Get box dimensions and cache them
+  const [boxSize, setBoxSize] = useState<{ width: number; height: number }>({
+    width: 345,
+    height: 388,
+  });
   useEffect(() => {
-    const optimizeImage = async () => {
-      try {
-        setIsLoading(true);
+    if (containerRef.current) {
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      setBoxSize({ width, height });
+    }
+  }, []);
 
-        // Fetch the image
-        const response = await fetch(src);
-        const arrayBuffer = await response.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
+  // Step 2: Load and compress the image
+  useEffect(() => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous'; // Prevents CORS tainting
+    img.src = src;
 
-        // Process with Sharp
-        let sharpInstance = sharp(buffer);
+    img.onload = () => {
+      const canvas = canvasRef.current;
+      if (canvas) {
+        canvas.width = boxSize.width;
+        canvas.height = boxSize.height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, boxSize.width, boxSize.height);
 
-        // Resize if dimensions provided
-        if (width || height) {
-          sharpInstance = sharpInstance.resize(width, height, {
-            fit: 'cover',
-            position: 'center',
-          });
+          // Convert canvas to compressed data URL
+          const compressedImageUrl = canvas.toDataURL('image/jpeg', quality);
+          setDisplaySrc(compressedImageUrl); // Set compressed image as display source
+
+          // Cache in sessionStorage to avoid redundant processing
+          const cacheKey = `imageCache_${src}`;
+          sessionStorage.setItem(cacheKey, compressedImageUrl);
         }
-
-        // Convert to specified format
-        switch (format) {
-          case 'jpeg':
-            sharpInstance = sharpInstance.jpeg({ quality });
-            break;
-          case 'png':
-            sharpInstance = sharpInstance.png({ quality });
-            break;
-          case 'webp':
-            sharpInstance = sharpInstance.webp({ quality });
-            break;
-          case 'avif':
-            sharpInstance = sharpInstance.avif({ quality });
-            break;
-        }
-
-        // Get optimized buffer
-        const optimizedBuffer = await sharpInstance.toBuffer();
-
-        // Convert to base64
-        const base64 = `data:image/${format};base64,${optimizedBuffer.toString(
-          'base64'
-        )}`;
-        setOptimizedSrc(base64);
-        setIsLoading(false);
-        onLoad?.();
-      } catch (err) {
-        const error =
-          err instanceof Error ? err : new Error('Image optimization failed');
-        setError(error);
-        onError?.(error);
       }
     };
 
-    optimizeImage();
-  }, [src, width, height, quality, format]);
-
-  if (error) {
-    return (
-      <div className={`ino-image ino-image--error ${className}`}>
-        Failed to load image
-      </div>
-    );
-  }
+    img.onerror = () => {
+      setDisplaySrc(fallbackSrc); // Show fallback image if loading fails
+      setHasError(true);
+    };
+  }, [src, boxSize, quality, fallbackSrc]);
 
   return (
-    <div className={`ino-image ${className}`} style={{ position: 'relative' }}>
-      {isLoading && placeholder === 'blur' && (
-        <div className="ino-image__placeholder">
-          <div className="ino-image__blur" />
-        </div>
-      )}
-      {optimizedSrc && (
+    <div
+      ref={containerRef}
+      style={{
+        width: boxSize.width,
+        height: boxSize.height,
+        overflow: 'hidden',
+        backgroundColor:
+          displaySrc && isLoaded ? 'transparent' : backgroundColor, // Background color while loading
+        position: 'relative',
+      }}
+    >
+      <canvas ref={canvasRef} style={{ display: 'none' }} />{' '}
+      {/* Hidden canvas for compression */}
+      {displaySrc && (
         <img
-          src={optimizedSrc}
+          src={displaySrc}
           alt={alt}
-          width={width}
-          height={height}
-          className={`ino-image__img ${isLoading ? 'loading' : 'loaded'}`}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: isLoaded ? 1 : 0, // Set to 1 once loaded, otherwise 0 for fade-in
+            transition: 'opacity 0.5s ease-in',
+          }}
+          onLoad={() => setIsLoaded(true)} // Set to true once image is fully loaded
         />
       )}
     </div>
   );
 };
+
+export default InoImage;
