@@ -1,37 +1,45 @@
 import React, { useEffect, useRef, useState } from 'react';
+import '../../styles/InoText.css';
 
 interface InoTextProps {
   children: string;
   variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'body' | 'caption';
   color?: 'primary' | 'secondary' | 'error' | 'success';
-  weight?: 'normal' | 'medium' | 'bold';
   marquee?: boolean;
   marqueeSpeed?: number;
   className?: string;
   isActive?: boolean;
+  delay?: number; // Delay before marquee starts
+  gap?: number; // Gap between original and repeated text
 }
 
 export const InoText: React.FC<InoTextProps> = ({
   children,
   variant = 'body',
   color = 'primary',
-  weight = 'normal',
   marquee = false,
   marqueeSpeed = 50,
   className = '',
   isActive = false,
+  delay = 1000,
+  gap = 50,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
-  const [marqueePosition, setMarqueePosition] = useState(0);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const [contentWidth, setContentWidth] = useState(0);
 
+  // Check if text overflows container
   useEffect(() => {
     const checkOverflow = () => {
       if (containerRef.current && contentRef.current) {
-        const isTextOverflowing =
-          contentRef.current.scrollWidth > containerRef.current.clientWidth;
-        setIsOverflowing(isTextOverflowing);
+        const container = containerRef.current;
+        const content = contentRef.current;
+
+        const hasOverflow = content.scrollWidth > container.clientWidth;
+        setIsOverflowing(hasOverflow);
+        setContentWidth(content.scrollWidth);
       }
     };
 
@@ -40,45 +48,27 @@ export const InoText: React.FC<InoTextProps> = ({
     return () => window.removeEventListener('resize', checkOverflow);
   }, [children]);
 
+  // Handle marquee animation start after delay
   useEffect(() => {
-    let animationFrame: number;
-    let startTime: number;
-
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = timestamp - startTime;
-
-      if (contentRef.current && isOverflowing && marquee && isActive) {
-        const contentWidth = contentRef.current.scrollWidth;
-        const containerWidth = containerRef.current?.clientWidth || 0;
-        const maxOffset = contentWidth - containerWidth;
-
-        // Calculate position based on time and speed
-        const newPosition =
-          (progress / marqueeSpeed) % (maxOffset + containerWidth);
-        setMarqueePosition(-newPosition);
-
-        // Reset position when complete cycle is done
-        if (newPosition >= maxOffset + containerWidth) {
-          startTime = timestamp;
-        }
-      }
-
-      animationFrame = requestAnimationFrame(animate);
-    };
+    let timeoutId: NodeJS.Timeout;
 
     if (isOverflowing && marquee && isActive) {
-      animationFrame = requestAnimationFrame(animate);
+      timeoutId = setTimeout(() => {
+        setShouldAnimate(true);
+      }, delay);
     } else {
-      setMarqueePosition(0);
+      setShouldAnimate(false);
     }
 
     return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-      }
+      if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [isOverflowing, marquee, isActive, marqueeSpeed]);
+  }, [isOverflowing, marquee, isActive, delay]);
+
+  const containerStyle = {
+    '--content-width': `${contentWidth}px`,
+    '--gap': `${gap}px`,
+  } as React.CSSProperties;
 
   return (
     <div
@@ -87,20 +77,26 @@ export const InoText: React.FC<InoTextProps> = ({
         ino-text 
         ino-text--${variant} 
         ino-text--${color}
-        ino-text--${weight}
         ${isActive ? 'ino-text--active' : ''}
+        ${shouldAnimate ? 'ino-text--marquee' : ''}
         ${className}
       `}
+      style={containerStyle}
     >
       <div
         ref={contentRef}
         className="ino-text__content"
         style={{
-          transform: `translateX(${marqueePosition}px)`,
+          animationDuration: `${marqueeSpeed}s`,
           whiteSpace: marquee ? 'nowrap' : 'normal',
         }}
       >
-        {children}
+        <span className="ino-text__original">{children}</span>
+        {shouldAnimate && (
+          <span className="ino-text__duplicate" aria-hidden="true">
+            {children}
+          </span>
+        )}
       </div>
     </div>
   );

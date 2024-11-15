@@ -2907,5 +2907,88 @@ var InoListItem = function InoListItem(_ref) {
   }, rightContent));
 };
 
-export { CheckboxItem, GridView, InoButton, InoCol, InoInput, InoKeyboard, InoListItem, InoRow, InoSidebar, InoSkeleton, InoSkeletonListItem, InoTab, InoTabs, ListGridView, ListView, Modal, ScrollView, ThemeProvider };
+var InoText = function InoText(_ref) {
+  var children = _ref.children,
+    _ref$variant = _ref.variant,
+    variant = _ref$variant === void 0 ? 'body' : _ref$variant,
+    _ref$color = _ref.color,
+    color = _ref$color === void 0 ? 'primary' : _ref$color,
+    _ref$marquee = _ref.marquee,
+    marquee = _ref$marquee === void 0 ? false : _ref$marquee,
+    _ref$marqueeSpeed = _ref.marqueeSpeed,
+    marqueeSpeed = _ref$marqueeSpeed === void 0 ? 50 : _ref$marqueeSpeed,
+    _ref$className = _ref.className,
+    className = _ref$className === void 0 ? '' : _ref$className,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    _ref$delay = _ref.delay,
+    delay = _ref$delay === void 0 ? 1000 : _ref$delay,
+    _ref$gap = _ref.gap,
+    gap = _ref$gap === void 0 ? 50 : _ref$gap;
+  var containerRef = useRef(null);
+  var contentRef = useRef(null);
+  var _useState = useState(false),
+    isOverflowing = _useState[0],
+    setIsOverflowing = _useState[1];
+  var _useState2 = useState(false),
+    shouldAnimate = _useState2[0],
+    setShouldAnimate = _useState2[1];
+  var _useState3 = useState(0),
+    contentWidth = _useState3[0],
+    setContentWidth = _useState3[1];
+  // Check if text overflows container
+  useEffect(function () {
+    var checkOverflow = function checkOverflow() {
+      if (containerRef.current && contentRef.current) {
+        var container = containerRef.current;
+        var content = contentRef.current;
+        var hasOverflow = content.scrollWidth > container.clientWidth;
+        setIsOverflowing(hasOverflow);
+        setContentWidth(content.scrollWidth);
+      }
+    };
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+    return function () {
+      return window.removeEventListener('resize', checkOverflow);
+    };
+  }, [children]);
+  // Handle marquee animation start after delay
+  useEffect(function () {
+    var timeoutId;
+    if (isOverflowing && marquee && isActive) {
+      timeoutId = setTimeout(function () {
+        setShouldAnimate(true);
+      }, delay);
+    } else {
+      setShouldAnimate(false);
+    }
+    return function () {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [isOverflowing, marquee, isActive, delay]);
+  var containerStyle = {
+    '--content-width': contentWidth + "px",
+    '--gap': gap + "px"
+  };
+  return React.createElement("div", {
+    ref: containerRef,
+    className: "\n        ino-text \n        ino-text--" + variant + " \n        ino-text--" + color + "\n        " + (isActive ? 'ino-text--active' : '') + "\n        " + (shouldAnimate ? 'ino-text--marquee' : '') + "\n        " + className + "\n      ",
+    style: containerStyle
+  }, React.createElement("div", {
+    ref: contentRef,
+    className: "ino-text__content",
+    style: {
+      animationDuration: marqueeSpeed + "s",
+      whiteSpace: marquee ? 'nowrap' : 'normal'
+    }
+  }, React.createElement("span", {
+    className: "ino-text__original"
+  }, children), shouldAnimate && React.createElement("span", {
+    className: "ino-text__duplicate",
+    "aria-hidden": "true"
+  }, children)));
+};
+
+export { CheckboxItem, GridView, InoButton, InoCol, InoInput, InoKeyboard, InoListItem, InoRow, InoSidebar, InoSkeleton, InoSkeletonListItem, InoTab, InoTabs, InoText, ListGridView, ListView, Modal, ScrollView, ThemeProvider };
 //# sourceMappingURL=ino-ui-tv.esm.js.map
