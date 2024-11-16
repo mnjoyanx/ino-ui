@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
-import { InoKeyboard } from './InoKeyboard/InoKeyboard';
-import { KeyboardKey } from './InoKeyboard/InoKeyboard.types';
+import { useState, useRef, type FC } from 'react';
+import { InoKeyboard } from '../InoKeyboard/InoKeyboard';
+import { KeyboardKey } from '../InoKeyboard/InoKeyboard.types';
 
 interface InoProtectInputProps {
   onChange?: (value: string) => void;
@@ -10,7 +10,7 @@ interface InoProtectInputProps {
   onComplete?: (value: string) => void;
 }
 
-export const InoProtectInput = ({
+export const InoProtectInput: FC<InoProtectInputProps> = ({
   onChange,
   count = 4,
   withLetters = false,
