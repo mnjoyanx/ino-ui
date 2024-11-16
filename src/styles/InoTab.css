@@ -75,8 +75,11 @@
 
 .ino-tabs-container {
   display: flex;
-  flex-direction: column;
   gap: 1.6rem;
+}
+
+.ino-tabs-container--vertical {
+  flex-direction: column;
 }
 
 .ino-tab-panels {

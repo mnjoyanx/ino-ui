@@ -1998,6 +1998,12 @@ var InoKeyboard = function InoKeyboard(_ref) {
   var _useState4 = useState(false),
     isShifted = _useState4[0],
     setIsShifted = _useState4[1];
+  var _useState5 = useState(false),
+    shiftLocked = _useState5[0],
+    setShiftLocked = _useState5[1];
+  var _useState6 = useState(0),
+    lastShiftPress = _useState6[0],
+    setLastShiftPress = _useState6[1];
   var getKeyboardLayout = function getKeyboardLayout() {
     if (customLayout) {
       return customLayout;
@@ -2029,23 +2035,33 @@ var InoKeyboard = function InoKeyboard(_ref) {
           onSubmit == null || onSubmit(prev);
           break;
         case 'shift':
-          setIsShifted(function (prevShift) {
-            return !prevShift;
-          });
+          var now = Date.now();
+          if (now - lastShiftPress < 500) {
+            setShiftLocked(true);
+            setIsShifted(true);
+          } else {
+            if (shiftLocked) {
+              setShiftLocked(false);
+              setIsShifted(false);
+            } else {
+              setIsShifted(true);
+            }
+          }
+          setLastShiftPress(now);
           return prev;
         default:
           if (prev.length < maxLength) {
             var charToAdd = isShifted ? key.toUpperCase() : key;
             newText = prev + charToAdd;
-            if (isShifted) {
-              setIsShifted(false); // Reset shift after one character
+            if (isShifted && !shiftLocked) {
+              setIsShifted(false);
             }
           }
       }
       onChange(newText);
       return newText;
     });
-  }, [maxLength, onChange, onSubmit, isShifted]);
+  }, [maxLength, onChange, onSubmit, isShifted, shiftLocked, lastShiftPress]);
   var handleNavigation = useCallback(function (direction) {
     var currentRow = keys[activeRow];
     var nextRow = direction === 'up' ? keys[activeRow - 1] : direction === 'down' ? keys[activeRow + 1] : null;

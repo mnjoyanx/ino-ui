@@ -15,7 +15,7 @@
 }
 
 .ino-text__duplicate {
-  margin-left: var(--gap, 50px);
+  margin-left: var(--gap, 5rem);
 }
 
 @keyframes marquee {
