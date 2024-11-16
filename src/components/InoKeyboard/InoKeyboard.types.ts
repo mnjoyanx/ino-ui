@@ -1,11 +1,20 @@
 export type KeyboardVariant = 'netflix' | 'standard' | string;
 export type KeyboardLayout = 'qwerty' | 'numeric' | string;
 
+export type KeyboardAction =
+    | 'input'
+    | 'delete'
+    | 'space'
+    | 'clear'
+    | 'submit'
+    | 'shift'
+    | (() => void);
+
 export interface KeyboardKey {
-    label: string;
+    label: string | React.ReactNode;
     value: string;
     width?: number;
-    action?: 'input' | 'delete' | 'space' | 'clear' | 'submit' | 'shift';
+    action?: KeyboardAction;
 }
 
 export interface KeyboardLayouts {

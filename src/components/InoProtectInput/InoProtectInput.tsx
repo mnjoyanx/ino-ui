@@ -1,6 +1,5 @@
 import React, { useState, useRef, type FC } from 'react';
 import { InoKeyboard } from '../InoKeyboard/InoKeyboard';
-import { KeyboardKey } from '../InoKeyboard/InoKeyboard.types';
 
 interface InoProtectInputProps {
   onChange?: (value: string) => void;
@@ -21,29 +20,6 @@ export const InoProtectInput: FC<InoProtectInputProps> = ({
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-
-  const createNumericLayout = (): KeyboardKey[][] => [
-    [
-      { label: '1', value: '1' },
-      { label: '2', value: '2' },
-      { label: '3', value: '3' },
-    ],
-    [
-      { label: '4', value: '4' },
-      { label: '5', value: '5' },
-      { label: '6', value: '6' },
-    ],
-    [
-      { label: '7', value: '7' },
-      { label: '8', value: '8' },
-      { label: '9', value: '9' },
-    ],
-    [
-      { label: 'Clear', value: 'clear', action: 'clear' },
-      { label: '0', value: '0' },
-      { label: '⌫', value: 'delete', action: 'delete' },
-    ],
-  ];
 
   const handleInputChange = (index: number, value: string) => {
     if (!isValidInput(value)) return;
@@ -85,30 +61,27 @@ export const InoProtectInput: FC<InoProtectInputProps> = ({
   return (
     <div className="ino-protect-input-container">
       <div className="ino-protect-input-boxes">
-        {Array(count)
-          .fill(null)
-          .map((_, index) => (
-            <input
-              key={index}
-              ref={el => (inputRefs.current[index] = el)}
-              type="text"
-              maxLength={1}
-              value={values[index]}
-              onChange={e => handleInputChange(index, e.target.value)}
-              onFocus={() => handleInputFocus(index)}
-              className={`ino-protect-input-box ${
-                values[index] ? 'filled' : ''
-              } ${index === activeIndex ? 'active' : ''}`}
-              readOnly={keyboard}
-            />
-          ))}
+        {Array(count).fill(null).map((_, index) => (
+          <input
+            key={index}
+            ref={el => (inputRefs.current[index] = el)}
+            type="text"
+            maxLength={1}
+            value={values[index]}
+            onChange={e => handleInputChange(index, e.target.value)}
+            onFocus={() => handleInputFocus(index)}
+            className={`ino-protect-input-box ${values[index] ? 'filled' : ''} ${
+              index === activeIndex ? 'active' : ''
+            }`}
+            readOnly={keyboard}
+          />
+        ))}
       </div>
       {keyboard && (
         <InoKeyboard
           isOpen={isKeyboardOpen}
           onClose={() => setIsKeyboardOpen(false)}
           onChange={handleKeyboardChange}
-          customLayout={!withLetters ? createNumericLayout() : undefined}
           variant="standard"
           layout={withLetters ? 'qwerty' : 'numeric'}
         />

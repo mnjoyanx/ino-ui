@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { InoKeyboardProps } from './InoKeyboard.types';
+import { InoKeyboardProps, KeyboardAction } from './InoKeyboard.types';
 import { InoButton } from '../InoButton/Index';
 import useKeydown from '../../hooks/useKeydown';
 import { standardLayout, netflixLayout } from './layouts';
@@ -50,11 +50,17 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   }, [activeRow, activeCol, keys, onActiveKeyChange]);
 
   const handleKeyPress = useCallback(
-    (key: string) => {
+    (key: string, action?: KeyboardAction) => {
+      // Handle function actions
+      if (typeof action === 'function') {
+        action();
+        return;
+      }
+
       setText(prev => {
         let newText = prev;
 
-        switch (key) {
+        switch (action) {
           case 'delete':
             newText = prev.slice(0, -1);
             break;
@@ -182,7 +188,7 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
                     setActiveRow(rowIndex);
                     setActiveCol(index);
                   }}
-                  onClick={() => handleKeyPress(key.value)}
+                  onClick={() => handleKeyPress(key.value, key.action)}
                   classNames={`ino-keyboard-key ${
                     key.action ? `ino-keyboard-key--${key.action}` : ''
                   } ${key.action === 'shift' && isShifted ? 'active' : ''}`}
