@@ -2,7 +2,7 @@ const postcss = require('rollup-plugin-postcss');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const copy = require('rollup-plugin-copy');
-
+const replace = require('@rollup/plugin-replace');
 module.exports = {
   rollup(config) {
     config.plugins.push(
