@@ -23,6 +23,8 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   const [activeRow, setActiveRow] = useState(0);
   const [activeCol, setActiveCol] = useState(0);
   const [isShifted, setIsShifted] = useState(false);
+  const [shiftLocked, setShiftLocked] = useState(false);
+  const [lastShiftPress, setLastShiftPress] = useState<number>(0);
 
   const getKeyboardLayout = () => {
     if (customLayout) {
@@ -63,14 +65,26 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
             onSubmit?.(prev);
             break;
           case 'shift':
-            setIsShifted(prevShift => !prevShift);
+            const now = Date.now();
+            if (now - lastShiftPress < 500) {
+              setShiftLocked(true);
+              setIsShifted(true);
+            } else {
+              if (shiftLocked) {
+                setShiftLocked(false);
+                setIsShifted(false);
+              } else {
+                setIsShifted(true);
+              }
+            }
+            setLastShiftPress(now);
             return prev;
           default:
             if (prev.length < maxLength) {
               const charToAdd = isShifted ? key.toUpperCase() : key;
               newText = prev + charToAdd;
-              if (isShifted) {
-                setIsShifted(false); // Reset shift after one character
+              if (isShifted && !shiftLocked) {
+                setIsShifted(false);
               }
             }
         }
@@ -79,7 +93,7 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
         return newText;
       });
     },
-    [maxLength, onChange, onSubmit, isShifted]
+    [maxLength, onChange, onSubmit, isShifted, shiftLocked, lastShiftPress]
   );
 
   const handleNavigation = useCallback(

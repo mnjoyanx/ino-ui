@@ -40,6 +40,10 @@
   );
 }
 
+.ino-sidebar--left.collapsed .ino-sidebar-item {
+  justify-content: flex-end;
+}
+
 .ino-sidebar--rtl {
   direction: rtl;
 }
