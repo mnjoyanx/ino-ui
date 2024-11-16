@@ -1,0 +1,88 @@
+.ino-skeleton-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 1.2rem;
+}
+
+.ino-skeleton--text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex: 1;
+}
+
+.ino-skeleton--text {
+  transform-origin: 0 55%;
+  transform: scale(1, 0.6);
+  border-radius: 0.4rem;
+}
+
+.ino-skeleton--circular {
+  border-radius: 50%;
+}
+
+.ino-skeleton--rectangular {
+  border-radius: 0.4rem;
+}
+
+.ino-skeleton--text:nth-child(1) {
+  width: 40%;
+}
+
+.ino-skeleton--text:nth-child(2) {
+  width: 90%;
+}
+
+.ino-skeleton--text:nth-child(3) {
+  width: 60%;
+}
+
+.ino-skeleton {
+  background-color: var(--ino-skeleton-bg, #e0e0e0);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Pulse Animation */
+.ino-skeleton--animation-pulse {
+  animation: ino-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes ino-skeleton-pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Wave Animation */
+.ino-skeleton--animation-wave::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: ino-skeleton-wave 1.6s linear 0.5s infinite;
+}
+
+@keyframes ino-skeleton-wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

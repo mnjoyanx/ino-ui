@@ -1,4 +1,4 @@
-import { useState, useRef, type FC } from 'react';
+import React, { useState, useRef, type FC } from 'react';
 import { InoKeyboard } from '../InoKeyboard/InoKeyboard';
 import { KeyboardKey } from '../InoKeyboard/InoKeyboard.types';
 
