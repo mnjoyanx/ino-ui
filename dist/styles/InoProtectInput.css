@@ -1,0 +1,33 @@
+.ino-protect-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.ino-protect-input-boxes {
+  display: flex;
+  gap: 1rem;
+}
+
+.ino-protect-input-box {
+  width: 6rem;
+  height: 6rem;
+  border: 2px solid var(--ino-border-primary);
+  border-radius: var(--ino-border-radius-medium);
+  text-align: center;
+  font-size: 2.4rem;
+  background: var(--ino-bg-primary);
+  color: var(--ino-text-primary);
+  transition: all 0.2s ease;
+}
+
+.ino-protect-input-box:focus {
+  border-color: var(--ino-border-focus);
+  box-shadow: 0 0 0 2px var(--ino-border-focus-shadow);
+  outline: none;
+}
+
+.ino-protect-input-box.filled {
+  border-color: var(--ino-border-success);
+}
