@@ -6,6 +6,9 @@ const copy = require('rollup-plugin-copy');
 module.exports = {
   rollup(config) {
     config.plugins.push(
+      replace({
+        preventAssignment: true,
+      }),
       postcss({
         plugins: [
           autoprefixer(),
