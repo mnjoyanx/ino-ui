@@ -1,4 +1,4 @@
-import React, { useState, useRef, type FC } from 'react';
+import React, { useState, useRef } from 'react';
 import { InoKeyboard } from '../InoKeyboard/InoKeyboard';
 
 interface InoProtectInputProps {
@@ -9,7 +9,7 @@ interface InoProtectInputProps {
   onComplete?: (value: string) => void;
 }
 
-export const InoProtectInput: FC<InoProtectInputProps> = ({
+export const InoProtectInput: React.FC<InoProtectInputProps> = ({
   onChange,
   count = 4,
   withLetters = false,
@@ -61,21 +61,23 @@ export const InoProtectInput: FC<InoProtectInputProps> = ({
   return (
     <div className="ino-protect-input-container">
       <div className="ino-protect-input-boxes">
-        {Array(count).fill(null).map((_, index) => (
-          <input
-            key={index}
-            ref={el => (inputRefs.current[index] = el)}
-            type="text"
-            maxLength={1}
-            value={values[index]}
-            onChange={e => handleInputChange(index, e.target.value)}
-            onFocus={() => handleInputFocus(index)}
-            className={`ino-protect-input-box ${values[index] ? 'filled' : ''} ${
-              index === activeIndex ? 'active' : ''
-            }`}
-            readOnly={keyboard}
-          />
-        ))}
+        {Array(count)
+          .fill(null)
+          .map((_, index) => (
+            <input
+              key={index}
+              ref={el => (inputRefs.current[index] = el)}
+              type="text"
+              maxLength={1}
+              value={values[index]}
+              onChange={e => handleInputChange(index, e.target.value)}
+              onFocus={() => handleInputFocus(index)}
+              className={`ino-protect-input-box ${
+                values[index] ? 'filled' : ''
+              } ${index === activeIndex ? 'active' : ''}`}
+              readOnly={keyboard}
+            />
+          ))}
       </div>
       {keyboard && (
         <InoKeyboard

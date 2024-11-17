@@ -12,8 +12,16 @@ module.exports = {
             preset: 'default',
           }),
         ],
+        // Extract CSS to a separate file
+        extract: true,
+
+        // Minify the CSS (optional)
+        minimize: true,
+
+        // Enable modules (optional, for CSS Modules)
+        modules: true,
         inject: false,
-        extract: false,
+        // extract: false,
       })
       // copy({
       //   targets: [{ src: 'src/styles/*.css', dest: 'dist/styles' }],
