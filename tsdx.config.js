@@ -1,14 +1,10 @@
 const postcss = require('rollup-plugin-postcss');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
-const copy = require('rollup-plugin-copy');
-const replace = require('@rollup/plugin-replace');
+// const copy = require('rollup-plugin-copy');
 module.exports = {
   rollup(config) {
     config.plugins.push(
-      replace({
-        preventAssignment: true,
-      }),
       postcss({
         plugins: [
           autoprefixer(),
@@ -18,10 +14,10 @@ module.exports = {
         ],
         inject: false,
         extract: false,
-      }),
-      copy({
-        targets: [{ src: 'src/styles/*.css', dest: 'dist/styles' }],
       })
+      // copy({
+      //   targets: [{ src: 'src/styles/*.css', dest: 'dist/styles' }],
+      // })
     );
     return config;
   },
