@@ -1,12 +1,11 @@
 {
-  "version": "1.9.20",
+  "version": "1.9.27",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "src",
-    "styles"
+    "src/styles/*.css"
   ],
   "engines": {
     "node": ">=18"

@@ -57,49 +57,43 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
         return;
       }
 
-      setText(prev => {
-        let newText = prev;
-
-        switch (action) {
-          case 'delete':
-            newText = prev.slice(0, -1);
-            break;
-          case 'space':
-            newText = prev + ' ';
-            break;
-          case 'submit':
-            onSubmit?.(prev);
-            break;
-          case 'shift':
-            const now = Date.now();
-            if (now - lastShiftPress < 500) {
-              setShiftLocked(true);
-              setIsShifted(true);
+      switch (action) {
+        case 'delete':
+          onChange('');
+          break;
+        case 'space':
+          onChange(' ');
+          break;
+        case 'submit':
+          onSubmit?.(key);
+          break;
+        case 'shift':
+          const now = Date.now();
+          if (now - lastShiftPress < 500) {
+            setShiftLocked(true);
+            setIsShifted(true);
+          } else {
+            if (shiftLocked) {
+              setShiftLocked(false);
+              setIsShifted(false);
             } else {
-              if (shiftLocked) {
-                setShiftLocked(false);
-                setIsShifted(false);
-              } else {
-                setIsShifted(true);
-              }
+              setIsShifted(true);
             }
-            setLastShiftPress(now);
-            return prev;
-          default:
-            if (prev.length < maxLength) {
-              const charToAdd = isShifted ? key.toUpperCase() : key;
-              newText = prev + charToAdd;
-              if (isShifted && !shiftLocked) {
-                setIsShifted(false);
-              }
-            }
-        }
-
-        onChange(newText);
-        return newText;
-      });
+          }
+          setLastShiftPress(now);
+          break;
+        case 'clear':
+          onChange('');
+          break;
+        default:
+          const charToAdd = isShifted ? key.toUpperCase() : key;
+          onChange(charToAdd);
+          if (isShifted && !shiftLocked) {
+            setIsShifted(false);
+          }
+      }
     },
-    [maxLength, onChange, onSubmit, isShifted, shiftLocked, lastShiftPress]
+    [onChange, onSubmit, isShifted, shiftLocked, lastShiftPress]
   );
 
   const handleNavigation = useCallback(
