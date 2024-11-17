@@ -1,0 +1,56 @@
+.ino-checkbox-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  padding: 1.2rem;
+  border-radius: 0.8rem;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.ino-checkbox-item:hover {
+  background-color: var(--ino-light-opacity);
+}
+
+.ino-checkbox-item.active {
+  background-color: var(--ino-light-primary);
+}
+
+.ino-checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  user-select: none;
+  width: 100%;
+}
+
+.ino-checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.ino-checkbox-container .ino-checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ino-checkbox-container .ino-label {
+  font-size: var(--ino-font-size-medium);
+  color: var(--ino-text-secondary);
+  font-weight: var(--ino-font-weight-medium);
+  transition: all 0.2s ease-in-out;
+}
+
+.ino-checkbox-item.rtl .ino-checkbox-container {
+  flex-direction: row-reverse;
+}
+
+.ino-checkbox-item.rtl .ino-checkbox-container .ino-checkmark {
+  margin-left: 1.2rem;
+  margin-right: 0;
+}
