@@ -1979,10 +1979,6 @@ var InoKeyboard = function InoKeyboard(_ref) {
   var isOpen = _ref.isOpen,
     onClose = _ref.onClose,
     onChange = _ref.onChange,
-    _ref$initialValue = _ref.initialValue,
-    initialValue = _ref$initialValue === void 0 ? '' : _ref$initialValue,
-    _ref$maxLength = _ref.maxLength,
-    maxLength = _ref$maxLength === void 0 ? 50 : _ref$maxLength,
     _ref$variant = _ref.variant,
     variant = _ref$variant === void 0 ? 'standard' : _ref$variant,
     _ref$layout = _ref.layout,
@@ -1994,23 +1990,21 @@ var InoKeyboard = function InoKeyboard(_ref) {
     onActiveKeyChange = _ref.onActiveKeyChange,
     _ref$infinite = _ref.infinite,
     infinite = _ref$infinite === void 0 ? false : _ref$infinite;
-  var _useState = React.useState(initialValue),
-    setText = _useState[1];
+  var _useState = React.useState(0),
+    activeRow = _useState[0],
+    setActiveRow = _useState[1];
   var _useState2 = React.useState(0),
-    activeRow = _useState2[0],
-    setActiveRow = _useState2[1];
-  var _useState3 = React.useState(0),
-    activeCol = _useState3[0],
-    setActiveCol = _useState3[1];
+    activeCol = _useState2[0],
+    setActiveCol = _useState2[1];
+  var _useState3 = React.useState(false),
+    isShifted = _useState3[0],
+    setIsShifted = _useState3[1];
   var _useState4 = React.useState(false),
-    isShifted = _useState4[0],
-    setIsShifted = _useState4[1];
-  var _useState5 = React.useState(false),
-    shiftLocked = _useState5[0],
-    setShiftLocked = _useState5[1];
-  var _useState6 = React.useState(0),
-    lastShiftPress = _useState6[0],
-    setLastShiftPress = _useState6[1];
+    shiftLocked = _useState4[0],
+    setShiftLocked = _useState4[1];
+  var _useState5 = React.useState(0),
+    lastShiftPress = _useState5[0],
+    setLastShiftPress = _useState5[1];
   var getKeyboardLayout = function getKeyboardLayout() {
     if (customLayout) {
       return customLayout;
@@ -2034,46 +2028,42 @@ var InoKeyboard = function InoKeyboard(_ref) {
       action();
       return;
     }
-    setText(function (prev) {
-      var newText = prev;
-      switch (action) {
-        case 'delete':
-          newText = prev.slice(0, -1);
-          break;
-        case 'space':
-          newText = prev + ' ';
-          break;
-        case 'submit':
-          onSubmit == null || onSubmit(prev);
-          break;
-        case 'shift':
-          var now = Date.now();
-          if (now - lastShiftPress < 500) {
-            setShiftLocked(true);
-            setIsShifted(true);
+    switch (action) {
+      case 'delete':
+        onChange('');
+        break;
+      case 'space':
+        onChange(' ');
+        break;
+      case 'submit':
+        onSubmit == null || onSubmit(key);
+        break;
+      case 'shift':
+        var now = Date.now();
+        if (now - lastShiftPress < 500) {
+          setShiftLocked(true);
+          setIsShifted(true);
+        } else {
+          if (shiftLocked) {
+            setShiftLocked(false);
+            setIsShifted(false);
           } else {
-            if (shiftLocked) {
-              setShiftLocked(false);
-              setIsShifted(false);
-            } else {
-              setIsShifted(true);
-            }
+            setIsShifted(true);
           }
-          setLastShiftPress(now);
-          return prev;
-        default:
-          if (prev.length < maxLength) {
-            var charToAdd = isShifted ? key.toUpperCase() : key;
-            newText = prev + charToAdd;
-            if (isShifted && !shiftLocked) {
-              setIsShifted(false);
-            }
-          }
-      }
-      onChange(newText);
-      return newText;
-    });
-  }, [maxLength, onChange, onSubmit, isShifted, shiftLocked, lastShiftPress]);
+        }
+        setLastShiftPress(now);
+        break;
+      case 'clear':
+        onChange('');
+        break;
+      default:
+        var charToAdd = isShifted ? key.toUpperCase() : key;
+        onChange(charToAdd);
+        if (isShifted && !shiftLocked) {
+          setIsShifted(false);
+        }
+    }
+  }, [onChange, onSubmit, isShifted, shiftLocked, lastShiftPress]);
   var handleNavigation = React.useCallback(function (direction) {
     var currentRow = keys[activeRow];
     var nextRow = direction === 'up' ? keys[activeRow - 1] : direction === 'down' ? keys[activeRow + 1] : null;
@@ -3026,7 +3016,10 @@ var InoProtectInput = function InoProtectInput(_ref) {
     withLetters = _ref$withLetters === void 0 ? false : _ref$withLetters,
     _ref$keyboard = _ref.keyboard,
     keyboard = _ref$keyboard === void 0 ? true : _ref$keyboard,
-    onComplete = _ref.onComplete;
+    onComplete = _ref.onComplete,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    onBack = _ref.onBack;
   var _useState = React.useState(Array(count).fill('')),
     values = _useState[0],
     setValues = _useState[1];
@@ -3064,10 +3057,36 @@ var InoProtectInput = function InoProtectInput(_ref) {
   };
   var handleInputFocus = function handleInputFocus(index) {
     setActiveIndex(index);
-    if (keyboard) {
-      setIsKeyboardOpen(true);
-    }
   };
+  useKeydown({
+    isActive: isActive,
+    left: function left() {
+      if (!isKeyboardOpen) {
+        setActiveIndex(function (prev) {
+          return Math.max(0, prev - 1);
+        });
+      }
+    },
+    right: function right() {
+      if (!isKeyboardOpen) {
+        setActiveIndex(function (prev) {
+          return Math.min(count - 1, prev + 1);
+        });
+      }
+    },
+    ok: function ok() {
+      if (!isKeyboardOpen && keyboard) {
+        setIsKeyboardOpen(true);
+      }
+    },
+    back: function back() {
+      if (isKeyboardOpen) {
+        setIsKeyboardOpen(false);
+      } else if (onBack) {
+        onBack();
+      }
+    }
+  });
   return React__default.createElement("div", {
     className: "ino-protect-input-container"
   }, React__default.createElement("div", {
@@ -3087,7 +3106,7 @@ var InoProtectInput = function InoProtectInput(_ref) {
       onFocus: function onFocus() {
         return handleInputFocus(index);
       },
-      className: "ino-protect-input-box " + (values[index] ? 'filled' : '') + " " + (index === activeIndex ? 'active' : ''),
+      className: "ino-protect-input-box " + (values[index] ? 'filled' : '') + " " + (index === activeIndex && isActive ? 'active' : ''),
       readOnly: keyboard
     });
   })), keyboard && React__default.createElement(InoKeyboard, {

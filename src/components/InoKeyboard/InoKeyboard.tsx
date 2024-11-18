@@ -9,8 +9,6 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   isOpen,
   onClose,
   onChange,
-  initialValue = '',
-  maxLength = 50,
   variant = 'standard',
   layout = 'qwerty',
   customLayout,
@@ -19,7 +17,6 @@ export const InoKeyboard: React.FC<InoKeyboardProps> = ({
   onActiveKeyChange,
   infinite = false,
 }) => {
-  const [, setText] = useState(initialValue);
   const [activeRow, setActiveRow] = useState(0);
   const [activeCol, setActiveCol] = useState(0);
   const [isShifted, setIsShifted] = useState(false);

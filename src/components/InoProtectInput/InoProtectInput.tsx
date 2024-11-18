@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { InoKeyboard } from '../InoKeyboard/InoKeyboard';
+import useKeydown from '../../hooks/useKeydown';
 
 interface InoProtectInputProps {
   onChange?: (value: string) => void;
@@ -7,6 +8,8 @@ interface InoProtectInputProps {
   withLetters?: boolean;
   keyboard?: boolean;
   onComplete?: (value: string) => void;
+  isActive?: boolean;
+  onBack?: () => void;
 }
 
 export const InoProtectInput: React.FC<InoProtectInputProps> = ({
@@ -15,7 +18,9 @@ export const InoProtectInput: React.FC<InoProtectInputProps> = ({
   withLetters = false,
   keyboard = true,
   onComplete,
-}: InoProtectInputProps) => {
+  isActive = false,
+  onBack,
+}) => {
   const [values, setValues] = useState<string[]>(Array(count).fill(''));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -39,6 +44,31 @@ export const InoProtectInput: React.FC<InoProtectInputProps> = ({
     }
   };
 
+  const handleRemove = () => {
+    const newValues = [...values];
+    if (values[activeIndex]) {
+      // If current position has a value, clear it
+      newValues[activeIndex] = '';
+    } else if (activeIndex > 0) {
+      // If current position is empty and we're not at the first position,
+      // clear previous position and move back
+      setActiveIndex(activeIndex - 1);
+      newValues[activeIndex - 1] = '';
+    }
+
+    setValues(newValues);
+    onChange?.(newValues.join(''));
+  };
+
+  const handleKeyboardChange = (text: string) => {
+    if (text === '') {
+      // Handle backspace/remove from keyboard
+      handleRemove();
+    } else {
+      handleInputChange(activeIndex, text);
+    }
+  };
+
   const isValidInput = (value: string): boolean => {
     if (!value) return true;
     if (withLetters) {
@@ -47,16 +77,35 @@ export const InoProtectInput: React.FC<InoProtectInputProps> = ({
     return /^[0-9]$/.test(value);
   };
 
-  const handleKeyboardChange = (text: string) => {
-    handleInputChange(activeIndex, text);
-  };
-
   const handleInputFocus = (index: number) => {
     setActiveIndex(index);
-    if (keyboard) {
-      setIsKeyboardOpen(true);
-    }
   };
+
+  useKeydown({
+    isActive,
+    left: () => {
+      if (!isKeyboardOpen) {
+        setActiveIndex(prev => Math.max(0, prev - 1));
+      }
+    },
+    right: () => {
+      if (!isKeyboardOpen) {
+        setActiveIndex(prev => Math.min(count - 1, prev + 1));
+      }
+    },
+    ok: () => {
+      if (!isKeyboardOpen && keyboard) {
+        setIsKeyboardOpen(true);
+      }
+    },
+    back: () => {
+      if (isKeyboardOpen) {
+        setIsKeyboardOpen(false);
+      } else if (onBack) {
+        onBack();
+      }
+    },
+  });
 
   return (
     <div className="ino-protect-input-container">
@@ -74,7 +123,7 @@ export const InoProtectInput: React.FC<InoProtectInputProps> = ({
               onFocus={() => handleInputFocus(index)}
               className={`ino-protect-input-box ${
                 values[index] ? 'filled' : ''
-              } ${index === activeIndex ? 'active' : ''}`}
+              } ${index === activeIndex && isActive ? 'active' : ''}`}
               readOnly={keyboard}
             />
           ))}
