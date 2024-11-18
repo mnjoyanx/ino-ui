@@ -6,7 +6,6 @@
   border-radius: var(--ino-border-radius-medium);
   color: var(--ino-text-primary);
   background: var(--ino-bg-primary);
-  box-shadow: var(--ino-shadow-medium);
   z-index: 1000;
   animation: toast-fade-in 0.3s ease;
   min-width: 20rem;
@@ -22,19 +21,19 @@
 }
 
 .ino-toast--success {
-  background: var(--ino-success);
+  background: var(--ino-bg-success);
 }
 
 .ino-toast--error {
-  background: var(--ino-error);
+  background: var(--ino-bg-danger);
 }
 
 .ino-toast--warning {
-  background: var(--ino-warning);
+  background: var(--ino-bg-warning);
 }
 
 .ino-toast--info {
-  background: var(--ino-info);
+  background: var(--ino-bg-primary);
 }
 
 @keyframes toast-fade-in {

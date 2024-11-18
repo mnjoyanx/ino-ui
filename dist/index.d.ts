@@ -25,4 +25,5 @@ export * from './components/InoImage/Index';
 export * from './components/InoText/InoText';
 export * from './components/InoProtectInput/InoProtectInput';
 export * from './components/InoToast/ToastProvider';
+export { toast } from './components/InoToast/toast';
 export * from './types/index';

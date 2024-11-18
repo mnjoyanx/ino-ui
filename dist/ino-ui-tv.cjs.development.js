@@ -3282,4 +3282,5 @@ exports.Modal = Modal;
 exports.ScrollView = ScrollView;
 exports.ThemeProvider = ThemeProvider;
 exports.ToastProvider = ToastProvider;
+exports.toast = toast;
 //# sourceMappingURL=ino-ui-tv.cjs.development.js.map

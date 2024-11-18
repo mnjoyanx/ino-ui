@@ -3253,5 +3253,5 @@ var ToastProvider = function ToastProvider(_ref) {
   })), document.body));
 };
 
-export { CheckboxItem, GridView, InoButton, InoCol, InoInput, InoKeyboard, InoListItem, InoProtectInput, InoRow, InoSidebar, InoSkeleton, InoSkeletonListItem, InoTab, InoTabs, InoText, ListGridView, ListView, Modal, ScrollView, ThemeProvider, ToastProvider };
+export { CheckboxItem, GridView, InoButton, InoCol, InoInput, InoKeyboard, InoListItem, InoProtectInput, InoRow, InoSidebar, InoSkeleton, InoSkeletonListItem, InoTab, InoTabs, InoText, ListGridView, ListView, Modal, ScrollView, ThemeProvider, ToastProvider, toast };
 //# sourceMappingURL=ino-ui-tv.esm.js.map
