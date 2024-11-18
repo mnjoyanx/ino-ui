@@ -24,4 +24,5 @@ export * from './components/InoListItem/InoListItem.types';
 export * from './components/InoImage/Index';
 export * from './components/InoText/InoText';
 export * from './components/InoProtectInput/InoProtectInput';
+export * from './components/InoToast/ToastProvider';
 export * from './types/index';

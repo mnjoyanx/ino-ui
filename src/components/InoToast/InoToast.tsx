@@ -20,6 +20,8 @@ export const InoToast: React.FC<InoToastProps> = ({
 
       return () => clearTimeout(timer);
     }
+
+    return () => {};
   }, [isVisible, duration, onClose]);
 
   if (!isVisible) return null;

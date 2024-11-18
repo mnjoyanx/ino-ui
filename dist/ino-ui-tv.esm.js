@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState, memo, startTransition, useMemo } from 'react';
-import { createPortal } from 'react-dom';
+import ReactDOM, { createPortal } from 'react-dom';
 
 var KeyCode = {
   N0: 48,
@@ -3038,15 +3038,34 @@ var InoProtectInput = function InoProtectInput(_ref) {
       onComplete(newValues.join(''));
     }
   };
+  var handleRemove = function handleRemove() {
+    var newValues = [].concat(values);
+    if (values[activeIndex]) {
+      // If current position has a value, clear it
+      newValues[activeIndex] = '';
+    } else if (activeIndex > 0) {
+      // If current position is empty and we're not at the first position,
+      // clear previous position and move back
+      setActiveIndex(activeIndex - 1);
+      newValues[activeIndex - 1] = '';
+    }
+    setValues(newValues);
+    onChange == null || onChange(newValues.join(''));
+  };
+  var handleKeyboardChange = function handleKeyboardChange(text) {
+    if (text === '') {
+      // Handle backspace/remove from keyboard
+      handleRemove();
+    } else {
+      handleInputChange(activeIndex, text);
+    }
+  };
   var isValidInput = function isValidInput(value) {
     if (!value) return true;
     if (withLetters) {
       return /^[A-Za-z0-9]$/.test(value);
     }
     return /^[0-9]$/.test(value);
-  };
-  var handleKeyboardChange = function handleKeyboardChange(text) {
-    handleInputChange(activeIndex, text);
   };
   var handleInputFocus = function handleInputFocus(index) {
     setActiveIndex(index);
@@ -3113,5 +3132,126 @@ var InoProtectInput = function InoProtectInput(_ref) {
   }));
 };
 
-export { CheckboxItem, GridView, InoButton, InoCol, InoInput, InoKeyboard, InoListItem, InoProtectInput, InoRow, InoSidebar, InoSkeleton, InoSkeletonListItem, InoTab, InoTabs, InoText, ListGridView, ListView, Modal, ScrollView, ThemeProvider };
+var toasts = [];
+var listeners = [];
+var notify = function notify(options) {
+  var id = Math.random().toString(36).slice(2);
+  var toast = {
+    id: id,
+    options: options
+  };
+  toasts = [].concat(toasts, [toast]);
+  listeners.forEach(function (listener) {
+    return listener(toasts);
+  });
+  if (options.duration !== 0) {
+    setTimeout(function () {
+      dismiss(id);
+    }, options.duration || 3000);
+  }
+  return id;
+};
+var dismiss = function dismiss(id) {
+  toasts = toasts.filter(function (toast) {
+    return toast.id !== id;
+  });
+  listeners.forEach(function (listener) {
+    return listener(toasts);
+  });
+};
+var toast = {
+  success: function success(message, options) {
+    return notify(_extends({
+      type: 'success',
+      message: message
+    }, options));
+  },
+  error: function error(message, options) {
+    return notify(_extends({
+      type: 'error',
+      message: message
+    }, options));
+  },
+  warning: function warning(message, options) {
+    return notify(_extends({
+      type: 'warning',
+      message: message
+    }, options));
+  },
+  info: function info(message, options) {
+    return notify(_extends({
+      type: 'info',
+      message: message
+    }, options));
+  },
+  dismiss: dismiss,
+  subscribe: function subscribe(listener) {
+    listeners.push(listener);
+    return function () {
+      listeners = listeners.filter(function (l) {
+        return l !== listener;
+      });
+    };
+  }
+};
+
+var InoToast = function InoToast(_ref) {
+  var message = _ref.message,
+    _ref$type = _ref.type,
+    type = _ref$type === void 0 ? 'info' : _ref$type,
+    _ref$position = _ref.position,
+    position = _ref$position === void 0 ? 'bottom' : _ref$position,
+    _ref$duration = _ref.duration,
+    duration = _ref$duration === void 0 ? 3000 : _ref$duration,
+    isVisible = _ref.isVisible,
+    onClose = _ref.onClose,
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames;
+  useEffect(function () {
+    if (isVisible && duration > 0) {
+      var timer = setTimeout(function () {
+        onClose == null || onClose();
+      }, duration);
+      return function () {
+        return clearTimeout(timer);
+      };
+    }
+    return function () {};
+  }, [isVisible, duration, onClose]);
+  if (!isVisible) return null;
+  var toastContent = React.createElement("div", {
+    className: "ino-toast ino-toast--" + type + " ino-toast--" + position + " " + classNames,
+    role: "alert"
+  }, React.createElement("div", {
+    className: "ino-toast__content"
+  }, message));
+  // Create portal
+  return ReactDOM.createPortal(toastContent, document.body);
+};
+
+var ToastProvider = function ToastProvider(_ref) {
+  var children = _ref.children;
+  var _useState = useState([]),
+    toasts = _useState[0],
+    setToasts = _useState[1];
+  useEffect(function () {
+    return toast.subscribe(setToasts);
+  }, []);
+  return React.createElement(React.Fragment, null, children, createPortal(React.createElement("div", {
+    className: "ino-toast-container"
+  }, toasts.map(function (toast) {
+    return React.createElement(InoToast, {
+      key: toast.id,
+      message: toast.options.message,
+      type: toast.options.type,
+      position: toast.options.position,
+      isVisible: true,
+      onClose: function onClose() {
+        return toast.dismiss(toast.id);
+      }
+    });
+  })), document.body));
+};
+
+export { CheckboxItem, GridView, InoButton, InoCol, InoInput, InoKeyboard, InoListItem, InoProtectInput, InoRow, InoSidebar, InoSkeleton, InoSkeletonListItem, InoTab, InoTabs, InoText, ListGridView, ListView, Modal, ScrollView, ThemeProvider, ToastProvider };
 //# sourceMappingURL=ino-ui-tv.esm.js.map
