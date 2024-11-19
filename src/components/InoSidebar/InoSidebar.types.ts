@@ -1,43 +1,34 @@
 import { MouseKeyboardEvent } from '../../types';
+import { NavigableComponentProps } from '../../types/base';
 
-export type InoSidebarPosition = 'left' | 'right';
-
-export interface InoSidebarItem {
-    id: string;
+export interface InoSidebarItemProps extends NavigableComponentProps {
+    /** Item id */
+    id: string | number;
+    /** Item label/content */
     label: string;
+    /** Optional icon component */
     icon?: React.ReactNode;
-    href?: string;
-    onClick?: () => void;
+    /** Whether the item is selected */
+    selected?: boolean;
+    /** Whether the item is disabled */
     disabled?: boolean;
+    /** Called when item is clicked/selected */
+    onClick?: (e: MouseKeyboardEvent, index?: number) => void;
 }
 
-export interface InoSidebarProps {
-    /** Array of sidebar items */
-    items: InoSidebarItem[];
-    /** Currently selected item ID */
+export interface InoSidebarProps extends NavigableComponentProps {
+    /** Sidebar items */
+    items: InoSidebarItemProps[];
+    /** Selected item id */
     selectedId?: string;
-    /** Whether the sidebar is in a loading state */
-    /** Whether the sidebar is collapsed */
+    /** Called when selected item changes */
+    onSelect?: (item: InoSidebarItemProps) => void;
+    /** Whether to show item indicators */
+    showIndicators?: boolean;
+    /** Whether to collapse sidebar */
     collapsed?: boolean;
-    /** Whether the sidebar is active (for navigation) */
-    isActive?: boolean;
-    /** Custom class names */
-    className?: string;
     /** Position of the sidebar */
-    position?: InoSidebarPosition;
-    /** Whether to use RTL layout */
-    rtl?: boolean;
-    /** Z-index for the sidebar */
-    zIndex?: number;
-    /** Width of the sidebar in rem units */
-    width?: number;
-    /** Width of the sidebar when collapsed in rem units */
-    collapsedWidth?: number;
-    /** Called when an item is selected */
-    onSelect?: (item: InoSidebarItem) => void;
-    /** Called when navigation events occur */
-    onUp?: (e: MouseKeyboardEvent, index?: number) => void;
-    onDown?: (e: MouseKeyboardEvent, index?: number) => void;
-    onRight?: (e: MouseKeyboardEvent, index?: number) => void;
-    onLeft?: (e: MouseKeyboardEvent, index?: number) => void;
+    position?: 'left' | 'right';
+    /** Visual variant */
+    variant?: 'primary' | 'secondary';
 } 

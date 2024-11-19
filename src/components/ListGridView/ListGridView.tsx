@@ -26,22 +26,22 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
 
   useKeydown({
     isActive,
-    down: () => {
+    down: e => {
       if (!currentList?.length) {
         if (onDown) {
-          onDown();
+          onDown(e);
         }
         return;
       }
 
       setCurrentRow(prev => Math.min(prev + 1, rowsCount - 1));
     },
-    up: () => {
+    up: e => {
       if (currentRow > 0) {
         setCurrentRow(prev => prev - 1);
       } else {
         if (onUp) {
-          onUp();
+          onUp(e);
         }
       }
     },
@@ -71,7 +71,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
           ) : null}
           <ListView
             {...listViewProps}
-            data={item.list}
+            items={item.list}
             id={`${index}-list-view`}
             uniqueKey={`${index}-list-view`}
             listType="horizontal"
@@ -100,7 +100,7 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
       uniqueKey={`${activeIndex}-list-grid-view`}
       itemWidth={listViewProps.itemWidth}
       itemHeight={listViewProps.itemHeight}
-      data={currentList}
+      items={currentList}
       listType="vertical"
       itemsCount={itemsPerRow}
       itemsTotal={itemsTotal}

@@ -9,8 +9,8 @@ interface InoTextProps {
   marqueeSpeed?: number;
   className?: string;
   isActive?: boolean;
-  delay?: number; // Delay before marquee starts
-  gap?: number; // Gap between original and repeated text
+  delay?: number;
+  gap?: number;
 }
 
 export const InoText: React.FC<InoTextProps> = ({

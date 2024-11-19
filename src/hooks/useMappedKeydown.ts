@@ -1,25 +1,24 @@
-import { MouseKeyboardEvent } from "../types";
 import useKeydown from './useKeydown';
 
 export interface MappedKeydownProps {
     isActive: boolean;
-    onOk?: (e: MouseKeyboardEvent, item?: any, index?: number) => void;
-    onBack?: (e: MouseKeyboardEvent, index?: number) => void;
-    onLeft?: (e: MouseKeyboardEvent, index?: number) => void;
-    onRight?: (e: MouseKeyboardEvent, index?: number) => void;
-    onUp?: (e: MouseKeyboardEvent, index?: number) => void;
-    onDown?: (e: MouseKeyboardEvent, index?: number) => void;
-    onLetter?: (e: MouseKeyboardEvent, index?: number) => void;
-    onNumber?: (e: MouseKeyboardEvent, index?: number) => void;
-    onMouseEnter?: (e: MouseKeyboardEvent, index?: number) => void;
-    onMouseLeave?: (e: MouseKeyboardEvent, index?: number) => void;
-    onRemove?: (e: MouseKeyboardEvent, index?: number) => void;
+    onOk?: (e: KeyboardEvent | React.MouseEvent<any>, item?: any, index?: number) => void;
+    onBack?: (e: KeyboardEvent, index?: number) => void;
+    onLeft?: (e: KeyboardEvent, index?: number) => void;
+    onRight?: (e: KeyboardEvent, index?: number) => void;
+    onUp?: (e: KeyboardEvent, index?: number) => void;
+    onDown?: (e: KeyboardEvent, index?: number) => void;
+    onLetter?: (e: KeyboardEvent, index?: number) => void;
+    onNumber?: (e: KeyboardEvent, index?: number) => void;
+    // onMouseEnter?: (e: React.MouseEvent, index?: number) => void;
+    // onMouseLeave?: (e: React.MouseEvent, index?: number) => void;
+    onRemove?: (e: KeyboardEvent, index?: number) => void;
     index?: number;
     item?: any;
 }
 
 export function useMappedKeydown(props: MappedKeydownProps) {
-    const { isActive, onOk, onBack, onLeft, onRight, onUp, onDown, onMouseEnter, onMouseLeave, onLetter, onNumber, onRemove, index, item } = props;
+    const { isActive, onOk, onBack, onLeft, onRight, onUp, onDown, onLetter, onNumber, onRemove, index, item } = props;
 
     useKeydown({
         isActive,
@@ -53,16 +52,16 @@ export function useMappedKeydown(props: MappedKeydownProps) {
                 onDown(e, index);
             }
         },
-        mouseEnter: (e) => {
-            if (onMouseEnter) {
-                onMouseEnter(e, index);
-            }
-        },
-        mouseLeave: (e) => {
-            if (onMouseLeave) {
-                onMouseLeave(e, index);
-            }
-        },
+        // mouseEnter: (e) => {
+        //     if (onMouseEnter) {
+        //         onMouseEnter(e, index);
+        //     }
+        // },
+        // mouseLeave: (e) => {
+        //     if (onMouseLeave) {
+        //         onMouseLeave(e, index);
+        //     }
+        // },
         letter: (e) => {
             console.log('letter', e);
             if (onLetter) {

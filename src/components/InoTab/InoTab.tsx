@@ -28,7 +28,6 @@ export const InoTab: React.FC<InoTabProps> = ({
     onRight,
     onUp,
     onDown,
-    onMouseEnter,
     index,
   });
 
@@ -44,7 +43,7 @@ export const InoTab: React.FC<InoTabProps> = ({
       }}
       onMouseEnter={(e: React.MouseEvent) => {
         if (onMouseEnter) {
-          onMouseEnter(e as MouseKeyboardEvent, index);
+          onMouseEnter(e, index);
         }
       }}
       className={`ino-tab ino-tab--${variant} ino-tab--${size} 

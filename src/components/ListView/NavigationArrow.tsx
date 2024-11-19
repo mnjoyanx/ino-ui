@@ -16,8 +16,8 @@ export const NavigationArrow: React.FC<NavigationArrowProps> = ({
   onClick,
   show,
   listType,
-  customStyle,
-  className,
+  style,
+  classNames,
 }) => {
   if (!show) return null;
 
@@ -34,13 +34,13 @@ export const NavigationArrow: React.FC<NavigationArrowProps> = ({
 
   return (
     <div
-      onClick={onClick}
+      onClick={(e: React.MouseEvent) => onClick(e)}
       style={{
         ...ARROW_STYLES,
         ...getPositionStyles(),
-        ...customStyle,
+        ...style,
       }}
-      className={`ino-list-arrow ino-list-arrow-${direction} ${className ||
+      className={`ino-list-arrow ino-list-arrow-${direction} ${classNames ||
         ''}`}
     >
       <span className="ino-list-arrow-icon">{icon}</span>

@@ -16,7 +16,7 @@ export const ScrollView: React.FC<ScrollViewProps> = ({
   onBack,
   classNames = '',
   scrollStep = 50,
-  showScrollIndicators = true,
+  showIndicators = true,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showTopIndicator, setShowTopIndicator] = useState(false);
@@ -51,32 +51,38 @@ export const ScrollView: React.FC<ScrollViewProps> = ({
     }, 150);
   }, [isScrolling, onStartScroll, onEndScroll, onReachBottom]);
 
-  const scrollUp = useCallback(() => {
-    if (!scrollRef.current) return;
+  const scrollUp = useCallback(
+    (e: KeyboardEvent) => {
+      if (!scrollRef.current) return;
 
-    scrollRef.current.scrollBy({
-      top: -scrollStep,
-      behavior: 'smooth',
-    });
+      scrollRef.current.scrollBy({
+        top: -scrollStep,
+        behavior: 'smooth',
+      });
 
-    if (scrollRef.current.scrollTop === 0) {
-      onUp?.();
-    }
-  }, [scrollStep, onUp]);
+      if (scrollRef.current.scrollTop === 0) {
+        onUp?.(e);
+      }
+    },
+    [scrollStep, onUp]
+  );
 
-  const scrollDown = useCallback(() => {
-    if (!scrollRef.current) return;
+  const scrollDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (!scrollRef.current) return;
 
-    scrollRef.current.scrollBy({
-      top: scrollStep,
-      behavior: 'smooth',
-    });
+      scrollRef.current.scrollBy({
+        top: scrollStep,
+        behavior: 'smooth',
+      });
 
-    const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
-    if (scrollTop + clientHeight >= scrollHeight) {
-      onDown?.();
-    }
-  }, [scrollStep, onDown]);
+      const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+      if (scrollTop + clientHeight >= scrollHeight) {
+        onDown?.(e);
+      }
+    },
+    [scrollStep, onDown]
+  );
 
   useKeydown({
     isActive,
@@ -96,7 +102,7 @@ export const ScrollView: React.FC<ScrollViewProps> = ({
 
   return (
     <div className={`ino-scroll-view-container ${classNames}`}>
-      {showScrollIndicators && showTopIndicator && (
+      {showIndicators && showTopIndicator && (
         <div className="ino-scroll-indicator ino-scroll-indicator--top">
           <SvgArrowUp />
         </div>
@@ -110,7 +116,7 @@ export const ScrollView: React.FC<ScrollViewProps> = ({
         {children}
       </div>
 
-      {showScrollIndicators && showBottomIndicator && (
+      {showIndicators && showBottomIndicator && (
         <div className="ino-scroll-indicator ino-scroll-indicator--bottom">
           <SvgArrowDown />
         </div>

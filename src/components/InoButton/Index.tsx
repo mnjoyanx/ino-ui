@@ -1,6 +1,5 @@
 import React from 'react';
 import { InoButtonProps } from './InoButton.types';
-import { MouseKeyboardEvent } from '../../types';
 import { useMappedKeydown } from '../../hooks/useMappedKeydown';
 
 import '../../styles/InoButton.css';
@@ -20,19 +19,29 @@ export const InoButton: React.FC<InoButtonProps> = ({
   onUp,
   onDown,
   onBack,
-  onFocus,
   onMouseEnter,
   ...rest
 }) => {
   useMappedKeydown({
     isActive,
-    onOk: onClick,
-    onBack: onBack,
-    onLeft: onLeft,
-    onRight: onRight,
-    onUp: onUp,
-    onDown: onDown,
-    onMouseEnter: onMouseEnter,
+    onOk: (e, index) => {
+      if (onClick) onClick(e, index);
+    },
+    onBack: (e, index) => {
+      if (onBack) onBack(e, index);
+    },
+    onLeft: (e, index) => {
+      if (onLeft) onLeft(e, index);
+    },
+    onRight: (e, index) => {
+      if (onRight) onRight(e, index);
+    },
+    onUp: (e, index) => {
+      if (onUp) onUp(e, index);
+    },
+    onDown: (e, index) => {
+      if (onDown) onDown(e, index);
+    },
     index,
   });
 
@@ -41,11 +50,11 @@ export const InoButton: React.FC<InoButtonProps> = ({
       type={type}
       onClick={e => {
         if (!disabled && onClick) {
-          onClick(e as MouseKeyboardEvent, index);
+          onClick(e, index);
         }
       }}
       onMouseEnter={e => {
-        onMouseEnter && onMouseEnter(e as MouseKeyboardEvent, index);
+        onMouseEnter && onMouseEnter(e, index);
       }}
       disabled={disabled}
       className={`ino-button ino-button--${variant} ino-button--${size} ${

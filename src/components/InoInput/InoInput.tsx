@@ -32,7 +32,7 @@ export const InoInput: React.FC<InoInputProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleFocus = useCallback(
-    (e: MouseKeyboardEvent) => {
+    (e: React.FocusEvent | MouseKeyboardEvent) => {
       if (!disabled) {
         onFocus?.(e, index);
       }
@@ -115,14 +115,14 @@ export const InoInput: React.FC<InoInputProps> = ({
     isActive: isActive,
     onNumber: handleKeyPress,
     onLetter: handleKeyPress,
-    onLeft: (e: MouseKeyboardEvent, index?: number) => {
+    onLeft: (e: KeyboardEvent, index?: number) => {
       if (showCursor) {
         handleNavigation('left');
       } else {
         onLeft?.(e, index);
       }
     },
-    onRight: (e: MouseKeyboardEvent, index?: number) => {
+    onRight: (e: KeyboardEvent, index?: number) => {
       if (showCursor) {
         handleNavigation('right');
       } else {
@@ -131,14 +131,12 @@ export const InoInput: React.FC<InoInputProps> = ({
     },
     onRemove: handleKeyPress,
     onOk,
-    onBack: (e: MouseKeyboardEvent, index?: number) => {
+    onBack: (e: KeyboardEvent, index?: number) => {
       onBack?.(e, index);
       onBlur?.(e, index);
     },
     onUp,
     onDown,
-    onMouseEnter,
-    onMouseLeave,
   });
 
   useEffect(() => {
@@ -159,10 +157,10 @@ export const InoInput: React.FC<InoInputProps> = ({
     <div
       ref={containerRef}
       onMouseEnter={(e: React.MouseEvent) => {
-        onMouseEnter?.(e as MouseKeyboardEvent);
+        onMouseEnter?.(e as React.MouseEvent);
       }}
       onMouseLeave={(e: React.MouseEvent) => {
-        onMouseLeave?.(e as MouseKeyboardEvent);
+        onMouseLeave?.(e as React.MouseEvent);
       }}
       className={`ino-input ino-input--${variant} ${isActive ? 'active' : ''} ${
         disabled ? 'ino-input--disabled' : ''

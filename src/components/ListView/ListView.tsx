@@ -56,7 +56,7 @@ let TRANSFORM_TIMEOUT = null;
  *   onRight={() => {}}
  *   onBack={() => {}}
  *   renderItem={(item) => <div>{item}</div>}
- *   data={Array(50).fill('Item')}
+ *   items={Array(50).fill('Item')}
  * />
  * ```
  */
@@ -88,13 +88,13 @@ export const ListView: React.FC<ListViewProps> = memo(
     onRight = () => {},
     onBack = () => {},
     renderItem,
-    data,
+    items,
     arrows = {
       show: false,
       startIcon: '←',
       endIcon: '→',
       style: {},
-      className: '',
+      classNames: '',
     },
     edgeScroll = {
       enabled: false,
@@ -144,12 +144,12 @@ export const ListView: React.FC<ListViewProps> = memo(
       [changeStartIndex]
     );
 
-    const next = (count = 1) => {
+    const next = (e: KeyboardEvent | React.MouseEvent, count = 1) => {
       setActiveIndex(index => {
         if (index === itemsTotal - 1) {
           listType === 'horizontal'
-            ? requestAnimationFrame(onRight)
-            : requestAnimationFrame(onDown);
+            ? requestAnimationFrame(() => onRight(e as KeyboardEvent, count))
+            : requestAnimationFrame(() => onDown(e as KeyboardEvent, count));
         } else {
           index += count;
           if (index > itemsTotal - 1) index = itemsTotal - 1;
@@ -161,12 +161,12 @@ export const ListView: React.FC<ListViewProps> = memo(
       });
     };
 
-    const prev = (count = 1) => {
+    const prev = (e: KeyboardEvent | React.MouseEvent, count = 1) => {
       setActiveIndex(index => {
         if (index === 0) {
           listType === 'horizontal'
-            ? requestAnimationFrame(onLeft)
-            : requestAnimationFrame(onUp);
+            ? requestAnimationFrame(() => onLeft(e as KeyboardEvent, count))
+            : requestAnimationFrame(() => onUp(e as KeyboardEvent, count));
         } else {
           index -= count;
           if (index < 0) index = 0;
@@ -178,19 +178,22 @@ export const ListView: React.FC<ListViewProps> = memo(
       });
     };
 
-    const back = useCallback(() => {
-      if (onBackScrollIndex !== null) {
-        scrollToIndex(onBackScrollIndex);
-      } else {
-        scrollToIndex(0); // Scroll to the first element
-      }
-      requestAnimationFrame(onBack);
-    }, [onBackScrollIndex, scrollToIndex, onBack]);
+    const back = useCallback(
+      (e: KeyboardEvent) => {
+        if (onBackScrollIndex !== null) {
+          scrollToIndex(onBackScrollIndex);
+        } else {
+          scrollToIndex(0); // Scroll to the first element
+        }
+        requestAnimationFrame(() => onBack(e));
+      },
+      [onBackScrollIndex, scrollToIndex, onBack]
+    );
 
     const onMouseEnterItem = useCallback(
-      (index: number) => {
+      (e: React.MouseEvent, index: number) => {
         setActiveIndex(index);
-        onMouseEnter(index);
+        onMouseEnter(e, index);
       },
       [onMouseEnter]
     );
@@ -228,12 +231,12 @@ export const ListView: React.FC<ListViewProps> = memo(
             index: i,
             style: getItemStyle(i),
             isActive: i === activeIndex && isActive,
-            item: data[i],
+            item: items[i],
             onUp,
             onDown,
             onLeft,
             onRight,
-            onMouseEnter: () => onMouseEnterItem(i),
+            onMouseEnter: (e: React.MouseEvent) => onMouseEnterItem(e, i),
           };
           items.push(renderItem(itemProps));
         }
@@ -254,7 +257,7 @@ export const ListView: React.FC<ListViewProps> = memo(
       onRight,
       onMouseEnterItem,
       renderItem,
-      data,
+      items,
     ]);
 
     useEffect(() => {
@@ -299,22 +302,26 @@ export const ListView: React.FC<ListViewProps> = memo(
     }, [startIndex, itemsTotal, itemsCount, arrows.show]);
 
     // const handleOk = useCallback(() => {
-    //   onOk(data[activeIndex], activeIndex);
-    // }, [onOk, data, activeIndex]);
+    //   onOk(items[activeIndex], activeIndex);
+    // }, [onOk, items, activeIndex]);
     const handleOk = () => {
-      onOk(data[activeIndex], activeIndex);
+      onOk(items[activeIndex], activeIndex);
     };
 
     const keyDownOptions = useMemo(
       () => ({
         isActive: isActive && nativeControle,
-        left: () => listType === 'horizontal' && prev(),
-        right: () => listType === 'horizontal' && next(),
-        up: () => listType !== 'horizontal' && prev(),
-        down: () => listType !== 'horizontal' && next(),
-        channel_up: () => prev(itemsCount),
-        channel_down: () => next(itemsCount),
-        back,
+        left: (e: KeyboardEvent) =>
+          listType === 'horizontal' && prev(e, itemsCount),
+        right: (e: KeyboardEvent) =>
+          listType === 'horizontal' && next(e, itemsCount),
+        up: (e: KeyboardEvent) =>
+          listType !== 'horizontal' && prev(e, itemsCount),
+        down: (e: KeyboardEvent) =>
+          listType !== 'horizontal' && next(e, itemsCount),
+        channel_up: (e: KeyboardEvent) => prev(e, itemsCount),
+        channel_down: (e: KeyboardEvent) => next(e, itemsCount),
+        back: (e: KeyboardEvent) => back(e),
         ok: handleOk,
         debounce,
       }),
@@ -354,7 +361,7 @@ export const ListView: React.FC<ListViewProps> = memo(
     }, []);
 
     const startAutoScroll = useCallback(
-      (direction: 'prev' | 'next') => {
+      (direction: 'prev' | 'next', e: React.MouseEvent) => {
         if (isAutoScrolling) return;
 
         setIsAutoScrolling(true);
@@ -363,11 +370,11 @@ export const ListView: React.FC<ListViewProps> = memo(
         // Add initial delay before starting to scroll
         autoScrollTimeoutRef.current = setTimeout(() => {
           // Initial scroll
-          scrollFn();
+          scrollFn(e);
 
           // Continue scrolling while hovering
           autoScrollIntervalRef.current = setInterval(() => {
-            scrollFn();
+            scrollFn(e);
           }, edgeScroll.interval);
         }, edgeScroll.startDelay);
       },
@@ -409,7 +416,7 @@ export const ListView: React.FC<ListViewProps> = memo(
               ...hoverZoneStyles,
               ...(listType === 'horizontal' ? { left: 0 } : { top: 0 }),
             }}
-            onMouseEnter={() => startAutoScroll('prev')}
+            onMouseEnter={(e: React.MouseEvent) => startAutoScroll('prev', e)}
             onMouseLeave={stopAutoScroll}
           />
         )}
@@ -421,7 +428,7 @@ export const ListView: React.FC<ListViewProps> = memo(
               ...hoverZoneStyles,
               ...(listType === 'horizontal' ? { right: 0 } : { bottom: 0 }),
             }}
-            onMouseEnter={() => startAutoScroll('next')}
+            onMouseEnter={(e: React.MouseEvent) => startAutoScroll('next', e)}
             onMouseLeave={stopAutoScroll}
           />
         )}
@@ -434,11 +441,11 @@ export const ListView: React.FC<ListViewProps> = memo(
               ? arrows.startIcon || <SvgArrowLeft />
               : arrows.startIcon || <SvgArrowUp />
           }
-          onClick={() => prev()}
+          onClick={(e: React.MouseEvent) => prev(e)}
           show={arrows.show && showStartArrow}
           listType={listType}
-          customStyle={arrows.style}
-          className={arrows.className}
+          style={arrows.style}
+          classNames={arrows.classNames}
         />
 
         <NavigationArrow
@@ -448,11 +455,11 @@ export const ListView: React.FC<ListViewProps> = memo(
               ? arrows.endIcon || <SvgArrowRight />
               : arrows.endIcon || <SvgArrowDown />
           }
-          onClick={() => next()}
+          onClick={(e: React.MouseEvent) => next(e)}
           show={arrows.show && showEndArrow}
           listType={listType}
-          customStyle={arrows.style}
-          className={arrows.className}
+          style={arrows.style}
+          classNames={arrows.classNames}
         />
 
         <div

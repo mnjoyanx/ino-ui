@@ -8,9 +8,8 @@ export const InoSidebar: React.FC<InoSidebarProps> = ({
   selectedId,
   collapsed = false,
   isActive = false,
-  className = '',
+  classNames = '',
   position = 'left',
-  rtl = false,
   onSelect,
   onUp,
   onDown,
@@ -23,8 +22,7 @@ export const InoSidebar: React.FC<InoSidebarProps> = ({
     'ino-sidebar',
     `ino-sidebar--${position}`,
     collapsed && 'collapsed',
-    rtl && 'ino-sidebar--rtl',
-    className,
+    classNames,
   ]
     .filter(Boolean)
     .join(' ');

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { ReactElement, useCallback, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ModalProps } from './Modal.types';
 import useKeydown from '../../hooks/useKeydown';
@@ -42,10 +42,8 @@ export const Modal: React.FC<ModalProps> = ({
   onCancel,
   showCloseIcon = false,
   closeOnOverlayClick = true,
-  onPrimaryMouseEnter,
-  onPrimaryMouseLeave,
-  onSecondaryMouseEnter,
-  onSecondaryMouseLeave,
+  onMouseEnter,
+  onMouseLeave,
   size = 'small',
 }) => {
   const [activeButtonIndex, setActiveButtonIndex] = useState<number>(0);
@@ -122,15 +120,15 @@ export const Modal: React.FC<ModalProps> = ({
                   variant="outline"
                   size="small"
                   onClick={handleSecondaryAction}
-                  onMouseEnter={() => {
+                  onMouseEnter={(e, index) => {
                     setActiveButtonIndex(0);
-                    if (onSecondaryMouseEnter) onSecondaryMouseEnter();
+                    if (onMouseEnter) onMouseEnter(e, index);
                   }}
-                  onMouseLeave={() => {
-                    if (onSecondaryMouseLeave) onSecondaryMouseLeave();
+                  onMouseLeave={(e, index) => {
+                    if (onMouseLeave) onMouseLeave(e, index);
                   }}
                 >
-                  {cancelBtnText}
+                  {cancelBtnText as ReactElement}
                 </InoButton>
               )}
               {okBtnText && (
@@ -141,15 +139,15 @@ export const Modal: React.FC<ModalProps> = ({
                   size="small"
                   classNames="ok-btn"
                   onClick={handlePrimaryAction}
-                  onMouseEnter={() => {
+                  onMouseEnter={(e, index) => {
                     setActiveButtonIndex(1);
-                    if (onPrimaryMouseEnter) onPrimaryMouseEnter();
+                    if (onMouseEnter) onMouseEnter(e, index);
                   }}
-                  onMouseLeave={() => {
-                    if (onPrimaryMouseLeave) onPrimaryMouseLeave();
+                  onMouseLeave={(e, index) => {
+                    if (onMouseLeave) onMouseLeave(e, index);
                   }}
                 >
-                  {okBtnText}
+                  {okBtnText as ReactElement}
                 </InoButton>
               )}
             </div>
