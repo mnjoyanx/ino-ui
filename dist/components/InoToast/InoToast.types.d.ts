@@ -1,5 +1,5 @@
 export declare type ToastType = 'success' | 'error' | 'warning' | 'info';
-export declare type ToastPosition = 'top' | 'bottom';
+export declare type ToastPosition = 'top' | 'top-right' | 'top-left' | 'bottom' | 'bottom-right' | 'bottom-left';
 export interface InoToastProps {
     /** Message to display */
     message: string;

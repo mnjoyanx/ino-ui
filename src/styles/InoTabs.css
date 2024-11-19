@@ -1,0 +1,35 @@
+.ino-tabs-container {
+  display: flex;
+}
+
+.ino-tabs-container--horizontal {
+  flex-direction: column;
+}
+
+.ino-tabs-container--vertical {
+  flex-direction: row;
+}
+
+.ino-tabs {
+  display: flex;
+}
+
+.ino-tabs--horizontal {
+  flex-direction: row;
+}
+
+.ino-tabs--vertical {
+  flex-direction: column;
+}
+
+.ino-tab-panels {
+  flex: 1;
+}
+
+.ino-tab-panels--horizontal {
+  margin-top: 1rem;
+}
+
+.ino-tab-panels--vertical {
+  margin-left: 1rem;
+}

@@ -14,6 +14,7 @@ export * from "./Modal/Modal";
 export * from "./InoListItem/InoListItem";
 export * from "./InoSidebar/InoSidebar";
 export * from "./InoSkeleton/InoSkeleton";
+export * from "./InoSkeleton/InoSkeletonListItem";
 export * from "./InoTab/InoTabs";
 export * from "./InoTab/InoTab";
 export * from "./InoText/InoText";

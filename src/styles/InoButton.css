@@ -66,3 +66,27 @@
 .ino-button.ino-button--secondary .ino-button__text {
   color: var(--ino-text-secondary);
 }
+
+.ino-button--underlined {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--ino-border-primary);
+  border-radius: 0;
+  color: var(--ino-text-primary);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.ino-button--underlined:hover:not(:disabled) {
+  border-bottom-color: var(--ino-border-hover);
+}
+
+.ino-button--underlined.ino-button--active {
+  border-bottom-color: var(--ino-border-focus);
+  border-bottom-width: 2px;
+  transform: none;
+}
+
+.ino-button--underlined:disabled {
+  border-bottom-color: var(--ino-border-disabled);
+}

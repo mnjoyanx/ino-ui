@@ -32,12 +32,13 @@ export const InoTabs: React.FC<InoTabsProps> = ({
   }, [controlledActiveIndex]);
 
   const handleTabChange = (index: number) => {
+    setActiveTabIndex(index);
+    onActiveChange?.(index);
+
     if (!changeByOnOk) {
       setSelectedTabIndex(index);
       onChange?.(index);
     }
-    setActiveTabIndex(index);
-    onActiveChange?.(index);
   };
 
   const handleNavigation = (direction: 'up' | 'down' | 'left' | 'right') => {
@@ -53,6 +54,11 @@ export const InoTabs: React.FC<InoTabsProps> = ({
 
     setActiveTabIndex(newIndex);
     onActiveChange?.(newIndex);
+
+    if (!changeByOnOk) {
+      setSelectedTabIndex(newIndex);
+      onChange?.(newIndex);
+    }
   };
 
   useMappedKeydown({
@@ -70,7 +76,7 @@ export const InoTabs: React.FC<InoTabsProps> = ({
   });
 
   return (
-    <div className="ino-tabs-container">
+    <div className={`ino-tabs-container ino-tabs-container--${direction}`}>
       <div
         role="tablist"
         className={`ino-tabs ino-tabs--${direction} ino-tabs--${variant} ino-tabs--${size} ${classNames}`}
@@ -90,7 +96,7 @@ export const InoTabs: React.FC<InoTabsProps> = ({
           return child;
         })}
       </div>
-      <div className="ino-tab-panels">
+      <div className={`ino-tab-panels ino-tab-panels--${direction}`}>
         {React.Children.map(children, (child, index) => {
           if (
             React.isValidElement<InoTabProps>(child) &&

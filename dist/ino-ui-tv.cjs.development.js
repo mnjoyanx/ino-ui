@@ -1451,12 +1451,12 @@ var InoTabs = function InoTabs(_ref) {
     }
   }, [controlledActiveIndex]);
   var handleTabChange = function handleTabChange(index) {
+    setActiveTabIndex(index);
+    onActiveChange == null || onActiveChange(index);
     if (!changeByOnOk) {
       setSelectedTabIndex(index);
       onChange == null || onChange(index);
     }
-    setActiveTabIndex(index);
-    onActiveChange == null || onActiveChange(index);
   };
   var handleNavigation = function handleNavigation(direction) {
     var isBackward = direction === 'up' || direction === 'left';
@@ -1486,7 +1486,7 @@ var InoTabs = function InoTabs(_ref) {
     }
   });
   return React__default.createElement("div", {
-    className: "ino-tabs-container"
+    className: "ino-tabs-container ino-tabs-container--" + direction
   }, React__default.createElement("div", {
     role: "tablist",
     className: "ino-tabs ino-tabs--" + direction + " ino-tabs--" + variant + " ino-tabs--" + size + " " + classNames
@@ -1505,7 +1505,7 @@ var InoTabs = function InoTabs(_ref) {
     }
     return child;
   })), React__default.createElement("div", {
-    className: "ino-tab-panels"
+    className: "ino-tab-panels ino-tab-panels--" + direction
   }, React__default.Children.map(children, function (child, index) {
     if (React__default.isValidElement(child) && index === selectedTabIndex) {
       return React__default.createElement("div", {
@@ -2165,6 +2165,31 @@ var InoSkeleton = function InoSkeleton(_ref) {
     "aria-label": "Loading...",
     role: "progressbar"
   });
+};
+
+var InoSkeletonListItem = function InoSkeletonListItem(_ref) {
+  var _ref$avatarSize = _ref.avatarSize,
+    avatarSize = _ref$avatarSize === void 0 ? 5 : _ref$avatarSize,
+    _ref$lines = _ref.lines,
+    lines = _ref$lines === void 0 ? 3 : _ref$lines,
+    _ref$className = _ref.className,
+    className = _ref$className === void 0 ? '' : _ref$className;
+  return React__default.createElement("div", {
+    className: "ino-skeleton-wrapper " + className
+  }, React__default.createElement(InoSkeleton, {
+    variant: "circular",
+    width: avatarSize,
+    height: avatarSize
+  }), React__default.createElement("div", {
+    className: "ino-skeleton--text-container"
+  }, Array(lines).fill(0).map(function (_, index) {
+    return React__default.createElement(InoSkeleton, {
+      key: index,
+      variant: "text",
+      height: 1.6,
+      animation: "wave"
+    });
+  })));
 };
 
 var InoTab = function InoTab(_ref) {
@@ -3274,6 +3299,7 @@ exports.InoProtectInput = InoProtectInput;
 exports.InoRow = InoRow;
 exports.InoSidebar = InoSidebar;
 exports.InoSkeleton = InoSkeleton;
+exports.InoSkeletonListItem = InoSkeletonListItem;
 exports.InoTab = InoTab;
 exports.InoTabs = InoTabs;
 exports.InoText = InoText;

@@ -1443,12 +1443,12 @@ var InoTabs = function InoTabs(_ref) {
     }
   }, [controlledActiveIndex]);
   var handleTabChange = function handleTabChange(index) {
+    setActiveTabIndex(index);
+    onActiveChange == null || onActiveChange(index);
     if (!changeByOnOk) {
       setSelectedTabIndex(index);
       onChange == null || onChange(index);
     }
-    setActiveTabIndex(index);
-    onActiveChange == null || onActiveChange(index);
   };
   var handleNavigation = function handleNavigation(direction) {
     var isBackward = direction === 'up' || direction === 'left';
@@ -1478,7 +1478,7 @@ var InoTabs = function InoTabs(_ref) {
     }
   });
   return React.createElement("div", {
-    className: "ino-tabs-container"
+    className: "ino-tabs-container ino-tabs-container--" + direction
   }, React.createElement("div", {
     role: "tablist",
     className: "ino-tabs ino-tabs--" + direction + " ino-tabs--" + variant + " ino-tabs--" + size + " " + classNames
@@ -1497,7 +1497,7 @@ var InoTabs = function InoTabs(_ref) {
     }
     return child;
   })), React.createElement("div", {
-    className: "ino-tab-panels"
+    className: "ino-tab-panels ino-tab-panels--" + direction
   }, React.Children.map(children, function (child, index) {
     if (React.isValidElement(child) && index === selectedTabIndex) {
       return React.createElement("div", {
@@ -2157,6 +2157,31 @@ var InoSkeleton = function InoSkeleton(_ref) {
     "aria-label": "Loading...",
     role: "progressbar"
   });
+};
+
+var InoSkeletonListItem = function InoSkeletonListItem(_ref) {
+  var _ref$avatarSize = _ref.avatarSize,
+    avatarSize = _ref$avatarSize === void 0 ? 5 : _ref$avatarSize,
+    _ref$lines = _ref.lines,
+    lines = _ref$lines === void 0 ? 3 : _ref$lines,
+    _ref$className = _ref.className,
+    className = _ref$className === void 0 ? '' : _ref$className;
+  return React.createElement("div", {
+    className: "ino-skeleton-wrapper " + className
+  }, React.createElement(InoSkeleton, {
+    variant: "circular",
+    width: avatarSize,
+    height: avatarSize
+  }), React.createElement("div", {
+    className: "ino-skeleton--text-container"
+  }, Array(lines).fill(0).map(function (_, index) {
+    return React.createElement(InoSkeleton, {
+      key: index,
+      variant: "text",
+      height: 1.6,
+      animation: "wave"
+    });
+  })));
 };
 
 var InoTab = function InoTab(_ref) {
@@ -3255,5 +3280,5 @@ var ListGridView = function ListGridView(_ref) {
   });
 };
 
-export { CheckboxItem, GridView, InoButton, InoCol, InoInput, InoKeyboard, InoListItem, InoProtectInput, InoRow, InoSidebar, InoSkeleton, InoTab, InoTabs, InoText, ListGridView, ListView, Modal, SIZES, ScrollView, ThemeProvider, ToastProvider, VARIANTS, toast, useMappedKeydown };
+export { CheckboxItem, GridView, InoButton, InoCol, InoInput, InoKeyboard, InoListItem, InoProtectInput, InoRow, InoSidebar, InoSkeleton, InoSkeletonListItem, InoTab, InoTabs, InoText, ListGridView, ListView, Modal, SIZES, ScrollView, ThemeProvider, ToastProvider, VARIANTS, toast, useMappedKeydown };
 //# sourceMappingURL=ino-ui-tv.esm.js.map

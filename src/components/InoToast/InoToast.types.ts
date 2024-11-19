@@ -1,5 +1,11 @@
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
-export type ToastPosition = 'top' | 'bottom';
+export type ToastPosition =
+    | 'top'
+    | 'top-right'
+    | 'top-left'
+    | 'bottom'
+    | 'bottom-right'
+    | 'bottom-left';
 
 export interface InoToastProps {
     /** Message to display */

@@ -73,15 +73,6 @@
   font-size: var(--ino-font-size-large);
 }
 
-.ino-tabs-container {
-  display: flex;
-  gap: 1.6rem;
-}
-
-.ino-tabs-container--vertical {
-  flex-direction: column;
-}
-
 .ino-tab-panels {
   background-color: var(--ino-bg-secondary);
   border-radius: var(--ino-border-radius-medium);

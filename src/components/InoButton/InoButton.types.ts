@@ -7,7 +7,7 @@ export interface InoButtonProps extends NavigableComponentProps {
     /**
      * The content to be displayed inside the button.
      */
-    children: React.ReactElement;
+    children: React.ReactElement | React.ReactNode;
 
     /**
      * Callback function to be called when the button is clicked.
@@ -37,5 +37,5 @@ export interface InoButtonProps extends NavigableComponentProps {
      * The variant of the button.
      * @default 'primary'
      */
-    variant?: 'primary' | 'outline' | 'ghost';
+    variant?: 'primary' | 'outline' | 'ghost' | 'underlined';
 }

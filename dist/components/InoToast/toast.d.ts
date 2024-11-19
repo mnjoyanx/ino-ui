@@ -3,7 +3,7 @@ export declare type ToastOptions = {
     type?: ToastType;
     message: string;
     duration?: number;
-    position?: 'top' | 'bottom';
+    position?: 'top' | 'bottom' | 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
 };
 declare type ToastInstance = {
     id: string;
