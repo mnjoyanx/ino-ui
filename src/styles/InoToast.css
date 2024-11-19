@@ -4,7 +4,7 @@
   min-width: 20rem;
   max-width: 40rem;
   padding: 1rem;
-  border-radius: var(--ino-border-radius-md);
+  border-radius: var(--ino-border-radius-medium);
   animation: toast-fade-in 0.3s ease;
 }
 

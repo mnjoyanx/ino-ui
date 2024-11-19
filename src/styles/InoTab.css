@@ -15,7 +15,7 @@
 }
 
 .ino-tab {
-  padding: 8px 16px;
+  padding: 0.8rem 1.6rem;
   cursor: pointer;
   border-radius: var(--ino-border-radius-small);
   transition: all 0.2s ease;
@@ -44,7 +44,6 @@
 
 /* Active and selected combined state */
 .ino-tab--active.ino-tab--selected {
-  box-shadow: 0 0 0 2px var(--ino-border-focus, var(--ino-bg-primary));
   transform: scale(1.02);
 }
 
@@ -59,7 +58,7 @@
 
 /* Size variants */
 .ino-tab--small {
-  padding: 1.2rem 2.4rem;
+  padding: 0.8rem 1.6rem;
   font-size: var(--ino-font-size-small);
 }
 

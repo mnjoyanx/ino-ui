@@ -14,6 +14,7 @@ export const InoTabs: React.FC<InoTabsProps> = ({
   classNames = '',
   onChange,
   onActiveChange,
+  isActive,
 }) => {
   const [selectedTabIndex, setSelectedTabIndex] = useState(selectedIndex);
   const [activeTabIndex, setActiveTabIndex] = useState(
@@ -62,7 +63,7 @@ export const InoTabs: React.FC<InoTabsProps> = ({
   };
 
   useMappedKeydown({
-    isActive: true,
+    isActive,
     onLeft: () => direction === 'horizontal' && handleNavigation('left'),
     onRight: () => direction === 'horizontal' && handleNavigation('right'),
     onUp: () => direction === 'vertical' && handleNavigation('up'),
@@ -87,7 +88,11 @@ export const InoTabs: React.FC<InoTabsProps> = ({
               ...child.props,
               isActive: index === activeTabIndex,
               isSelected: index === selectedTabIndex,
-              onClick: () => handleTabChange(index),
+              onClick: () => {
+                handleTabChange(index);
+                setSelectedTabIndex(index);
+                onChange?.(index);
+              },
               variant,
               size,
               index,

@@ -1426,7 +1426,8 @@ var InoTabs = function InoTabs(_ref) {
     _ref$classNames = _ref.classNames,
     classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
     onChange = _ref.onChange,
-    onActiveChange = _ref.onActiveChange;
+    onActiveChange = _ref.onActiveChange,
+    isActive = _ref.isActive;
   var _useState = useState(selectedIndex),
     selectedTabIndex = _useState[0],
     setSelectedTabIndex = _useState[1];
@@ -1455,9 +1456,13 @@ var InoTabs = function InoTabs(_ref) {
     var newIndex = isBackward ? activeTabIndex === 0 && infinite ? childrenArray.length - 1 : Math.max(0, activeTabIndex - 1) : activeTabIndex === childrenArray.length - 1 && infinite ? 0 : Math.min(childrenArray.length - 1, activeTabIndex + 1);
     setActiveTabIndex(newIndex);
     onActiveChange == null || onActiveChange(newIndex);
+    if (!changeByOnOk) {
+      setSelectedTabIndex(newIndex);
+      onChange == null || onChange(newIndex);
+    }
   };
   useMappedKeydown({
-    isActive: true,
+    isActive: isActive,
     onLeft: function onLeft() {
       return direction === 'horizontal' && handleNavigation('left');
     },
@@ -1488,7 +1493,9 @@ var InoTabs = function InoTabs(_ref) {
         isActive: index === activeTabIndex,
         isSelected: index === selectedTabIndex,
         onClick: function onClick() {
-          return handleTabChange(index);
+          handleTabChange(index);
+          setSelectedTabIndex(index);
+          onChange == null || onChange(index);
         },
         variant: variant,
         size: size,

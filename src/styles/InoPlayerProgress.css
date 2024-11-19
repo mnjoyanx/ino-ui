@@ -1,0 +1,55 @@
+.ino-player-progress {
+  position: relative;
+  height: 0.4rem;
+  background: var(--ino-bg-secondary);
+  cursor: pointer;
+  transition: height 0.2s ease;
+}
+
+.ino-player-progress--active,
+.ino-player-progress:hover {
+  height: 0.6rem;
+}
+
+.ino-player-progress__buffered {
+  position: absolute;
+  height: 100%;
+  background: var(--ino-bg-secondary-light);
+  transition: width 0.2s ease;
+}
+
+.ino-player-progress__value {
+  position: absolute;
+  height: 100%;
+  background: var(--ino-bg-primary);
+  transition: width 0.1s ease;
+}
+
+.ino-player-progress__handle {
+  position: absolute;
+  top: 50%;
+  width: 1.2rem;
+  height: 1.2rem;
+  background: var(--ino-bg-primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.ino-player-progress--active .ino-player-progress__handle,
+.ino-player-progress:hover .ino-player-progress__handle {
+  opacity: 1;
+}
+
+.ino-player-progress__tooltip {
+  position: absolute;
+  top: -2.4rem;
+  transform: translateX(-50%);
+  background: var(--ino-bg-primary);
+  color: var(--ino-text-primary);
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--ino-border-radius-small);
+  font-size: var(--ino-font-size-small);
+  pointer-events: none;
+}

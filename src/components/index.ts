@@ -28,6 +28,7 @@ export * from "./InoTab/InoTabs"
 export * from "./InoTab/InoTab"
 export * from "./InoText/InoText"
 export * from "./ScrollView/ScrollView"
+export * from "./InoPlayerProgress/InoPlayerProgress"
 
 // List Components
 export * from './ListView/ListView';
