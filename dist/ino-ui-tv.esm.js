@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect, useState } from 'react';
+import React, { useRef, useCallback, useEffect, useState, memo, useMemo, startTransition } from 'react';
 import ReactDOM, { createPortal } from 'react-dom';
 
 var SIZES = {
@@ -1408,56 +1408,6 @@ var InoRow = function InoRow(_ref) {
   }));
 };
 
-var InoTab = function InoTab(_ref) {
-  var label = _ref.label,
-    _ref$isActive = _ref.isActive,
-    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
-    _ref$isSelected = _ref.isSelected,
-    isSelected = _ref$isSelected === void 0 ? false : _ref$isSelected,
-    _ref$disabled = _ref.disabled,
-    disabled = _ref$disabled === void 0 ? false : _ref$disabled,
-    index = _ref.index,
-    _ref$classNames = _ref.classNames,
-    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
-    _ref$variant = _ref.variant,
-    variant = _ref$variant === void 0 ? 'primary' : _ref$variant,
-    _ref$size = _ref.size,
-    size = _ref$size === void 0 ? 'medium' : _ref$size,
-    _onClick = _ref.onClick,
-    onLeft = _ref.onLeft,
-    onRight = _ref.onRight,
-    onUp = _ref.onUp,
-    onDown = _ref.onDown,
-    onBack = _ref.onBack,
-    _onMouseEnter = _ref.onMouseEnter;
-  useMappedKeydown({
-    isActive: isActive,
-    onOk: _onClick,
-    onBack: onBack,
-    onLeft: onLeft,
-    onRight: onRight,
-    onUp: onUp,
-    onDown: onDown,
-    index: index
-  });
-  return React.createElement("div", {
-    role: "tab",
-    "aria-selected": isSelected,
-    "aria-disabled": disabled,
-    onClick: function onClick(e) {
-      if (!disabled && _onClick) {
-        _onClick(e, index);
-      }
-    },
-    onMouseEnter: function onMouseEnter(e) {
-      if (_onMouseEnter) {
-        _onMouseEnter(e, index);
-      }
-    },
-    className: "ino-tab ino-tab--" + variant + " ino-tab--" + size + " \n          " + (isActive ? 'ino-tab--active' : '') + " \n          " + (isSelected ? 'ino-tab--selected' : '') + " \n          " + (disabled ? 'ino-tab--disabled' : '') + " \n          " + classNames
-  }, label);
-};
-
 var InoTabs = function InoTabs(_ref) {
   var children = _ref.children,
     _ref$selectedIndex = _ref.selectedIndex,
@@ -1557,6 +1507,71 @@ var InoTabs = function InoTabs(_ref) {
     }
     return null;
   })));
+};
+
+var ThemeProvider = function ThemeProvider(_ref) {
+  var theme = _ref.theme,
+    children = _ref.children;
+  useEffect(function () {
+    var _theme$fonts, _theme$fonts2;
+    var root = document.documentElement;
+    // Colors
+    if (theme.colors) {
+      var _theme$colors$text, _theme$colors$text2;
+      if (theme.colors.primary) {
+        root.style.setProperty('--ino-bg-primary', theme.colors.primary);
+        root.style.setProperty('--ino-border-primary', theme.colors.primary);
+        root.style.setProperty('--ino-shadow-primary', theme.colors.primary);
+      }
+      if (theme.colors.secondary) {
+        root.style.setProperty('--ino-bg-secondary', theme.colors.secondary);
+      }
+      if (theme.colors.danger) {
+        root.style.setProperty('--ino-bg-danger', theme.colors.danger);
+      }
+      if (theme.colors.warning) {
+        root.style.setProperty('--ino-bg-warning', theme.colors.warning);
+      }
+      // Text colors
+      if ((_theme$colors$text = theme.colors.text) != null && _theme$colors$text.primary) {
+        root.style.setProperty('--ino-text-primary', theme.colors.text.primary);
+      }
+      if ((_theme$colors$text2 = theme.colors.text) != null && _theme$colors$text2.secondary) {
+        root.style.setProperty('--ino-text-secondary', theme.colors.text.secondary);
+      }
+    }
+    // Font sizes
+    if ((_theme$fonts = theme.fonts) != null && _theme$fonts.sizes) {
+      if (theme.fonts.sizes.small) {
+        root.style.setProperty('--ino-font-size-small', theme.fonts.sizes.small);
+      }
+      if (theme.fonts.sizes.medium) {
+        root.style.setProperty('--ino-font-size-medium', theme.fonts.sizes.medium);
+      }
+      if (theme.fonts.sizes.large) {
+        root.style.setProperty('--ino-font-size-large', theme.fonts.sizes.large);
+      }
+    }
+    // Font weights
+    if ((_theme$fonts2 = theme.fonts) != null && _theme$fonts2.weights) {
+      if (theme.fonts.weights.light) {
+        root.style.setProperty('--ino-font-weight-light', theme.fonts.weights.light.toString());
+      }
+      if (theme.fonts.weights.regular) {
+        root.style.setProperty('--ino-font-weight-regular', theme.fonts.weights.regular.toString());
+      }
+    }
+    // Border radius
+    if (theme.borderRadius) {
+      if (theme.borderRadius.small) {
+        root.style.setProperty('--ino-border-radius-small', theme.borderRadius.small);
+      }
+      if (theme.borderRadius.medium) {
+        root.style.setProperty('--ino-border-radius-medium', theme.borderRadius.medium);
+      }
+    }
+  }, [theme]);
+  return React.createElement(React.Fragment, null, children);
 };
 
 var toasts = [];
@@ -1763,5 +1778,1432 @@ var InoText = function InoText(_ref) {
   }, children)));
 };
 
-export { InoButton, InoCol, InoInput, InoKeyboard, InoProtectInput, InoRow, InoTab, InoTabs, InoText, SIZES, ToastProvider, VARIANTS, toast, useMappedKeydown };
+var DefaultCheckbox = function DefaultCheckbox(_ref) {
+  var isChecked = _ref.isChecked,
+    isActive = _ref.isActive;
+  return React.createElement("svg", {
+    width: "2.4rem",
+    height: "2.4rem",
+    viewBox: "0 0 24 24",
+    fill: "none"
+  }, React.createElement("rect", {
+    x: "2",
+    y: "2",
+    width: "20",
+    height: "20",
+    rx: "6",
+    stroke: isChecked ? 'var(--ino-bg-primary)' : isActive ? 'var(--ino-bg-primary)' : 'var(--ino-border-secondary)',
+    strokeWidth: "2",
+    fill: isChecked ? 'var(--ino-bg-primary)' : 'white'
+  }), isChecked && React.createElement("path", {
+    d: "M7 12L10.5 15.5L17 9",
+    stroke: "white",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }));
+};
+var CheckboxItem = function CheckboxItem(_ref2) {
+  var _ref2$defaultChecked = _ref2.defaultChecked,
+    defaultChecked = _ref2$defaultChecked === void 0 ? false : _ref2$defaultChecked,
+    checked = _ref2.checked,
+    label = _ref2.label,
+    onChange = _ref2.onChange,
+    isActive = _ref2.isActive,
+    _ref2$classNames = _ref2.classNames,
+    classNames = _ref2$classNames === void 0 ? '' : _ref2$classNames,
+    CustomIcon = _ref2.icon,
+    onDown = _ref2.onDown,
+    onUp = _ref2.onUp,
+    onLeft = _ref2.onLeft,
+    onRight = _ref2.onRight,
+    onOk = _ref2.onOk,
+    onBack = _ref2.onBack,
+    _ref2$isRTL = _ref2.isRTL,
+    isRTL = _ref2$isRTL === void 0 ? false : _ref2$isRTL;
+  var _useState = useState(defaultChecked),
+    internalChecked = _useState[0],
+    setInternalChecked = _useState[1];
+  // Use checked prop if provided, otherwise use internal state
+  var isChecked = checked !== undefined ? checked : internalChecked;
+  var handleToggle = useCallback(function () {
+    var newCheckedState = !isChecked;
+    // Only update internal state if not controlled
+    if (checked === undefined) {
+      setInternalChecked(newCheckedState);
+    }
+    // Only call onChange if it exists
+    onChange == null || onChange(newCheckedState);
+  }, [isChecked, onChange, checked]);
+  var keyDownOptions = {
+    isActive: isActive,
+    ok: function ok() {
+      handleToggle();
+      onOk && onOk();
+    },
+    back: onBack,
+    up: onUp,
+    down: onDown,
+    left: onLeft,
+    right: onRight
+  };
+  useKeydown(keyDownOptions);
+  return React.createElement("div", {
+    className: "ino-checkbox-item " + (isActive ? 'active' : '') + " " + (isRTL ? 'rtl' : '') + " " + classNames
+  }, React.createElement("label", {
+    className: "ino-checkbox-container"
+  }, React.createElement("input", {
+    type: "checkbox",
+    checked: isChecked,
+    onChange: handleToggle
+  }), React.createElement("span", {
+    className: "ino-checkmark"
+  }, CustomIcon ? React.createElement(CustomIcon, {
+    isChecked: isChecked,
+    isActive: isActive
+  }) : React.createElement(DefaultCheckbox, {
+    isChecked: isChecked,
+    isActive: isActive
+  })), React.createElement("span", {
+    className: "ino-label"
+  }, label)));
+};
+
+var ModalPortal = function ModalPortal(_ref) {
+  var children = _ref.children;
+  var modalRoot = document.body;
+  return createPortal(children, modalRoot);
+};
+/**
+ * Modal component for displaying content in an overlay.
+ *
+ * This component provides a customizable modal dialog with optional primary and secondary action buttons.
+ * It supports keyboard navigation and can be controlled via props.
+ *
+ * @component
+ * @example
+ * ```jsx
+ * <Modal
+ *   isOpen={isModalOpen}
+ *   onClose={() => setIsModalOpen(false)}
+ *   title="Example Modal"
+ *   okBtnText="Save"
+ *   onOk={() => handleSave()}
+ *   cancelBtnText="Cancel"
+ * >
+ *   <p>This is the modal content.</p>
+ * </Modal>
+ * ```
+ */
+var Modal = function Modal(_ref2) {
+  var isOpen = _ref2.isOpen,
+    onClose = _ref2.onClose,
+    title = _ref2.title,
+    children = _ref2.children,
+    _ref2$classNames = _ref2.classNames,
+    classNames = _ref2$classNames === void 0 ? '' : _ref2$classNames,
+    okBtnText = _ref2.okBtnText,
+    onOk = _ref2.onOk,
+    cancelBtnText = _ref2.cancelBtnText,
+    onCancel = _ref2.onCancel,
+    _ref2$showCloseIcon = _ref2.showCloseIcon,
+    showCloseIcon = _ref2$showCloseIcon === void 0 ? false : _ref2$showCloseIcon,
+    _ref2$closeOnOverlayC = _ref2.closeOnOverlayClick,
+    closeOnOverlayClick = _ref2$closeOnOverlayC === void 0 ? true : _ref2$closeOnOverlayC,
+    _onMouseEnter = _ref2.onMouseEnter,
+    _onMouseLeave = _ref2.onMouseLeave,
+    _ref2$size = _ref2.size,
+    size = _ref2$size === void 0 ? 'small' : _ref2$size;
+  var _useState = useState(0),
+    activeButtonIndex = _useState[0],
+    setActiveButtonIndex = _useState[1];
+  var handleClose = useCallback(function () {
+    onClose();
+  }, [onClose]);
+  var handlePrimaryAction = useCallback(function () {
+    if (onOk) {
+      onOk();
+    } else {
+      handleClose();
+    }
+  }, [onOk, handleClose]);
+  var handleOverlayClick = useCallback(function (e) {
+    if (closeOnOverlayClick && e.target === e.currentTarget) {
+      handleClose();
+    }
+  }, [closeOnOverlayClick, handleClose]);
+  var handleSecondaryAction = useCallback(function () {
+    if (onCancel) {
+      onCancel();
+    } else {
+      handleClose();
+    }
+  }, [onCancel, handleClose]);
+  var keyDownOptions = {
+    isActive: isOpen,
+    back: handleClose,
+    ok: function ok() {
+      if (activeButtonIndex === 0) {
+        handleSecondaryAction();
+      } else if (activeButtonIndex === 1) {
+        handlePrimaryAction();
+      }
+    },
+    left: function left() {
+      return setActiveButtonIndex(function (prev) {
+        return Math.max(prev - 1, 0);
+      });
+    },
+    right: function right() {
+      return setActiveButtonIndex(function (prev) {
+        return Math.min(prev + 1, 1);
+      });
+    }
+  };
+  useKeydown(keyDownOptions);
+  if (!isOpen) return null;
+  return React.createElement(ModalPortal, null, React.createElement("div", {
+    className: "ino-modal-overlay " + classNames,
+    onClick: handleOverlayClick
+  }, React.createElement("div", {
+    className: "ino-modal ino-modal--" + size
+  }, React.createElement("div", {
+    className: "ino-modal-header"
+  }, React.createElement("h2", {
+    className: "ino-modal-title"
+  }, title), showCloseIcon && React.createElement("button", {
+    className: "ino-modal-close",
+    onClick: handleClose
+  }, "\xD7")), React.createElement("div", {
+    className: "ino-modal-content"
+  }, children), (okBtnText || cancelBtnText) && React.createElement("div", {
+    className: "ino-modal-footer"
+  }, cancelBtnText && React.createElement(InoButton, {
+    index: 0,
+    isActive: activeButtonIndex === 0,
+    variant: "outline",
+    size: "small",
+    onClick: handleSecondaryAction,
+    onMouseEnter: function onMouseEnter(e, index) {
+      setActiveButtonIndex(0);
+      if (_onMouseEnter) _onMouseEnter(e, index);
+    },
+    onMouseLeave: function onMouseLeave(e, index) {
+      if (_onMouseLeave) _onMouseLeave(e, index);
+    }
+  }, cancelBtnText), okBtnText && React.createElement(InoButton, {
+    index: 1,
+    isActive: activeButtonIndex === 1,
+    variant: "primary",
+    size: "small",
+    classNames: "ok-btn",
+    onClick: handlePrimaryAction,
+    onMouseEnter: function onMouseEnter(e, index) {
+      setActiveButtonIndex(1);
+      if (_onMouseEnter) _onMouseEnter(e, index);
+    },
+    onMouseLeave: function onMouseLeave(e, index) {
+      if (_onMouseLeave) _onMouseLeave(e, index);
+    }
+  }, okBtnText)))));
+};
+
+var InoListItem = function InoListItem(_ref) {
+  var children = _ref.children,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    _ref$disabled = _ref.disabled,
+    disabled = _ref$disabled === void 0 ? false : _ref$disabled,
+    icon = _ref.icon,
+    rightContent = _ref.rightContent,
+    _ref$className = _ref.className,
+    className = _ref$className === void 0 ? '' : _ref$className,
+    index = _ref.index,
+    _onClick = _ref.onClick,
+    onUp = _ref.onUp,
+    onDown = _ref.onDown,
+    onLeft = _ref.onLeft,
+    onOk = _ref.onOk,
+    onRight = _ref.onRight;
+  useMappedKeydown({
+    isActive: isActive,
+    onOk: onOk,
+    onUp: onUp,
+    onDown: onDown,
+    onLeft: onLeft,
+    onRight: onRight
+  });
+  return React.createElement("div", {
+    className: "ino-list-item " + (isActive ? 'active' : '') + " " + (disabled ? 'disabled' : '') + " " + className,
+    onClick: function onClick(e) {
+      return !disabled && (_onClick == null ? void 0 : _onClick(e, index));
+    },
+    role: "button",
+    tabIndex: disabled ? -1 : 0,
+    "aria-disabled": disabled
+  }, icon && React.createElement("div", {
+    className: "ino-list-item__icon"
+  }, icon), React.createElement("div", {
+    className: "ino-list-item__content"
+  }, children), rightContent && React.createElement("div", {
+    className: "ino-list-item__right"
+  }, rightContent));
+};
+
+var InoSidebar = function InoSidebar(_ref) {
+  var _ref$items = _ref.items,
+    items = _ref$items === void 0 ? [] : _ref$items,
+    selectedId = _ref.selectedId,
+    _ref$collapsed = _ref.collapsed,
+    collapsed = _ref$collapsed === void 0 ? false : _ref$collapsed,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
+    _ref$position = _ref.position,
+    position = _ref$position === void 0 ? 'left' : _ref$position,
+    onSelect = _ref.onSelect,
+    _onUp = _ref.onUp,
+    _onDown = _ref.onDown,
+    onRight = _ref.onRight,
+    onLeft = _ref.onLeft;
+  var _useState = useState(0),
+    activeIndex = _useState[0],
+    setActiveIndex = _useState[1];
+  var classes = ['ino-sidebar', "ino-sidebar--" + position, collapsed && 'collapsed', classNames].filter(Boolean).join(' ');
+  useMappedKeydown({
+    isActive: isActive,
+    onUp: function onUp(e) {
+      if (activeIndex === 0) {
+        _onUp == null || _onUp(e, activeIndex);
+      } else {
+        setActiveIndex(function (prev) {
+          return Math.max(0, prev - 1);
+        });
+      }
+    },
+    onDown: function onDown(e) {
+      if (activeIndex === items.length - 1) {
+        _onDown == null || _onDown(e, activeIndex);
+      } else {
+        setActiveIndex(function (prev) {
+          return Math.min(items.length - 1, prev + 1);
+        });
+      }
+    },
+    onLeft: onLeft,
+    onRight: onRight,
+    onOk: function onOk() {
+      var selectedItem = items[activeIndex];
+      if (selectedItem && !selectedItem.disabled) {
+        onSelect == null || onSelect(selectedItem);
+      }
+    }
+  });
+  return React.createElement("aside", {
+    className: classes
+  }, items.map(function (item, index) {
+    return React.createElement("div", {
+      key: item.id,
+      onMouseEnter: function onMouseEnter() {
+        return setActiveIndex(index);
+      },
+      className: ['ino-sidebar-item', selectedId === item.id && 'selected', isActive && activeIndex === index && 'active', item.disabled && 'disabled'].filter(Boolean).join(' '),
+      onClick: function onClick() {
+        return !item.disabled && (onSelect == null ? void 0 : onSelect(item));
+      }
+    }, React.createElement("div", {
+      className: "ino-sidebar-item__icon"
+    }, item.icon), !collapsed && React.createElement("div", {
+      className: "ino-sidebar-item__content"
+    }, React.createElement("span", {
+      className: "ino-sidebar-item__label"
+    }, item.label)));
+  }));
+};
+
+var InoSkeleton = function InoSkeleton(_ref) {
+  var _ref$width = _ref.width,
+    width = _ref$width === void 0 ? '100%' : _ref$width,
+    height = _ref.height,
+    _ref$variant = _ref.variant,
+    variant = _ref$variant === void 0 ? 'rectangular' : _ref$variant,
+    _ref$textVariant = _ref.textVariant,
+    textVariant = _ref$textVariant === void 0 ? 'body' : _ref$textVariant,
+    _ref$animation = _ref.animation,
+    animation = _ref$animation === void 0 ? 'pulse' : _ref$animation,
+    _ref$className = _ref.className,
+    className = _ref$className === void 0 ? '' : _ref$className,
+    _ref$style = _ref.style,
+    style = _ref$style === void 0 ? {} : _ref$style,
+    _ref$borderRadius = _ref.borderRadius,
+    borderRadius = _ref$borderRadius === void 0 ? 0.4 : _ref$borderRadius;
+  var getWidth = function getWidth() {
+    if (typeof width === 'number') return width + "rem";
+    return width;
+  };
+  var getHeight = function getHeight() {
+    if (typeof height === 'number') return height + "rem";
+    return height;
+  };
+  var classes = ['ino-skeleton', "ino-skeleton--" + variant, "ino-skeleton--animation-" + animation, variant === 'text' && "ino-skeleton--" + textVariant, className].filter(Boolean).join(' ');
+  return React.createElement("div", {
+    className: classes,
+    style: _extends({
+      width: getWidth(),
+      height: variant === 'text' ? undefined : getHeight(),
+      borderRadius: variant === 'circular' ? '50%' : borderRadius + "rem"
+    }, style),
+    "aria-label": "Loading...",
+    role: "progressbar"
+  });
+};
+
+var SvgArrowUp = function SvgArrowUp() {
+  return React.createElement("svg", {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    width: "2.4rem",
+    height: "2.4rem"
+  }, React.createElement("g", {
+    id: "SVGRepo_bgCarrier",
+    strokeWidth: "0"
+  }), React.createElement("g", {
+    id: "SVGRepo_tracerCarrier",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), React.createElement("g", {
+    id: "SVGRepo_iconCarrier"
+  }, ' ', React.createElement("path", {
+    d: "M12 6V18M12 6L7 11M12 6L17 11",
+    stroke: "#fff",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), ' '));
+};
+
+var SvgArrowDown = function SvgArrowDown() {
+  return React.createElement("svg", {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    width: "2.4rem",
+    height: "2.4rem"
+  }, React.createElement("g", {
+    id: "SVGRepo_bgCarrier",
+    strokeWidth: "0"
+  }), React.createElement("g", {
+    id: "SVGRepo_tracerCarrier",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), React.createElement("g", {
+    id: "SVGRepo_iconCarrier"
+  }, ' ', React.createElement("path", {
+    d: "M12 6V18M12 18L7 13M12 18L17 13",
+    stroke: "#fff",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), ' '));
+};
+
+var ScrollView = function ScrollView(_ref) {
+  var children = _ref.children,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    onReachBottom = _ref.onReachBottom,
+    onStartScroll = _ref.onStartScroll,
+    onEndScroll = _ref.onEndScroll,
+    onDown = _ref.onDown,
+    onUp = _ref.onUp,
+    onOk = _ref.onOk,
+    onBack = _ref.onBack,
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
+    _ref$scrollStep = _ref.scrollStep,
+    scrollStep = _ref$scrollStep === void 0 ? 50 : _ref$scrollStep,
+    _ref$showIndicators = _ref.showIndicators,
+    showIndicators = _ref$showIndicators === void 0 ? true : _ref$showIndicators;
+  var scrollRef = useRef(null);
+  var _useState = useState(false),
+    showTopIndicator = _useState[0],
+    setShowTopIndicator = _useState[1];
+  var _useState2 = useState(true),
+    showBottomIndicator = _useState2[0],
+    setShowBottomIndicator = _useState2[1];
+  var _useState3 = useState(false),
+    isScrolling = _useState3[0],
+    setIsScrolling = _useState3[1];
+  var scrollTimeout = useRef();
+  var handleScroll = useCallback(function () {
+    if (!scrollRef.current) return;
+    var _scrollRef$current = scrollRef.current,
+      scrollTop = _scrollRef$current.scrollTop,
+      scrollHeight = _scrollRef$current.scrollHeight,
+      clientHeight = _scrollRef$current.clientHeight;
+    // Show/hide scroll indicators
+    setShowTopIndicator(scrollTop > 0);
+    setShowBottomIndicator(scrollTop + clientHeight < scrollHeight);
+    // Handle scroll start/end
+    if (!isScrolling) {
+      setIsScrolling(true);
+      onStartScroll == null || onStartScroll();
+    }
+    clearTimeout(scrollTimeout.current);
+    scrollTimeout.current = setTimeout(function () {
+      setIsScrolling(false);
+      onEndScroll == null || onEndScroll();
+      // Check if reached bottom
+      if (Math.ceil(scrollTop + clientHeight) >= scrollHeight) {
+        onReachBottom == null || onReachBottom();
+      }
+    }, 150);
+  }, [isScrolling, onStartScroll, onEndScroll, onReachBottom]);
+  var scrollUp = useCallback(function (e) {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollBy({
+      top: -scrollStep,
+      behavior: 'smooth'
+    });
+    if (scrollRef.current.scrollTop === 0) {
+      onUp == null || onUp(e);
+    }
+  }, [scrollStep, onUp]);
+  var scrollDown = useCallback(function (e) {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollBy({
+      top: scrollStep,
+      behavior: 'smooth'
+    });
+    var _scrollRef$current2 = scrollRef.current,
+      scrollTop = _scrollRef$current2.scrollTop,
+      scrollHeight = _scrollRef$current2.scrollHeight,
+      clientHeight = _scrollRef$current2.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight) {
+      onDown == null || onDown(e);
+    }
+  }, [scrollStep, onDown]);
+  useKeydown({
+    isActive: isActive,
+    up: scrollUp,
+    down: scrollDown,
+    ok: onOk,
+    back: onBack
+  });
+  useEffect(function () {
+    return function () {
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+    };
+  }, []);
+  return React.createElement("div", {
+    className: "ino-scroll-view-container " + classNames
+  }, showIndicators && showTopIndicator && React.createElement("div", {
+    className: "ino-scroll-indicator ino-scroll-indicator--top"
+  }, React.createElement(SvgArrowUp, null)), React.createElement("div", {
+    ref: scrollRef,
+    className: "ino-scroll-view-content",
+    onScroll: handleScroll
+  }, children), showIndicators && showBottomIndicator && React.createElement("div", {
+    className: "ino-scroll-indicator ino-scroll-indicator--bottom"
+  }, React.createElement(SvgArrowDown, null)));
+};
+
+var ARROW_STYLES = {
+  position: 'absolute',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  zIndex: 1,
+  cursor: 'pointer'
+};
+var NavigationArrow = function NavigationArrow(_ref) {
+  var direction = _ref.direction,
+    icon = _ref.icon,
+    _onClick = _ref.onClick,
+    show = _ref.show,
+    listType = _ref.listType,
+    style = _ref.style,
+    classNames = _ref.classNames;
+  if (!show) return null;
+  var getPositionStyles = function getPositionStyles() {
+    var _ref3;
+    if (listType === 'horizontal') {
+      var _ref2;
+      return _ref2 = {}, _ref2[direction === 'start' ? 'left' : 'right'] = 0, _ref2;
+    }
+    return _ref3 = {}, _ref3[direction === 'start' ? 'top' : 'bottom'] = 0, _ref3;
+  };
+  return React.createElement("div", {
+    onClick: function onClick(e) {
+      return _onClick(e);
+    },
+    style: _extends({}, ARROW_STYLES, getPositionStyles(), style),
+    className: "ino-list-arrow ino-list-arrow-" + direction + " " + (classNames || '')
+  }, React.createElement("span", {
+    className: "ino-list-arrow-icon"
+  }, icon));
+};
+
+var SvgArrowLeft = function SvgArrowLeft() {
+  return React.createElement("svg", {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    width: "2.4rem",
+    height: "2.4rem"
+  }, React.createElement("g", {
+    id: "SVGRepo_bgCarrier",
+    strokeWidth: "0"
+  }), React.createElement("g", {
+    id: "SVGRepo_tracerCarrier",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), React.createElement("g", {
+    id: "SVGRepo_iconCarrier"
+  }, ' ', React.createElement("path", {
+    d: "M6 12H18M6 12L11 7M6 12L11 17",
+    stroke: "#fff",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), ' '));
+};
+
+var SvgArrowRight = function SvgArrowRight() {
+  return React.createElement("svg", {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    width: "2.4rem",
+    height: "2.4rem"
+  }, React.createElement("g", {
+    id: "SVGRepo_bgCarrier",
+    strokeWidth: "0"
+  }), React.createElement("g", {
+    id: "SVGRepo_tracerCarrier",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), React.createElement("g", {
+    id: "SVGRepo_iconCarrier"
+  }, ' ', React.createElement("path", {
+    d: "M6 12H18M18 12L13 7M18 12L13 17",
+    stroke: "#fff",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), ' '));
+};
+
+var TRANSFORM_TIMEOUT = null;
+/**
+ * ListView component for displaying a list of items.
+ *
+ * This component provides a customizable list view with optional navigation and item rendering.
+ * It supports keyboard navigation and can be controlled via props.
+ */
+/**
+ * ListView component for displaying a list of items.
+ *
+ * This component provides a customizable list view with optional navigation and item rendering.
+ * It supports keyboard navigation and can be controlled via props.
+ *
+ * @component
+ * @example
+ * ```jsx
+ * <ListView
+ *   id="example-list"
+ *   uniqueKey="list-"
+ *   listType="horizontal"
+ *   nativeControle={true}
+ *   itemsCount={10}
+ *   itemsTotal={50}
+ *   gap={1}
+ *   buffer={2}
+ *   itemWidth={20}
+ *   itemWidth={20}
+ *   itemHeight={20}
+ *   isActive={true}
+ *   initialActiveIndex={0}
+ *   onBackScrollIndex={null}
+ *   startScrollIndex={0}
+ *   direction="ltr"
+ *   onMouseEnter={() => {}}
+ *   onUp={() => {}}
+ *   onDown={() => {}}
+ *   onLeft={() => {}}
+ *   onRight={() => {}}
+ *   onBack={() => {}}
+ *   renderItem={(item) => <div>{item}</div>}
+ *   items={Array(50).fill('Item')}
+ * />
+ * ```
+ */
+var ListView = /*#__PURE__*/memo(function (_ref) {
+  var id = _ref.id,
+    _ref$uniqueKey = _ref.uniqueKey,
+    uniqueKey = _ref$uniqueKey === void 0 ? 'list-' : _ref$uniqueKey,
+    _ref$listType = _ref.listType,
+    listType = _ref$listType === void 0 ? 'horizontal' : _ref$listType,
+    _ref$nativeControle = _ref.nativeControle,
+    nativeControle = _ref$nativeControle === void 0 ? false : _ref$nativeControle,
+    itemsCount = _ref.itemsCount,
+    itemsTotal = _ref.itemsTotal,
+    buffer = _ref.buffer,
+    itemWidth = _ref.itemWidth,
+    itemHeight = _ref.itemHeight,
+    gap = _ref.gap,
+    isActive = _ref.isActive,
+    _ref$initialActiveInd = _ref.initialActiveIndex,
+    initialActiveIndex = _ref$initialActiveInd === void 0 ? 0 : _ref$initialActiveInd,
+    _ref$onBackScrollInde = _ref.onBackScrollIndex,
+    onBackScrollIndex = _ref$onBackScrollInde === void 0 ? null : _ref$onBackScrollInde,
+    _ref$startScrollIndex = _ref.startScrollIndex,
+    startScrollIndex = _ref$startScrollIndex === void 0 ? 0 : _ref$startScrollIndex,
+    _ref$direction = _ref.direction,
+    direction = _ref$direction === void 0 ? 'ltr' : _ref$direction,
+    _ref$withTitle = _ref.withTitle,
+    withTitle = _ref$withTitle === void 0 ? false : _ref$withTitle,
+    _ref$rowGap = _ref.rowGap,
+    rowGap = _ref$rowGap === void 0 ? 0 : _ref$rowGap,
+    _ref$debounce = _ref.debounce,
+    debounce = _ref$debounce === void 0 ? 200 : _ref$debounce,
+    _ref$onMouseEnter = _ref.onMouseEnter,
+    onMouseEnter = _ref$onMouseEnter === void 0 ? function () {} : _ref$onMouseEnter,
+    _ref$onUp = _ref.onUp,
+    onUp = _ref$onUp === void 0 ? function () {} : _ref$onUp,
+    _ref$onDown = _ref.onDown,
+    onDown = _ref$onDown === void 0 ? function () {} : _ref$onDown,
+    _ref$onLeft = _ref.onLeft,
+    onLeft = _ref$onLeft === void 0 ? function () {} : _ref$onLeft,
+    _ref$onRight = _ref.onRight,
+    onRight = _ref$onRight === void 0 ? function () {} : _ref$onRight,
+    _ref$onBack = _ref.onBack,
+    onBack = _ref$onBack === void 0 ? function () {} : _ref$onBack,
+    renderItem = _ref.renderItem,
+    items = _ref.items,
+    _ref$arrows = _ref.arrows,
+    arrows = _ref$arrows === void 0 ? {
+      show: false,
+      startIcon: '←',
+      endIcon: '→',
+      style: {},
+      classNames: ''
+    } : _ref$arrows,
+    _ref$edgeScroll = _ref.edgeScroll,
+    edgeScroll = _ref$edgeScroll === void 0 ? {
+      enabled: false,
+      interval: 700,
+      startDelay: 1000
+    } : _ref$edgeScroll,
+    _ref$onOk = _ref.onOk,
+    onOk = _ref$onOk === void 0 ? function () {} : _ref$onOk;
+  var scrollViewRef = useRef(null);
+  var _useState = useState(0),
+    startIndex = _useState[0],
+    setStartIndex = _useState[1];
+  var _useState2 = useState(initialActiveIndex),
+    activeIndex = _useState2[0],
+    setActiveIndex = _useState2[1];
+  var _useState3 = useState(false),
+    showStartArrow = _useState3[0],
+    setShowStartArrow = _useState3[1];
+  var _useState4 = useState(false),
+    showEndArrow = _useState4[0],
+    setShowEndArrow = _useState4[1];
+  var _useState5 = useState(false),
+    isAutoScrolling = _useState5[0],
+    setIsAutoScrolling = _useState5[1];
+  var autoScrollIntervalRef = useRef(null);
+  var autoScrollTimeoutRef = useRef(null);
+  var changeStartIndex = useCallback(function (index) {
+    index -= startScrollIndex;
+    if (index > itemsTotal - itemsCount) index = itemsTotal - itemsCount;
+    if (index < 0) index = 0;
+    setStartIndex(index);
+  }, [itemsTotal, itemsCount, startScrollIndex]);
+  useEffect(function () {
+    setInitialActiveIndex(initialActiveIndex);
+  }, [id]);
+  var setInitialActiveIndex = function setInitialActiveIndex(index) {
+    setActiveIndex(index);
+    changeStartIndex(index);
+  };
+  var scrollToIndex = useCallback(function (index) {
+    setActiveIndex(index);
+    changeStartIndex(index);
+    // Trigger a re-render to update the transform
+    setTimeout(function () {
+      setStartIndex(function (prevStartIndex) {
+        return prevStartIndex;
+      });
+    }, 0);
+  }, [changeStartIndex]);
+  var next = function next(e, count) {
+    if (count === void 0) {
+      count = 1;
+    }
+    setActiveIndex(function (index) {
+      if (index === itemsTotal - 1) {
+        listType === 'horizontal' ? requestAnimationFrame(function () {
+          return onRight(e, count);
+        }) : requestAnimationFrame(function () {
+          return onDown(e, count);
+        });
+      } else {
+        index += count;
+        if (index > itemsTotal - 1) index = itemsTotal - 1;
+      }
+      changeStartIndex(index);
+      return index;
+    });
+  };
+  var prev = function prev(e, count) {
+    if (count === void 0) {
+      count = 1;
+    }
+    setActiveIndex(function (index) {
+      if (index === 0) {
+        listType === 'horizontal' ? requestAnimationFrame(function () {
+          return onLeft(e, count);
+        }) : requestAnimationFrame(function () {
+          return onUp(e, count);
+        });
+      } else {
+        index -= count;
+        if (index < 0) index = 0;
+      }
+      changeStartIndex(index);
+      return index;
+    });
+  };
+  var _back = useCallback(function (e) {
+    if (onBackScrollIndex !== null) {
+      scrollToIndex(onBackScrollIndex);
+    } else {
+      scrollToIndex(0); // Scroll to the first element
+    }
+    requestAnimationFrame(function () {
+      return onBack(e);
+    });
+  }, [onBackScrollIndex, scrollToIndex, onBack]);
+  var onMouseEnterItem = useCallback(function (e, index) {
+    setActiveIndex(index);
+    onMouseEnter(e, index);
+  }, [onMouseEnter]);
+  var getItemStyle = useCallback(function (index) {
+    var _ref2;
+    return _extends({
+      position: 'absolute',
+      width: itemWidth + "rem",
+      height: itemHeight + "rem"
+    }, listType === 'horizontal' ? (_ref2 = {}, _ref2[direction === 'rtl' ? 'right' : 'left'] = index * (itemWidth + (gap || 0)) + "rem", _ref2.top = 0, _ref2) : {
+      left: 0,
+      top: index * (itemHeight + (gap || 0)) + "rem"
+    });
+  }, [itemWidth, itemHeight, listType, direction, gap]);
+  var renderItems = useCallback(function () {
+    var items = [];
+    var start = startIndex - buffer;
+    var end = startIndex + itemsCount + buffer;
+    var _loop = function _loop(i) {
+      if (i >= 0 && i < itemsTotal) {
+        var itemProps = {
+          key: "" + uniqueKey + i,
+          index: i,
+          style: getItemStyle(i),
+          isActive: i === activeIndex && isActive,
+          item: items[i],
+          onUp: onUp,
+          onDown: onDown,
+          onLeft: onLeft,
+          onRight: onRight,
+          onMouseEnter: function onMouseEnter(e) {
+            return onMouseEnterItem(e, i);
+          }
+        };
+        items.push(renderItem(itemProps));
+      }
+    };
+    for (var i = start; i < end; i++) {
+      _loop(i);
+    }
+    return items;
+  }, [startIndex, buffer, itemsCount, itemsTotal, uniqueKey, getItemStyle, activeIndex, isActive, onUp, onDown, onLeft, onRight, onMouseEnterItem, renderItem, items]);
+  useEffect(function () {
+    var applyTransform = function applyTransform() {
+      if (!scrollViewRef.current) return;
+      var verticalSpacing = itemHeight + rowGap;
+      var transform = listType === 'horizontal' ? "translate3d(" + (direction === 'ltr' ? '-' : '') + startIndex * (itemWidth + (gap || 0)) + "rem, 0, 0)" : "translate3d(0, -" + startIndex * verticalSpacing + "rem, 0)";
+      scrollViewRef.current.style.transform = transform;
+      scrollViewRef.current.style.webkitTransform = transform;
+      window.dispatchEvent(new Event('transformstart'));
+      clearTimeout(TRANSFORM_TIMEOUT);
+      TRANSFORM_TIMEOUT = setTimeout(function () {
+        return window.dispatchEvent(new Event('transformend'));
+      }, 500);
+    };
+    applyTransform();
+  }, [startIndex, listType, direction, itemWidth, itemHeight, gap, withTitle]);
+  useEffect(function () {
+    if (arrows.show) {
+      setShowStartArrow(startIndex > 0);
+      setShowEndArrow(startIndex < itemsTotal - itemsCount);
+    }
+  }, [startIndex, itemsTotal, itemsCount, arrows.show]);
+  // const handleOk = useCallback(() => {
+  //   onOk(items[activeIndex], activeIndex);
+  // }, [onOk, items, activeIndex]);
+  var handleOk = function handleOk() {
+    onOk(items[activeIndex], activeIndex);
+  };
+  var keyDownOptions = useMemo(function () {
+    return {
+      isActive: isActive && nativeControle,
+      left: function left(e) {
+        return listType === 'horizontal' && prev(e, itemsCount);
+      },
+      right: function right(e) {
+        return listType === 'horizontal' && next(e, itemsCount);
+      },
+      up: function up(e) {
+        return listType !== 'horizontal' && prev(e, itemsCount);
+      },
+      down: function down(e) {
+        return listType !== 'horizontal' && next(e, itemsCount);
+      },
+      channel_up: function channel_up(e) {
+        return prev(e, itemsCount);
+      },
+      channel_down: function channel_down(e) {
+        return next(e, itemsCount);
+      },
+      back: function back(e) {
+        return _back(e);
+      },
+      ok: handleOk,
+      debounce: debounce
+    };
+  }, [isActive, nativeControle, listType, prev, next, itemsCount, _back, handleOk, debounce]);
+  useKeydown(keyDownOptions);
+  var parentStyle = useMemo(function () {
+    var _ref3;
+    return _ref3 = {}, _ref3[listType === 'horizontal' ? 'height' : 'width'] = (listType === 'horizontal' ? itemHeight : itemWidth) + "rem", _ref3;
+  }, [listType, itemHeight, itemWidth]);
+  useEffect(function () {
+    return function () {
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+      }
+      if (autoScrollTimeoutRef.current) {
+        clearTimeout(autoScrollTimeoutRef.current);
+      }
+    };
+  }, []);
+  var startAutoScroll = useCallback(function (direction, e) {
+    if (isAutoScrolling) return;
+    setIsAutoScrolling(true);
+    var scrollFn = direction === 'prev' ? prev : next;
+    // Add initial delay before starting to scroll
+    autoScrollTimeoutRef.current = setTimeout(function () {
+      // Initial scroll
+      scrollFn(e);
+      // Continue scrolling while hovering
+      autoScrollIntervalRef.current = setInterval(function () {
+        scrollFn(e);
+      }, edgeScroll.interval);
+    }, edgeScroll.startDelay);
+  }, [isAutoScrolling, prev, next, edgeScroll.interval, edgeScroll.startDelay]);
+  var stopAutoScroll = useCallback(function () {
+    if (autoScrollIntervalRef.current) {
+      clearInterval(autoScrollIntervalRef.current);
+      autoScrollIntervalRef.current = null;
+    }
+    if (autoScrollTimeoutRef.current) {
+      clearTimeout(autoScrollTimeoutRef.current);
+      autoScrollTimeoutRef.current = null;
+    }
+    setIsAutoScrolling(false);
+  }, []);
+  var hoverZoneStyles = _extends({
+    position: 'absolute',
+    zIndex: 2
+  }, listType === 'horizontal' ? {
+    top: 0,
+    height: '100%'
+  } : {
+    left: 0,
+    width: '100%'
+  });
+  return React.createElement("div", {
+    className: "scroll-view-parent " + listType,
+    style: parentStyle
+  }, edgeScroll.enabled && startIndex > 0 && React.createElement("div", {
+    className: "edge-scroll-zone edge-scroll-zone-start",
+    style: _extends({}, hoverZoneStyles, listType === 'horizontal' ? {
+      left: 0
+    } : {
+      top: 0
+    }),
+    onMouseEnter: function onMouseEnter(e) {
+      return startAutoScroll('prev', e);
+    },
+    onMouseLeave: stopAutoScroll
+  }), edgeScroll.enabled && startIndex < itemsTotal - itemsCount && React.createElement("div", {
+    className: "edge-scroll-zone edge-scroll-zone-end",
+    style: _extends({}, hoverZoneStyles, listType === 'horizontal' ? {
+      right: 0
+    } : {
+      bottom: 0
+    }),
+    onMouseEnter: function onMouseEnter(e) {
+      return startAutoScroll('next', e);
+    },
+    onMouseLeave: stopAutoScroll
+  }), React.createElement(NavigationArrow, {
+    direction: "start",
+    icon: listType === 'horizontal' ? arrows.startIcon || React.createElement(SvgArrowLeft, null) : arrows.startIcon || React.createElement(SvgArrowUp, null),
+    onClick: function onClick(e) {
+      return prev(e);
+    },
+    show: arrows.show && showStartArrow,
+    listType: listType,
+    style: arrows.style,
+    classNames: arrows.classNames
+  }), React.createElement(NavigationArrow, {
+    direction: "end",
+    icon: listType === 'horizontal' ? arrows.endIcon || React.createElement(SvgArrowRight, null) : arrows.endIcon || React.createElement(SvgArrowDown, null),
+    onClick: function onClick(e) {
+      return next(e);
+    },
+    show: arrows.show && showEndArrow,
+    listType: listType,
+    style: arrows.style,
+    classNames: arrows.classNames
+  }), React.createElement("div", {
+    className: "scroll-view list-view " + (direction === 'rtl' ? 'rtl-list-view' : ''),
+    ref: scrollViewRef
+  }, renderItems()));
+});
+
+var TRANSFORM_TIMEOUT$1 = 800;
+/**
+ * Initializes a GridView component with the given properties.
+ *
+ * @param {GridViewProps} props - The properties for the GridView component.
+ * @returns {React.ReactNode} The initialized GridView component.
+ */
+/**
+ * GridView component for displaying a grid of items.
+ *
+ * This component provides a customizable grid view with optional navigation and item rendering.
+ * It supports keyboard navigation and can be controlled via props.
+ *
+ * @component
+ * @example
+ * ```jsx
+ * <GridView
+ *   id="example-grid"
+ *   uniqueKey="list-"
+ *   nativeControle={true}
+ *   rowItemsCount={4}
+ *   rowCount={10}
+ *   bufferStart={0}
+ *   bufferEnd={0}
+ *   itemWidth={20}
+ *   itemHeight={20}
+ *   isActive={true}
+ *   debounce={200}
+ *   initialActiveIndex={0}
+ *   direction="ltr"
+ *   onMouseEnter={() => {}}
+ *   onChangeRow={() => {}}
+ *   onUp={() => {}}
+ *   onDown={() => {}}
+ *   onBack={() => {}}
+ *   renderItem={(item) => <div>{item}</div>}
+ *   data={Array(40).fill('Item')}
+ * />
+ * ```
+ */
+var GridView = /*#__PURE__*/memo(function (_ref) {
+  var id = _ref.id,
+    _ref$uniqueKey = _ref.uniqueKey,
+    uniqueKey = _ref$uniqueKey === void 0 ? 'list-' : _ref$uniqueKey,
+    _ref$nativeControle = _ref.nativeControle,
+    nativeControle = _ref$nativeControle === void 0 ? false : _ref$nativeControle,
+    _ref$scrollOffset = _ref.scrollOffset,
+    scrollOffset = _ref$scrollOffset === void 0 ? 0 : _ref$scrollOffset,
+    _ref$rowItemsCount = _ref.rowItemsCount,
+    rowItemsCount = _ref$rowItemsCount === void 0 ? 5 : _ref$rowItemsCount,
+    rowCount = _ref.rowCount,
+    _ref$bufferStart = _ref.bufferStart,
+    bufferStart = _ref$bufferStart === void 0 ? 0 : _ref$bufferStart,
+    _ref$bufferEnd = _ref.bufferEnd,
+    bufferEnd = _ref$bufferEnd === void 0 ? 0 : _ref$bufferEnd,
+    itemWidth = _ref.itemWidth,
+    itemHeight = _ref.itemHeight,
+    isActive = _ref.isActive,
+    _ref$initialActiveInd = _ref.initialActiveIndex,
+    initialActiveIndex = _ref$initialActiveInd === void 0 ? 0 : _ref$initialActiveInd,
+    _ref$direction = _ref.direction,
+    direction = _ref$direction === void 0 ? 'ltr' : _ref$direction,
+    _ref$debounce = _ref.debounce,
+    debounce = _ref$debounce === void 0 ? 200 : _ref$debounce,
+    _ref$onMouseEnter = _ref.onMouseEnter,
+    onMouseEnter = _ref$onMouseEnter === void 0 ? function () {} : _ref$onMouseEnter,
+    _ref$onChangeRow = _ref.onChangeRow,
+    onChangeRow = _ref$onChangeRow === void 0 ? function () {} : _ref$onChangeRow,
+    _ref$onUp = _ref.onUp,
+    onUp = _ref$onUp === void 0 ? function () {} : _ref$onUp,
+    _ref$onDown = _ref.onDown,
+    onDown = _ref$onDown === void 0 ? function () {} : _ref$onDown,
+    _ref$onLeft = _ref.onLeft,
+    onLeft = _ref$onLeft === void 0 ? function () {} : _ref$onLeft,
+    _ref$onRight = _ref.onRight,
+    onRight = _ref$onRight === void 0 ? function () {} : _ref$onRight,
+    _ref$onOk = _ref.onOk,
+    onOk = _ref$onOk === void 0 ? function () {} : _ref$onOk,
+    _ref$onBack = _ref.onBack,
+    onBack = _ref$onBack === void 0 ? function () {} : _ref$onBack,
+    renderItem = _ref.renderItem,
+    data = _ref.data,
+    _ref$gap = _ref.gap,
+    gap = _ref$gap === void 0 ? 1 : _ref$gap,
+    _ref$rowGap = _ref.rowGap,
+    rowGap = _ref$rowGap === void 0 ? gap : _ref$rowGap;
+  var scrollViewRef = useRef(null);
+  var _useState = useState(0),
+    startRow = _useState[0],
+    setStartRow = _useState[1];
+  var _useState2 = useState(initialActiveIndex),
+    activeIndex = _useState2[0],
+    setActiveIndex = _useState2[1];
+  var containerRef = useRef(null);
+  var _useState3 = useState(function () {
+      var DEFAULT_ROW_ITEMS = 5;
+      var DEFAULT_ITEM_WIDTH = 25;
+      var DEFAULT_ITEM_HEIGHT = 25;
+      return {
+        itemWidth: itemWidth || DEFAULT_ITEM_WIDTH,
+        itemHeight: itemHeight || DEFAULT_ITEM_HEIGHT,
+        rowItems: rowItemsCount || DEFAULT_ROW_ITEMS,
+        rows: rowCount || Math.ceil(data.length / (rowItemsCount || DEFAULT_ROW_ITEMS))
+      };
+    }),
+    dimensions = _useState3[0],
+    setDimensions = _useState3[1];
+  var changeStartRow = useCallback(function (index) {
+    var startScrollRow = 2;
+    var currentRow = Math.ceil((index + 1) / rowItemsCount);
+    var row = currentRow - startScrollRow;
+    if (row < 0) row = 0;
+    setStartRow(row);
+  }, [rowItemsCount]);
+  useEffect(function () {
+    setActiveIndex(initialActiveIndex);
+    changeStartRow(initialActiveIndex);
+  }, [id, initialActiveIndex, changeStartRow]);
+  var left = useCallback(function () {
+    setActiveIndex(function (prev) {
+      if (prev % rowItemsCount === 0) {
+        requestAnimationFrame(function () {
+          return onLeft == null ? void 0 : onLeft(prev);
+        });
+      } else {
+        prev--;
+      }
+      return prev;
+    });
+  }, [rowItemsCount, onLeft]);
+  var right = useCallback(function () {
+    setActiveIndex(function (prev) {
+      if (prev % rowItemsCount === rowItemsCount - 1 || prev === data.length - 1) {
+        requestAnimationFrame(function () {
+          return onRight == null ? void 0 : onRight(prev);
+        });
+      } else {
+        prev++;
+      }
+      return prev;
+    });
+  }, [rowItemsCount, data.length, onRight]);
+  var up = useCallback(function () {
+    setActiveIndex(function (prev) {
+      if (prev < rowItemsCount) {
+        requestAnimationFrame(function () {
+          return onUp == null ? void 0 : onUp(prev);
+        });
+      } else {
+        prev -= rowItemsCount;
+      }
+      changeStartRow(prev);
+      return prev;
+    });
+  }, [rowItemsCount, onUp, changeStartRow]);
+  var down = useCallback(function () {
+    setActiveIndex(function (prev) {
+      if (Math.ceil((prev + 1) / rowItemsCount) === Math.ceil(data.length / rowItemsCount)) {
+        requestAnimationFrame(function () {
+          return onDown == null ? void 0 : onDown(prev);
+        });
+      } else {
+        prev += rowItemsCount;
+        if (prev > data.length - 1) prev = data.length - 1;
+      }
+      changeStartRow(prev);
+      return prev;
+    });
+  }, [rowItemsCount, data.length, onDown, changeStartRow]);
+  var ok = useCallback(function () {
+    onOk == null || onOk(data[activeIndex], activeIndex);
+  }, [onOk, data, activeIndex]);
+  var back = useCallback(function () {
+    onBack == null || onBack(activeIndex);
+  }, [onBack, activeIndex]);
+  var onMouseEnterItem = useCallback(function (index) {
+    setActiveIndex(index);
+    onMouseEnter(index);
+  }, [onMouseEnter]);
+  // Calculate dimensions based on container and data
+  useEffect(function () {
+    var calculateDimensions = function calculateDimensions() {
+      var DEFAULT_ROW_ITEMS = 5;
+      var DEFAULT_ITEM_WIDTH = 15;
+      var DEFAULT_ITEM_HEIGHT = 15;
+      // Calculate dimensions based on data length
+      var totalItems = data.length;
+      // Use provided rowItemsCount or default
+      var calculatedRowItems = rowItemsCount || DEFAULT_ROW_ITEMS;
+      // Calculate rows based on total items and items per row
+      var calculatedRows = rowCount || Math.ceil(totalItems / calculatedRowItems);
+      // Use provided dimensions or defaults
+      var calculatedItemWidth = itemWidth || DEFAULT_ITEM_WIDTH;
+      var calculatedItemHeight = itemHeight || DEFAULT_ITEM_HEIGHT;
+      setDimensions({
+        itemWidth: calculatedItemWidth,
+        itemHeight: calculatedItemHeight,
+        rowItems: calculatedRowItems,
+        rows: calculatedRows
+      });
+    };
+    calculateDimensions();
+  }, [itemWidth, itemHeight, rowItemsCount, rowCount, data.length]);
+  // Use calculated dimensions in render logic
+  var getItemStyle = useCallback(function (index) {
+    var _ref2;
+    var vIndex = Math.floor(index / dimensions.rowItems);
+    var hIndex = index % dimensions.rowItems;
+    return _ref2 = {
+      position: 'absolute',
+      width: dimensions.itemWidth + "rem",
+      height: dimensions.itemHeight + "rem",
+      top: vIndex * (dimensions.itemHeight + rowGap) + "rem"
+    }, _ref2[direction === 'rtl' ? 'right' : 'left'] = hIndex * (dimensions.itemWidth + gap) + "rem", _ref2;
+  }, [dimensions, gap, rowGap, direction]);
+  var renderItems = useCallback(function () {
+    var items = [];
+    // Guard against invalid dimensions
+    if (!dimensions.rowItems) {
+      console.warn('Invalid rowItems in dimensions:', dimensions);
+      return items;
+    }
+    var visibleStart = Math.max(0, startRow * dimensions.rowItems - dimensions.rowItems * bufferStart);
+    var visibleEnd = Math.min(data.length, startRow * dimensions.rowItems + dimensions.rowItems * dimensions.rows + dimensions.rowItems * bufferEnd);
+    var _loop = function _loop(i) {
+      var itemProps = {
+        key: "" + uniqueKey + i,
+        index: i,
+        style: getItemStyle(i),
+        isActive: i === activeIndex && isActive,
+        item: data[i],
+        onMouseEnter: function onMouseEnter() {
+          return onMouseEnterItem(i);
+        }
+      };
+      items.push(renderItem(itemProps));
+    };
+    for (var i = visibleStart; i < visibleEnd; i++) {
+      _loop(i);
+    }
+    return items;
+  }, [startRow, bufferStart, bufferEnd, dimensions.rowItems, dimensions.rows, data.length, uniqueKey, getItemStyle, activeIndex, isActive, data, onMouseEnterItem, renderItem]);
+  useEffect(function () {
+    var applyTransform = function applyTransform() {
+      if (!scrollViewRef.current) return;
+      var offset = startRow * (dimensions.itemHeight + rowGap);
+      var currentRow = Math.ceil((activeIndex + 1) / dimensions.rowItems);
+      if (currentRow > 1) {
+        offset += scrollOffset;
+      }
+      var transform = "translate3d(0, -" + offset + "rem, 0)";
+      scrollViewRef.current.style.transform = transform;
+      scrollViewRef.current.style.webkitTransform = transform;
+      window.dispatchEvent(new Event('transformstart'));
+      setTimeout(function () {
+        return window.dispatchEvent(new Event('transformend'));
+      }, TRANSFORM_TIMEOUT$1);
+      onChangeRow(currentRow);
+    };
+    startTransition(function () {
+      applyTransform();
+    });
+  }, [activeIndex, startRow, dimensions.itemHeight, dimensions.rowItems, scrollOffset, onChangeRow, rowGap]);
+  var keyDownOptions = useMemo(function () {
+    return {
+      isActive: isActive && nativeControle,
+      debounce: debounce,
+      left: left,
+      right: right,
+      up: up,
+      down: down,
+      back: back,
+      ok: ok
+    };
+  }, [isActive, nativeControle, left, right, up, down, back, onOk, debounce]);
+  useKeydown(keyDownOptions);
+  useEffect(function () {
+    setStartRow(0);
+  }, [data]);
+  return React.createElement("div", {
+    ref: containerRef,
+    className: "scroll-view-parent",
+    style: {
+      width: '100%',
+      height: '100%',
+      position: 'relative'
+    }
+  }, React.createElement("div", {
+    className: "scroll-view grid-view",
+    ref: scrollViewRef
+  }, renderItems()));
+});
+
+var _excluded$1 = ["rowsCount", "rowGap", "data", "withTitle", "isActive", "onRowChange", "onUp", "onDown"];
+var ListGridView = function ListGridView(_ref) {
+  var rowsCount = _ref.rowsCount,
+    _ref$rowGap = _ref.rowGap,
+    rowGap = _ref$rowGap === void 0 ? 1 : _ref$rowGap,
+    data = _ref.data,
+    _ref$withTitle = _ref.withTitle,
+    withTitle = _ref$withTitle === void 0 ? false : _ref$withTitle,
+    isActive = _ref.isActive,
+    _ref$onRowChange = _ref.onRowChange,
+    onRowChange = _ref$onRowChange === void 0 ? function () {} : _ref$onRowChange,
+    _ref$onUp = _ref.onUp,
+    onUp = _ref$onUp === void 0 ? function () {} : _ref$onUp,
+    _ref$onDown = _ref.onDown,
+    onDown = _ref$onDown === void 0 ? function () {} : _ref$onDown,
+    listViewProps = _objectWithoutPropertiesLoose(_ref, _excluded$1);
+  var _useState = useState(0),
+    activeIndex = _useState[0];
+  var currentList = useMemo(function () {
+    return Array.isArray(data) ? data : [];
+  }, [data]);
+  var itemsTotal = currentList.length;
+  var itemsPerRow = useMemo(function () {
+    return Math.ceil(itemsTotal / rowsCount);
+  }, [itemsTotal, rowsCount]);
+  var _useState2 = useState(0),
+    currentRow = _useState2[0],
+    setCurrentRow = _useState2[1];
+  useKeydown({
+    isActive: isActive,
+    down: function down(e) {
+      if (!(currentList != null && currentList.length)) {
+        if (onDown) {
+          onDown(e);
+        }
+        return;
+      }
+      setCurrentRow(function (prev) {
+        return Math.min(prev + 1, rowsCount - 1);
+      });
+    },
+    up: function up(e) {
+      if (currentRow > 0) {
+        setCurrentRow(function (prev) {
+          return prev - 1;
+        });
+      } else {
+        if (onUp) {
+          onUp(e);
+        }
+      }
+    },
+    debounce: listViewProps.debounce || 200
+  });
+  var getRowStyle = useCallback(function (index) {
+    return {
+      position: 'absolute',
+      width: listViewProps.itemWidth * itemsPerRow + "rem",
+      height: listViewProps.itemHeight + "rem",
+      top: index * (listViewProps.itemHeight + rowGap) + "rem"
+    };
+  }, [listViewProps.itemWidth, listViewProps.itemHeight, itemsPerRow, rowGap]);
+  var renderRowItems = useCallback(function (_ref2) {
+    var item = _ref2.item,
+      index = _ref2.index,
+      isActive = _ref2.isActive;
+    return React.createElement("div", {
+      key: index,
+      style: getRowStyle(index)
+    }, withTitle ? React.createElement("div", {
+      className: "ino-list-title-wrapper"
+    }, React.createElement("h3", {
+      className: "ino-list-title"
+    }, item.name)) : null, React.createElement(ListView, Object.assign({}, listViewProps, {
+      items: item.list,
+      id: index + "-list-view",
+      uniqueKey: index + "-list-view",
+      listType: "horizontal",
+      itemsTotal: item.list.length,
+      itemsCount: listViewProps.itemsCount || 1,
+      buffer: listViewProps.buffer || 3,
+      debounce: listViewProps.debounce || 200,
+      itemWidth: listViewProps.itemWidth || 20,
+      itemHeight: listViewProps.itemHeight || 30,
+      gap: listViewProps.gap || 0,
+      rowGap: rowGap || 0,
+      withTitle: withTitle,
+      isActive: isActive && currentRow === index,
+      renderItem: listViewProps.renderItem,
+      nativeControle: true
+    })));
+  }, [getRowStyle, listViewProps.renderItem, withTitle, activeIndex, currentRow]);
+  return React.createElement(ListView, {
+    id: activeIndex + "-list-grid-view",
+    uniqueKey: activeIndex + "-list-grid-view",
+    itemWidth: listViewProps.itemWidth,
+    itemHeight: listViewProps.itemHeight,
+    items: currentList,
+    listType: "vertical",
+    itemsCount: itemsPerRow,
+    itemsTotal: itemsTotal,
+    nativeControle: true,
+    isActive: isActive,
+    debounce: listViewProps.debounce || 200,
+    buffer: currentList.length,
+    gap: listViewProps.gap,
+    rowGap: rowGap,
+    renderItem: function renderItem(_ref3) {
+      var index = _ref3.index,
+        item = _ref3.item,
+        style = _ref3.style;
+      return renderRowItems({
+        key: index,
+        index: index,
+        item: item,
+        style: style,
+        isActive: isActive,
+        onMouseEnter: function onMouseEnter() {
+          var row = Math.floor(index / itemsPerRow);
+          setCurrentRow(row);
+          onRowChange(row);
+        }
+      });
+    }
+  });
+};
+
+export { CheckboxItem, GridView, InoButton, InoCol, InoInput, InoKeyboard, InoListItem, InoProtectInput, InoRow, InoSidebar, InoSkeleton, InoTabs, InoText, ListGridView, ListView, Modal, SIZES, ScrollView, ThemeProvider, ToastProvider, VARIANTS, toast, useMappedKeydown };
 //# sourceMappingURL=ino-ui-tv.esm.js.map
