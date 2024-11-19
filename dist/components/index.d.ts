@@ -15,6 +15,7 @@ export * from "./InoListItem/InoListItem";
 export * from "./InoSidebar/InoSidebar";
 export * from "./InoSkeleton/InoSkeleton";
 export * from "./InoTab/InoTabs";
+export * from "./InoTab/InoTab";
 export * from "./InoText/InoText";
 export * from "./ScrollView/ScrollView";
 export * from './ListView/ListView';
