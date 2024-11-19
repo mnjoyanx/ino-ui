@@ -1,10 +1,9 @@
 /// <reference types="react" />
 import { MouseKeyboardEvent } from '../../types';
-export interface InoListItemProps {
+import { NavigableComponentProps } from '../../types/base';
+export interface InoListItemProps extends NavigableComponentProps {
     /** Item label/content */
     children: React.ReactNode;
-    /** Whether the item is active */
-    isActive?: boolean;
     /** Whether the item is disabled */
     disabled?: boolean;
     /** Optional icon component */

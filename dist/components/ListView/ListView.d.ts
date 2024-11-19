@@ -39,7 +39,7 @@ import { ListViewProps } from './ListView.types';
  *   onRight={() => {}}
  *   onBack={() => {}}
  *   renderItem={(item) => <div>{item}</div>}
- *   data={Array(50).fill('Item')}
+ *   items={Array(50).fill('Item')}
  * />
  * ```
  */

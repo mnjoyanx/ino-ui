@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { InoTabsProps, InoTabProps } from './InoTab.types';
 import { useMappedKeydown } from '../../hooks/useMappedKeydown';
-import '../../styles/InoTab.css';
 
 export const InoTabs: React.FC<InoTabsProps> = ({
   children,

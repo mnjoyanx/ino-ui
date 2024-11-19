@@ -1,193 +1,89 @@
 import React from "react";
+import { BaseProps, NavigableComponentProps } from '../../types/base';
 /**
  * Interface for ListView component props.
  */
-export interface ListViewProps {
-    /**
-     * Unique identifier for the ListView component.
-     */
-    id: string;
-    /**
-     * Optional unique key prefix for each item in the ListView.
-     */
-    uniqueKey?: string;
-    /**
-     * Type of list orientation, either 'horizontal' or 'vertical'.
-     */
-    listType?: "horizontal" | "vertical";
-    /**
-     * Flag indicating if native control should be used for scrolling.
-     */
-    nativeControle?: boolean;
-    /**
-     * Optional debounce time in milliseconds for scroll events.
-     */
-    debounce?: number;
-    /**
-     * Number of items currently visible in the ListView.
-     */
-    itemsCount: number;
-    /**
-     * Total number of items in the ListView.
-     */
-    itemsTotal: number;
-    /**
-     * Buffer size for items before and after the visible items.
-     */
-    buffer: number;
-    /**
-     * Width of each item in the ListView.
-     */
-    itemWidth: number;
-    /**
-     * Height of each item in the ListView.
-     */
-    itemHeight: number;
-    /**
-     * Flag indicating if the ListView is currently active.
-     */
-    isActive: boolean;
-    /**
-     * Optional initial active index for the ListView.
-     */
-    initialActiveIndex?: number;
-    /**
-     * Gap between items in the ListView.
-     */
-    gap?: number;
-    /**
-     * Gap between rows in the ListView.
-     */
-    rowGap?: number;
-    /**
-     * Whether the ListView has a title.
-     */
-    withTitle?: boolean;
-    /**
-     * Index to scroll back to when the back button is pressed.
-     */
-    onBackScrollIndex?: number | null;
-    /**
-     * Starting index for scrolling.
-     */
-    startScrollIndex?: number;
-    /**
-     * Direction of the ListView, either 'ltr' (left to right) or 'rtl' (right to left).
-     */
-    direction?: "ltr" | "rtl";
-    /**
-     * Callback function for when an item is hovered.
-     * @param index - The index of the hovered item.
-     */
-    onMouseEnter?: (index: number) => void;
-    /**
-     * Callback function for when the up navigation is triggered.
-     */
-    onUp?: () => void;
-    /**
-     * Callback function for when the down navigation is triggered.
-     */
-    onDown?: () => void;
-    /**
-     * Callback function for when the left navigation is triggered.
-     */
-    onLeft?: () => void;
-    /**
-     * Callback function for when the right navigation is triggered.
-     */
-    onRight?: () => void;
-    /**
-     * Callback function for when the back navigation is triggered.
-     */
-    onBack?: () => void;
-    /**
-     * Callback function for when the OK/Enter action is triggered.
-     * @param item - The selected item
-     * @param index - The index of the selected item
-     */
-    onOk?: (item: any, index: number) => void;
-    /**
-     * Function to render each item in the ListView.
-     * @param props - The props for the item.
-     * @returns The rendered item.
-     */
+export interface ListViewProps extends NavigableComponentProps {
+    /** Unique identifier for the list */
+    id: string | number;
+    /** Items to be rendered in the list */
+    items: any[];
+    /** Unique identifier for the list item */
+    uniqueKey: string | number;
+    /** Function to render each item */
     renderItem: (props: ItemProps) => React.ReactNode;
-    /**
-     * Array of data items to be rendered in the ListView.
-     */
-    data: any[];
-    /**
-     * Configuration for navigation arrows
-     */
+    /** Number of items to render at once */
+    itemsPerPage?: number;
+    /** Total number of items */
+    itemsTotal?: number;
+    /** Number of items to render */
+    itemsCount?: number;
+    /** Buffer size */
+    buffer?: number;
+    /** Height of each item */
+    itemHeight?: number;
+    /** Width of each item */
+    itemWidth?: number;
+    /** Layout orientation */
+    orientation?: 'horizontal' | 'vertical';
+    /** Initial active index */
+    initialActiveIndex?: number;
+    /** Gap between items */
+    gap?: number;
+    /** Gap between rows */
+    rowGap?: number;
+    /** Whether the list has a title */
+    withTitle?: boolean;
+    /** Index to scroll back to when back is pressed */
+    onBackScrollIndex?: number | null;
+    /** Starting scroll index */
+    startScrollIndex?: number;
+    /** Layout direction */
+    direction?: 'ltr' | 'rtl';
+    /** List type */
+    listType?: 'horizontal' | 'vertical';
+    /** Arrows configuration */
     arrows?: ArrowProps;
-    /**
-     * Configuration for edge scroll behavior
-     */
+    /** Edge scroll configuration */
     edgeScroll?: EdgeScrollProps;
+    /** Debounce time for item selection */
+    debounce?: number;
+    /** Whether the list is controlled by native elements */
+    nativeControle?: boolean;
+    /** Called when an item is selected */
+    onOk?: (item: any, index: number) => void;
 }
-export interface ItemProps {
+export interface ItemProps extends NavigableComponentProps {
+    /** Unique identifier for the item */
     key: string | number;
+    /** Item index */
     index: number;
+    /** Item styles */
     style: React.CSSProperties;
+    /** Whether the item is currently active */
     isActive: boolean;
+    /** The item data */
     item: any;
-    onUp?: () => void;
-    onDown?: () => void;
-    onLeft?: () => void;
-    onRight?: () => void;
-    onMouseEnter: () => void;
 }
-export interface ArrowProps {
-    /**
-     * Whether to show the arrows
-     */
+export interface ArrowProps extends BaseProps {
+    /** Whether to show the arrows */
     show?: boolean;
-    /**
-     * Icon for the start/left/up arrow
-     */
+    /** Icon for the start arrow */
     startIcon?: React.ReactNode;
-    /**
-     * Icon for the end/right/down arrow
-     */
+    /** Icon for the end arrow */
     endIcon?: React.ReactNode;
-    /**
-     * Custom styles for the arrows
-     */
-    style?: React.CSSProperties;
-    /**
-     * Additional CSS class names
-     */
-    className?: string;
 }
-export interface NavigationArrowProps {
-    /**
-     * Direction of the navigation arrow ('start' for left/up, 'end' for right/down)
-     */
+export interface NavigationArrowProps extends BaseProps {
+    /** Arrow direction */
     direction: 'start' | 'end';
-    /**
-     * Icon element to display as the arrow
-     */
+    /** Arrow icon */
     icon: React.ReactNode;
-    /**
-     * Click handler for the arrow
-     */
-    onClick: () => void;
-    /**
-     * Whether to show or hide the arrow
-     */
+    /** Click handler */
+    onClick: (e: React.MouseEvent) => void;
+    /** Whether to show the arrow */
     show: boolean;
-    /**
-     * Orientation of the list ('horizontal' or 'vertical')
-     */
+    /** List orientation */
     listType: 'horizontal' | 'vertical';
-    /**
-     * Custom styles to apply to the arrow
-     */
-    customStyle?: React.CSSProperties;
-    /**
-     * Additional CSS class names
-     */
-    className?: string;
 }
 export interface EdgeScrollProps {
     /**
