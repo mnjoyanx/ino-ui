@@ -19,6 +19,7 @@ export * from "./InoTab/InoTabs";
 export * from "./InoTab/InoTab";
 export * from "./InoText/InoText";
 export * from "./ScrollView/ScrollView";
+export * from "./InoPlayerProgress/InoPlayerProgress";
 export * from './ListView/ListView';
 export * from './GridView/GridView';
 export * from "./ListGridView/ListGridView";

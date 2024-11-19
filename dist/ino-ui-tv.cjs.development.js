@@ -2400,6 +2400,100 @@ var ScrollView = function ScrollView(_ref) {
   }, React__default.createElement(SvgArrowDown, null)));
 };
 
+var InoPlayerProgress = function InoPlayerProgress(_ref) {
+  var _ref$value = _ref.value,
+    value = _ref$value === void 0 ? 0 : _ref$value,
+    _ref$buffered = _ref.buffered,
+    buffered = _ref$buffered === void 0 ? 0 : _ref$buffered,
+    _ref$isActive = _ref.isActive,
+    isActive = _ref$isActive === void 0 ? false : _ref$isActive,
+    onChange = _ref.onChange,
+    onDragStart = _ref.onDragStart,
+    onDragEnd = _ref.onDragEnd,
+    _ref$classNames = _ref.classNames,
+    classNames = _ref$classNames === void 0 ? '' : _ref$classNames,
+    _ref$showTooltip = _ref.showTooltip,
+    showTooltip = _ref$showTooltip === void 0 ? true : _ref$showTooltip,
+    _ref$duration = _ref.duration,
+    duration = _ref$duration === void 0 ? 0 : _ref$duration;
+  var _useState = React.useState(false),
+    isDragging = _useState[0],
+    setIsDragging = _useState[1];
+  var _useState2 = React.useState(0),
+    tooltipPosition = _useState2[0],
+    setTooltipPosition = _useState2[1];
+  var _useState3 = React.useState(0),
+    tooltipTime = _useState3[0],
+    setTooltipTime = _useState3[1];
+  var progressRef = React.useRef(null);
+  var formatTime = function formatTime(seconds) {
+    var minutes = Math.floor(seconds / 60);
+    var remainingSeconds = Math.floor(seconds % 60);
+    return minutes + ":" + remainingSeconds.toString().padStart(2, '0');
+  };
+  var handleMouseMove = function handleMouseMove(e) {
+    if (!progressRef.current) return;
+    var rect = progressRef.current.getBoundingClientRect();
+    var position = (e.clientX - rect.left) / rect.width;
+    var clampedPosition = Math.max(0, Math.min(1, position));
+    setTooltipPosition(clampedPosition * 100);
+    setTooltipTime(duration * clampedPosition);
+    if (isDragging) {
+      onChange == null || onChange(clampedPosition * 100);
+    }
+  };
+  var handleMouseDown = function handleMouseDown(e) {
+    setIsDragging(true);
+    onDragStart == null || onDragStart();
+    handleMouseMove(e);
+  };
+  var handleMouseUp = function handleMouseUp() {
+    if (isDragging) {
+      setIsDragging(false);
+      onDragEnd == null || onDragEnd();
+    }
+  };
+  React__default.useEffect(function () {
+    if (isDragging) {
+      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('mouseleave', handleMouseUp);
+    }
+    return function () {
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mouseleave', handleMouseUp);
+    };
+  }, [isDragging]);
+  return React__default.createElement("div", {
+    ref: progressRef,
+    className: "\n                ino-player-progress \n                " + (isActive ? 'ino-player-progress--active' : '') + "\n                " + (isDragging ? 'ino-player-progress--dragging' : '') + "\n                " + classNames + "\n            ",
+    onMouseMove: handleMouseMove,
+    onMouseDown: handleMouseDown,
+    onMouseLeave: function onMouseLeave() {
+      return !isDragging && setTooltipPosition(-1);
+    }
+  }, React__default.createElement("div", {
+    className: "ino-player-progress__buffered",
+    style: {
+      width: buffered + "%"
+    }
+  }), React__default.createElement("div", {
+    className: "ino-player-progress__value",
+    style: {
+      width: value + "%"
+    }
+  }), showTooltip && tooltipPosition >= 0 && React__default.createElement("div", {
+    className: "ino-player-progress__tooltip",
+    style: {
+      left: tooltipPosition + "%"
+    }
+  }, formatTime(tooltipTime)), React__default.createElement("div", {
+    className: "ino-player-progress__handle",
+    style: {
+      left: value + "%"
+    }
+  }));
+};
+
 var ARROW_STYLES = {
   position: 'absolute',
   display: 'flex',
@@ -3302,6 +3396,7 @@ exports.InoCol = InoCol;
 exports.InoInput = InoInput;
 exports.InoKeyboard = InoKeyboard;
 exports.InoListItem = InoListItem;
+exports.InoPlayerProgress = InoPlayerProgress;
 exports.InoProtectInput = InoProtectInput;
 exports.InoRow = InoRow;
 exports.InoSidebar = InoSidebar;
