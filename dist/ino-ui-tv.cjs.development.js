@@ -3185,7 +3185,7 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
     }, _ref2[direction === 'rtl' ? 'right' : 'left'] = hIndex * (dimensions.itemWidth + gap) + "rem", _ref2;
   }, [dimensions, gap, rowGap, direction]);
   var renderItems = React.useCallback(function () {
-    var items = [];
+    var newItems = [];
     // Guard against invalid dimensions
     if (!dimensions.rowItems) {
       console.warn('Invalid rowItems in dimensions:', dimensions);
@@ -3204,12 +3204,12 @@ var GridView = /*#__PURE__*/React.memo(function (_ref) {
           return onMouseEnterItem(i);
         }
       };
-      items.push(renderItem(itemProps));
+      newItems.push(renderItem(itemProps));
     };
     for (var i = visibleStart; i < visibleEnd; i++) {
       _loop(i);
     }
-    return items;
+    return newItems;
   }, [startRow, bufferStart, bufferEnd, dimensions.rowItems, dimensions.rows, items.length, uniqueKey, getItemStyle, activeIndex, isActive, items, onMouseEnterItem, renderItem]);
   React.useEffect(function () {
     var applyTransform = function applyTransform() {

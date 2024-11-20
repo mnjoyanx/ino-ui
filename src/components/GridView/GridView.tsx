@@ -237,7 +237,7 @@ export const GridView: React.FC<GridViewProps> = memo(
     );
 
     const renderItems = useCallback(() => {
-      const items: React.ReactNode[] = [];
+      const newItems: React.ReactNode[] = [];
 
       // Guard against invalid dimensions
       if (!dimensions.rowItems) {
@@ -266,9 +266,9 @@ export const GridView: React.FC<GridViewProps> = memo(
           item: items[i],
           onMouseEnter: () => onMouseEnterItem(i),
         };
-        items.push(renderItem(itemProps));
+        newItems.push(renderItem(itemProps));
       }
-      return items;
+      return newItems;
     }, [
       startRow,
       bufferStart,
