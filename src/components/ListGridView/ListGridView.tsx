@@ -7,7 +7,7 @@ import useKeydown from '../../hooks/useKeydown';
 export const ListGridView: React.FC<ListGridViewProps> = ({
   rowsCount,
   rowGap = 1,
-  data,
+  items,
   withTitle = false,
   isActive,
   onRowChange = () => {},
@@ -16,7 +16,9 @@ export const ListGridView: React.FC<ListGridViewProps> = ({
   ...listViewProps
 }) => {
   const [activeIndex] = useState(0);
-  const currentList = useMemo(() => (Array.isArray(data) ? data : []), [data]);
+  const currentList = useMemo(() => (Array.isArray(items) ? items : []), [
+    items,
+  ]);
   const itemsTotal = currentList.length;
   const itemsPerRow = useMemo(() => Math.ceil(itemsTotal / rowsCount), [
     itemsTotal,

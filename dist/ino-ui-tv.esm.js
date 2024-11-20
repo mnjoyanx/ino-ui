@@ -2778,7 +2778,7 @@ var ListView = /*#__PURE__*/memo(function (_ref) {
     });
   }, [itemWidth, itemHeight, listType, direction, gap]);
   var renderItems = useCallback(function () {
-    var items = [];
+    var newiIems = [];
     var start = startIndex - buffer;
     var end = startIndex + itemsCount + buffer;
     var _loop = function _loop(i) {
@@ -2797,13 +2797,13 @@ var ListView = /*#__PURE__*/memo(function (_ref) {
             return onMouseEnterItem(e, i);
           }
         };
-        items.push(renderItem(itemProps));
+        newiIems.push(renderItem(itemProps));
       }
     };
     for (var i = start; i < end; i++) {
       _loop(i);
     }
-    return items;
+    return newiIems;
   }, [startIndex, buffer, itemsCount, itemsTotal, uniqueKey, getItemStyle, activeIndex, isActive, onUp, onDown, onLeft, onRight, onMouseEnterItem, renderItem, items]);
   useEffect(function () {
     var applyTransform = function applyTransform() {
@@ -2997,7 +2997,7 @@ var TRANSFORM_TIMEOUT$1 = 800;
  *   onDown={() => {}}
  *   onBack={() => {}}
  *   renderItem={(item) => <div>{item}</div>}
- *   data={Array(40).fill('Item')}
+ *   items={Array(40).fill('Item')}
  * />
  * ```
  */
@@ -3042,7 +3042,7 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
     _ref$onBack = _ref.onBack,
     onBack = _ref$onBack === void 0 ? function () {} : _ref$onBack,
     renderItem = _ref.renderItem,
-    data = _ref.data,
+    items = _ref.items,
     _ref$gap = _ref.gap,
     gap = _ref$gap === void 0 ? 1 : _ref$gap,
     _ref$rowGap = _ref.rowGap,
@@ -3063,7 +3063,7 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
         itemWidth: itemWidth || DEFAULT_ITEM_WIDTH,
         itemHeight: itemHeight || DEFAULT_ITEM_HEIGHT,
         rowItems: rowItemsCount || DEFAULT_ROW_ITEMS,
-        rows: rowCount || Math.ceil(data.length / (rowItemsCount || DEFAULT_ROW_ITEMS))
+        rows: rowCount || Math.ceil(items.length / (rowItemsCount || DEFAULT_ROW_ITEMS))
       };
     }),
     dimensions = _useState3[0],
@@ -3093,7 +3093,7 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
   }, [rowItemsCount, onLeft]);
   var right = useCallback(function () {
     setActiveIndex(function (prev) {
-      if (prev % rowItemsCount === rowItemsCount - 1 || prev === data.length - 1) {
+      if (prev % rowItemsCount === rowItemsCount - 1 || prev === items.length - 1) {
         requestAnimationFrame(function () {
           return onRight == null ? void 0 : onRight(prev);
         });
@@ -3102,7 +3102,7 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
       }
       return prev;
     });
-  }, [rowItemsCount, data.length, onRight]);
+  }, [rowItemsCount, items.length, onRight]);
   var up = useCallback(function () {
     setActiveIndex(function (prev) {
       if (prev < rowItemsCount) {
@@ -3118,21 +3118,21 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
   }, [rowItemsCount, onUp, changeStartRow]);
   var down = useCallback(function () {
     setActiveIndex(function (prev) {
-      if (Math.ceil((prev + 1) / rowItemsCount) === Math.ceil(data.length / rowItemsCount)) {
+      if (Math.ceil((prev + 1) / rowItemsCount) === Math.ceil(items.length / rowItemsCount)) {
         requestAnimationFrame(function () {
           return onDown == null ? void 0 : onDown(prev);
         });
       } else {
         prev += rowItemsCount;
-        if (prev > data.length - 1) prev = data.length - 1;
+        if (prev > items.length - 1) prev = items.length - 1;
       }
       changeStartRow(prev);
       return prev;
     });
-  }, [rowItemsCount, data.length, onDown, changeStartRow]);
+  }, [rowItemsCount, items.length, onDown, changeStartRow]);
   var ok = useCallback(function () {
-    onOk == null || onOk(data[activeIndex], activeIndex);
-  }, [onOk, data, activeIndex]);
+    onOk == null || onOk(items[activeIndex], activeIndex);
+  }, [onOk, items, activeIndex]);
   var back = useCallback(function () {
     onBack == null || onBack(activeIndex);
   }, [onBack, activeIndex]);
@@ -3140,14 +3140,14 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
     setActiveIndex(index);
     onMouseEnter(index);
   }, [onMouseEnter]);
-  // Calculate dimensions based on container and data
+  // Calculate dimensions based on container and items
   useEffect(function () {
     var calculateDimensions = function calculateDimensions() {
       var DEFAULT_ROW_ITEMS = 5;
       var DEFAULT_ITEM_WIDTH = 15;
       var DEFAULT_ITEM_HEIGHT = 15;
-      // Calculate dimensions based on data length
-      var totalItems = data.length;
+      // Calculate dimensions based on items length
+      var totalItems = items.length;
       // Use provided rowItemsCount or default
       var calculatedRowItems = rowItemsCount || DEFAULT_ROW_ITEMS;
       // Calculate rows based on total items and items per row
@@ -3163,7 +3163,7 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
       });
     };
     calculateDimensions();
-  }, [itemWidth, itemHeight, rowItemsCount, rowCount, data.length]);
+  }, [itemWidth, itemHeight, rowItemsCount, rowCount, items.length]);
   // Use calculated dimensions in render logic
   var getItemStyle = useCallback(function (index) {
     var _ref2;
@@ -3184,14 +3184,14 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
       return items;
     }
     var visibleStart = Math.max(0, startRow * dimensions.rowItems - dimensions.rowItems * bufferStart);
-    var visibleEnd = Math.min(data.length, startRow * dimensions.rowItems + dimensions.rowItems * dimensions.rows + dimensions.rowItems * bufferEnd);
+    var visibleEnd = Math.min(items.length, startRow * dimensions.rowItems + dimensions.rowItems * dimensions.rows + dimensions.rowItems * bufferEnd);
     var _loop = function _loop(i) {
       var itemProps = {
         key: "" + uniqueKey + i,
         index: i,
         style: getItemStyle(i),
         isActive: i === activeIndex && isActive,
-        item: data[i],
+        item: items[i],
         onMouseEnter: function onMouseEnter() {
           return onMouseEnterItem(i);
         }
@@ -3202,7 +3202,7 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
       _loop(i);
     }
     return items;
-  }, [startRow, bufferStart, bufferEnd, dimensions.rowItems, dimensions.rows, data.length, uniqueKey, getItemStyle, activeIndex, isActive, data, onMouseEnterItem, renderItem]);
+  }, [startRow, bufferStart, bufferEnd, dimensions.rowItems, dimensions.rows, items.length, uniqueKey, getItemStyle, activeIndex, isActive, items, onMouseEnterItem, renderItem]);
   useEffect(function () {
     var applyTransform = function applyTransform() {
       if (!scrollViewRef.current) return;
@@ -3239,7 +3239,7 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
   useKeydown(keyDownOptions);
   useEffect(function () {
     setStartRow(0);
-  }, [data]);
+  }, [items]);
   return React.createElement("div", {
     ref: containerRef,
     className: "scroll-view-parent",
@@ -3254,12 +3254,12 @@ var GridView = /*#__PURE__*/memo(function (_ref) {
   }, renderItems()));
 });
 
-var _excluded$1 = ["rowsCount", "rowGap", "data", "withTitle", "isActive", "onRowChange", "onUp", "onDown"];
+var _excluded$1 = ["rowsCount", "rowGap", "items", "withTitle", "isActive", "onRowChange", "onUp", "onDown"];
 var ListGridView = function ListGridView(_ref) {
   var rowsCount = _ref.rowsCount,
     _ref$rowGap = _ref.rowGap,
     rowGap = _ref$rowGap === void 0 ? 1 : _ref$rowGap,
-    data = _ref.data,
+    items = _ref.items,
     _ref$withTitle = _ref.withTitle,
     withTitle = _ref$withTitle === void 0 ? false : _ref$withTitle,
     isActive = _ref.isActive,
@@ -3273,8 +3273,8 @@ var ListGridView = function ListGridView(_ref) {
   var _useState = useState(0),
     activeIndex = _useState[0];
   var currentList = useMemo(function () {
-    return Array.isArray(data) ? data : [];
-  }, [data]);
+    return Array.isArray(items) ? items : [];
+  }, [items]);
   var itemsTotal = currentList.length;
   var itemsPerRow = useMemo(function () {
     return Math.ceil(itemsTotal / rowsCount);

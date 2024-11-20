@@ -19,7 +19,7 @@ module.exports = {
         minimize: true,
 
         // Enable modules (optional, for CSS Modules)
-        modules: true,
+        modules: false,
         inject: false,
         // extract: false,
       })

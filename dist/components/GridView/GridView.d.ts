@@ -35,7 +35,7 @@ import { GridViewProps } from './GridView.types';
  *   onDown={() => {}}
  *   onBack={() => {}}
  *   renderItem={(item) => <div>{item}</div>}
- *   data={Array(40).fill('Item')}
+ *   items={Array(40).fill('Item')}
  * />
  * ```
  */

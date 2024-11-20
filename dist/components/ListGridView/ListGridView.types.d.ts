@@ -7,7 +7,7 @@ export interface CategoryData<T = any> {
 export interface ListGridViewProps<T = any> extends Omit<ListViewProps, 'listType'> {
     rowsCount: number;
     rowGap?: number;
-    data: CategoryData<T>[];
+    items: CategoryData<T>[];
     isActive: boolean;
     withTitle?: boolean;
     onRowChange?: (row: number) => void;

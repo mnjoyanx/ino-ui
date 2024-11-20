@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { InoPlayerProgressProps } from './InoPlayerProgress.types';
-import '../../styles/InoPlayerProgress.css';
 
 export const InoPlayerProgress: React.FC<InoPlayerProgressProps> = ({
   value = 0,

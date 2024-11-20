@@ -12,7 +12,7 @@ export interface GridViewProps {
     /**
      * Array of data items to be rendered in the GridView.
      */
-    data: any[];
+    items: any[];
     /**
      * Optional unique key prefix for each item in the GridView.
      */

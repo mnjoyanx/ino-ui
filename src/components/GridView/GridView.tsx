@@ -48,7 +48,7 @@ const TRANSFORM_TIMEOUT = 800;
  *   onDown={() => {}}
  *   onBack={() => {}}
  *   renderItem={(item) => <div>{item}</div>}
- *   data={Array(40).fill('Item')}
+ *   items={Array(40).fill('Item')}
  * />
  * ```
  */
@@ -78,7 +78,7 @@ export const GridView: React.FC<GridViewProps> = memo(
     onOk = () => {},
     onBack = () => {},
     renderItem,
-    data,
+    items,
     gap = 1,
     rowGap = gap,
   }) => {
@@ -97,7 +97,7 @@ export const GridView: React.FC<GridViewProps> = memo(
         rowItems: rowItemsCount || DEFAULT_ROW_ITEMS,
         rows:
           rowCount ||
-          Math.ceil(data.length / (rowItemsCount || DEFAULT_ROW_ITEMS)),
+          Math.ceil(items.length / (rowItemsCount || DEFAULT_ROW_ITEMS)),
       };
     });
 
@@ -132,7 +132,7 @@ export const GridView: React.FC<GridViewProps> = memo(
       setActiveIndex(prev => {
         if (
           prev % rowItemsCount === rowItemsCount - 1 ||
-          prev === data.length - 1
+          prev === items.length - 1
         ) {
           requestAnimationFrame(() => onRight?.(prev));
         } else {
@@ -140,7 +140,7 @@ export const GridView: React.FC<GridViewProps> = memo(
         }
         return prev;
       });
-    }, [rowItemsCount, data.length, onRight]);
+    }, [rowItemsCount, items.length, onRight]);
 
     const up = useCallback(() => {
       setActiveIndex(prev => {
@@ -158,21 +158,21 @@ export const GridView: React.FC<GridViewProps> = memo(
       setActiveIndex(prev => {
         if (
           Math.ceil((prev + 1) / rowItemsCount) ===
-          Math.ceil(data.length / rowItemsCount)
+          Math.ceil(items.length / rowItemsCount)
         ) {
           requestAnimationFrame(() => onDown?.(prev));
         } else {
           prev += rowItemsCount;
-          if (prev > data.length - 1) prev = data.length - 1;
+          if (prev > items.length - 1) prev = items.length - 1;
         }
         changeStartRow(prev);
         return prev;
       });
-    }, [rowItemsCount, data.length, onDown, changeStartRow]);
+    }, [rowItemsCount, items.length, onDown, changeStartRow]);
 
     const ok = useCallback(() => {
-      onOk?.(data[activeIndex], activeIndex);
-    }, [onOk, data, activeIndex]);
+      onOk?.(items[activeIndex], activeIndex);
+    }, [onOk, items, activeIndex]);
 
     const back = useCallback(() => {
       onBack?.(activeIndex);
@@ -186,15 +186,15 @@ export const GridView: React.FC<GridViewProps> = memo(
       [onMouseEnter]
     );
 
-    // Calculate dimensions based on container and data
+    // Calculate dimensions based on container and items
     useEffect(() => {
       const calculateDimensions = () => {
         const DEFAULT_ROW_ITEMS = 5;
         const DEFAULT_ITEM_WIDTH = 15;
         const DEFAULT_ITEM_HEIGHT = 15;
 
-        // Calculate dimensions based on data length
-        const totalItems = data.length;
+        // Calculate dimensions based on items length
+        const totalItems = items.length;
 
         // Use provided rowItemsCount or default
         const calculatedRowItems = rowItemsCount || DEFAULT_ROW_ITEMS;
@@ -216,7 +216,7 @@ export const GridView: React.FC<GridViewProps> = memo(
       };
 
       calculateDimensions();
-    }, [itemWidth, itemHeight, rowItemsCount, rowCount, data.length]);
+    }, [itemWidth, itemHeight, rowItemsCount, rowCount, items.length]);
 
     // Use calculated dimensions in render logic
     const getItemStyle = useCallback(
@@ -251,7 +251,7 @@ export const GridView: React.FC<GridViewProps> = memo(
       );
 
       const visibleEnd = Math.min(
-        data.length,
+        items.length,
         startRow * dimensions.rowItems +
           dimensions.rowItems * dimensions.rows +
           dimensions.rowItems * bufferEnd
@@ -263,7 +263,7 @@ export const GridView: React.FC<GridViewProps> = memo(
           index: i,
           style: getItemStyle(i),
           isActive: i === activeIndex && isActive,
-          item: data[i],
+          item: items[i],
           onMouseEnter: () => onMouseEnterItem(i),
         };
         items.push(renderItem(itemProps));
@@ -275,12 +275,12 @@ export const GridView: React.FC<GridViewProps> = memo(
       bufferEnd,
       dimensions.rowItems,
       dimensions.rows,
-      data.length,
+      items.length,
       uniqueKey,
       getItemStyle,
       activeIndex,
       isActive,
-      data,
+      items,
       onMouseEnterItem,
       renderItem,
     ]);
@@ -341,7 +341,7 @@ export const GridView: React.FC<GridViewProps> = memo(
 
     useEffect(() => {
       setStartRow(0);
-    }, [data]);
+    }, [items]);
 
     return (
       <div

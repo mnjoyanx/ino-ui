@@ -220,7 +220,7 @@ export const ListView: React.FC<ListViewProps> = memo(
     );
 
     const renderItems = useCallback(() => {
-      const items: React.ReactNode[] = [];
+      const newiIems: React.ReactNode[] = [];
       const start = startIndex - buffer;
       const end = startIndex + itemsCount + buffer;
 
@@ -238,10 +238,10 @@ export const ListView: React.FC<ListViewProps> = memo(
             onRight,
             onMouseEnter: (e: React.MouseEvent) => onMouseEnterItem(e, i),
           };
-          items.push(renderItem(itemProps));
+          newiIems.push(renderItem(itemProps));
         }
       }
-      return items;
+      return newiIems;
     }, [
       startIndex,
       buffer,
